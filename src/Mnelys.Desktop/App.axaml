@@ -1,0 +1,20 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Mnelys.Desktop.App"
+             RequestedThemeVariant="Default">
+    <Application.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="Color.Window.Background" Color="#FFF8FC" />
+            <SolidColorBrush x:Key="Color.Surface.Default" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="Color.Surface.Elevated" Color="#FFF1F8" />
+            <SolidColorBrush x:Key="Color.Border.Subtle" Color="#26A95283" />
+            <SolidColorBrush x:Key="Color.Text.Primary" Color="#FF291925" />
+            <SolidColorBrush x:Key="Color.Text.Secondary" Color="#FF735D6C" />
+            <SolidColorBrush x:Key="Color.Accent.Primary" Color="#FFE8549A" />
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+</Application>

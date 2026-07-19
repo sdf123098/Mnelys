@@ -1,0 +1,38 @@
+# Build output
+bin/
+obj/
+artifacts/
+TestResults/
+coverage/
+
+# IDE and editor state
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userprefs
+
+# Generated packages and publishing output
+*.nupkg
+*.snupkg
+publish/
+AppDir/
+*.AppImage
+*.dmg
+
+# Local application data and credentials
+.mnelys/
+data/
+cache/
+logs/
+secrets.json
+*.secrets.json
+*.pfx
+*.p12
+*.key
+
+# Platform noise
+.DS_Store
+Thumbs.db
+Desktop.ini

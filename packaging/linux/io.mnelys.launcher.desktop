@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Mnelys
+Name[zh_CN]=忆涟
+Comment=Minecraft launcher and mod-development workspace
+Exec=Mnelys
+Icon=io.mnelys.launcher
+Categories=Game;Development;
+Terminal=false
+StartupWMClass=Mnelys

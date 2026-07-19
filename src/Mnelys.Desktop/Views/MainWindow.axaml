@@ -1,0 +1,106 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Mnelys.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="1280"
+        d:DesignHeight="800"
+        x:Class="Mnelys.Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Width="1280"
+        Height="800"
+        MinWidth="900"
+        MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="False"
+        TransparencyLevelHint="None"
+        Background="{DynamicResource Color.Window.Background}"
+        Icon="/Assets/mnelys.ico"
+        Title="忆涟 · Mnelys">
+
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid Margin="36" ColumnDefinitions="300,*" ColumnSpacing="36">
+        <Border Grid.Column="0"
+                Padding="24"
+                Background="{DynamicResource Color.Surface.Default}"
+                BorderBrush="{DynamicResource Color.Border.Subtle}"
+                BorderThickness="1"
+                CornerRadius="24">
+            <StackPanel Spacing="20">
+                <Border Width="220"
+                        Height="220"
+                        HorizontalAlignment="Center"
+                        CornerRadius="40"
+                        ClipToBounds="True">
+                    <Image Source="/Assets/mnelys-icon.png"
+                           Stretch="UniformToFill"
+                           AutomationProperties.Name="忆涟项目图标" />
+                </Border>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding ChineseName}"
+                               HorizontalAlignment="Center"
+                               FontSize="34"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource Color.Text.Primary}" />
+                    <TextBlock Text="{Binding ProductName}"
+                               HorizontalAlignment="Center"
+                               FontSize="18"
+                               Foreground="{DynamicResource Color.Text.Secondary}" />
+                </StackPanel>
+
+                <Border Padding="12,8"
+                        HorizontalAlignment="Center"
+                        Background="{DynamicResource Color.Surface.Elevated}"
+                        CornerRadius="12">
+                    <TextBlock Text="{Binding Milestone}"
+                               Foreground="{DynamicResource Color.Accent.Primary}" />
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Spacing="24">
+            <TextBlock Text="发布链技术验证"
+                       FontSize="42"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource Color.Text.Primary}" />
+            <TextBlock MaxWidth="680"
+                       HorizontalAlignment="Left"
+                       Text="这是完全独立的 Avalonia 桌面 Shell。当前窗口保持不透明，不请求 Mica、Acrylic 或桌面背景采样。"
+                       TextWrapping="Wrap"
+                       FontSize="20"
+                       LineHeight="30"
+                       Foreground="{DynamicResource Color.Text.Secondary}" />
+
+            <Border MaxWidth="680"
+                    HorizontalAlignment="Stretch"
+                    Padding="24"
+                    Background="{DynamicResource Color.Surface.Default}"
+                    BorderBrush="{DynamicResource Color.Border.Subtle}"
+                    BorderThickness="1"
+                    CornerRadius="18">
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="150,*" RowSpacing="12">
+                    <TextBlock Text="运行时" Foreground="{DynamicResource Color.Text.Secondary}" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding RuntimeDescription}"
+                               Foreground="{DynamicResource Color.Text.Primary}" />
+                    <TextBlock Grid.Row="1"
+                               Text="当前平台"
+                               Foreground="{DynamicResource Color.Text.Secondary}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding PlatformDescription}"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource Color.Text.Primary}" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Grid>
+
+</Window>
