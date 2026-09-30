@@ -1,0 +1,21 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--mnelys-sidebar-width) 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    'sidebar content'
+    'status  status';
+  height: 100%;
+  background-color: var(--mnelys-color-canvas);
+}
+
+.content {
+  grid-area: content;
+  overflow-y: auto;
+  padding: var(--mnelys-space-6);
+}
+
+.contentInner {
+  max-width: var(--mnelys-content-max-width);
+  margin: 0 auto;
+}

@@ -1,0 +1,15 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-3);
+  padding: var(--mnelys-space-5);
+  background-color: var(--mnelys-color-surface);
+  border: 1px solid var(--mnelys-color-border);
+  border-radius: var(--mnelys-radius-lg);
+  box-shadow: var(--mnelys-shadow-panel);
+}
+
+.body {
+  max-width: 46rem;
+  color: var(--mnelys-color-text-muted);
+}

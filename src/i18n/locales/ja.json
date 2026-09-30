@@ -1,0 +1,59 @@
+{
+  "app": {
+    "name": "Mnelys",
+    "chineseName": "憶漣",
+    "tagline": "プレイヤーとMod開発者のためのAIネイティブMinecraftランチャー兼開発ワークスペース"
+  },
+  "nav": {
+    "instances": "インスタンス",
+    "accounts": "アカウント",
+    "tasks": "タスク",
+    "settings": "設定"
+  },
+  "status": {
+    "checking": "Mnelysコアを確認しています…",
+    "coreConnected": "コア接続済み",
+    "coreUnavailable": "コアに接続できません"
+  },
+  "home": {
+    "heading": "Mnelysへようこそ",
+    "intro": "このビルドはM1シェルです。Rustコアのバージョンは{{version}}（コントラクト v{{contractVersion}}）です。",
+    "runtimeHeading": "ランタイム",
+    "platform": "プラットフォーム",
+    "architecture": "アーキテクチャ",
+    "webview": "Webビュー",
+    "debugBuild": "デバッグビルド"
+  },
+  "instances": {
+    "heading": "インスタンス",
+    "empty": "インスタンスはまだありません。インスタンス作成は最初のバーティカルスライスで提供されます。"
+  },
+  "accounts": {
+    "heading": "アカウント",
+    "empty": "アカウントはまだありません。Microsoft・オフライン・外部Yggdrasilのサインインはアカウントスライスで提供されます。"
+  },
+  "tasks": {
+    "heading": "タスク",
+    "empty": "実行中のタスクはありません。ダウンロードとインストールのタスクがここに表示されます。"
+  },
+  "settings": {
+    "heading": "設定",
+    "language": "表示言語",
+    "languageDescription": "再起動なしで即座に反映されます。",
+    "about": "このアプリについて",
+    "aboutDescription": "Mnelysは現在M1シェル段階です。ウィンドウ、ナビゲーション、型付きコア境界、国際化のみを備え、Minecraftのインストールや起動はまだできません。"
+  },
+  "error": {
+    "title": "エラーが発生しました",
+    "retry": "再試行",
+    "coreUnavailable": "Mnelysコアに接続できません。通常、デスクトップシェルがRustバックエンドを起動していないことが原因です。",
+    "coreNotImplemented": "その機能はコアにまだ実装されていません。",
+    "coreInvalidRequest": "コアはリクエストを無効と判定しました。",
+    "coreIo": "ファイル操作に失敗しました。",
+    "coreNetwork": "ネットワーク操作に失敗しました。",
+    "coreUnauthorized": "そのリクエストは許可されていません。",
+    "coreConflict": "そのリクエストは既存の状態と競合しました。",
+    "coreInternal": "コアが内部エラーを報告しました。",
+    "unknown": "不明なエラーが発生しました。"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Baseline capability set for the Mnelys main window. New permissions are added here deliberately, one at a time (ADR 0005, ADR 0006).",
+  "platforms": ["windows", "macOS", "linux"],
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

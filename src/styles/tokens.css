@@ -1,0 +1,127 @@
+/*
+ * Design tokens (ADR 0006).
+ *
+ * Components read tokens only — never a literal colour or size. A theme is a token
+ * set swapped on the root element.
+ *
+ * ADR 0005 forbids Mica, Acrylic, vibrancy, desktop sampling and translucent window
+ * backgrounds. Every surface below therefore resolves to an opaque colour, and there
+ * is no `backdrop-filter` anywhere in this layer.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Typography — CJK fallbacks are first-class because the product ships in zh/ja/en. */
+  --mnelys-font-sans:
+    'Segoe UI Variable Text', 'Segoe UI', 'Noto Sans SC', 'Noto Sans JP', 'Microsoft YaHei UI',
+    'Microsoft YaHei', 'Hiragino Sans', 'Yu Gothic UI', system-ui, sans-serif;
+  --mnelys-font-mono: 'Cascadia Code', 'JetBrains Mono', Consolas, 'SFMono-Regular', monospace;
+
+  --mnelys-font-size-xs: 0.75rem;
+  --mnelys-font-size-sm: 0.8125rem;
+  --mnelys-font-size-md: 0.875rem;
+  --mnelys-font-size-lg: 1rem;
+  --mnelys-font-size-xl: 1.375rem;
+
+  --mnelys-line-height-tight: 1.25;
+  --mnelys-line-height-normal: 1.55;
+
+  --mnelys-font-weight-regular: 400;
+  --mnelys-font-weight-medium: 500;
+  --mnelys-font-weight-semibold: 600;
+
+  /* Spacing */
+  --mnelys-space-1: 0.25rem;
+  --mnelys-space-2: 0.5rem;
+  --mnelys-space-3: 0.75rem;
+  --mnelys-space-4: 1rem;
+  --mnelys-space-5: 1.5rem;
+  --mnelys-space-6: 2rem;
+  --mnelys-space-7: 3rem;
+
+  /* Radii */
+  --mnelys-radius-sm: 0.25rem;
+  --mnelys-radius-md: 0.5rem;
+  --mnelys-radius-lg: 0.75rem;
+  --mnelys-radius-pill: 999rem;
+
+  /* Motion */
+  --mnelys-duration-fast: 90ms;
+  --mnelys-duration-normal: 160ms;
+  --mnelys-easing-standard: cubic-bezier(0.2, 0, 0.2, 1);
+
+  /* Layout */
+  --mnelys-sidebar-width: 13.5rem;
+  --mnelys-statusbar-height: 1.875rem;
+  --mnelys-content-max-width: 64rem;
+
+  /* Palette — light */
+  --mnelys-color-canvas: #f5f6f8;
+  --mnelys-color-surface: #ffffff;
+  --mnelys-color-surface-sunken: #eceef2;
+  --mnelys-color-surface-hover: #e8eaef;
+  --mnelys-color-surface-active: #dfe3ea;
+  --mnelys-color-border: #d7dae1;
+  --mnelys-color-border-strong: #b6bcc7;
+  --mnelys-color-text: #1b1e24;
+  --mnelys-color-text-muted: #5b616d;
+  --mnelys-color-text-inverse: #ffffff;
+  --mnelys-color-accent: #2f6f4f;
+  --mnelys-color-accent-hover: #275f43;
+  --mnelys-color-accent-soft: #e3efe8;
+  --mnelys-color-danger: #b3261e;
+  --mnelys-color-danger-soft: #fbe9e7;
+  --mnelys-color-success: #2e7d32;
+  --mnelys-color-focus-ring: #2f6f4f;
+
+  --mnelys-shadow-panel: 0 1px 2px rgb(15 18 25 / 8%);
+}
+
+/* Dark palette. Kept as an explicit block rather than `light-dark()` because the
+   declared macOS floor (13) ships a WebKit that predates the function. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --mnelys-color-canvas: #15171c;
+    --mnelys-color-surface: #1c1f26;
+    --mnelys-color-surface-sunken: #101216;
+    --mnelys-color-surface-hover: #252932;
+    --mnelys-color-surface-active: #2e3340;
+    --mnelys-color-border: #2c313b;
+    --mnelys-color-border-strong: #444b58;
+    --mnelys-color-text: #e8eaef;
+    --mnelys-color-text-muted: #9aa1af;
+    --mnelys-color-text-inverse: #101216;
+    --mnelys-color-accent: #6cc39a;
+    --mnelys-color-accent-hover: #86d2ae;
+    --mnelys-color-accent-soft: #1d2f27;
+    --mnelys-color-danger: #f2837b;
+    --mnelys-color-danger-soft: #35211f;
+    --mnelys-color-success: #7bc67e;
+    --mnelys-color-focus-ring: #6cc39a;
+
+    --mnelys-shadow-panel: 0 1px 2px rgb(0 0 0 / 40%);
+  }
+}
+
+:root[data-theme='dark'] {
+  --mnelys-color-canvas: #15171c;
+  --mnelys-color-surface: #1c1f26;
+  --mnelys-color-surface-sunken: #101216;
+  --mnelys-color-surface-hover: #252932;
+  --mnelys-color-surface-active: #2e3340;
+  --mnelys-color-border: #2c313b;
+  --mnelys-color-border-strong: #444b58;
+  --mnelys-color-text: #e8eaef;
+  --mnelys-color-text-muted: #9aa1af;
+  --mnelys-color-text-inverse: #101216;
+  --mnelys-color-accent: #6cc39a;
+  --mnelys-color-accent-hover: #86d2ae;
+  --mnelys-color-accent-soft: #1d2f27;
+  --mnelys-color-danger: #f2837b;
+  --mnelys-color-danger-soft: #35211f;
+  --mnelys-color-success: #7bc67e;
+  --mnelys-color-focus-ring: #6cc39a;
+
+  --mnelys-shadow-panel: 0 1px 2px rgb(0 0 0 / 40%);
+}

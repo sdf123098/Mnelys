@@ -1,0 +1,53 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-2);
+  padding-top: var(--mnelys-space-4);
+  border-top: 1px solid var(--mnelys-color-border);
+}
+
+.hint {
+  color: var(--mnelys-color-text-muted);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mnelys-space-2);
+}
+
+.choice {
+  padding: var(--mnelys-space-2) var(--mnelys-space-4);
+  background-color: var(--mnelys-color-surface-sunken);
+  border: 1px solid var(--mnelys-color-border);
+  border-radius: var(--mnelys-radius-md);
+  cursor: pointer;
+  transition: background-color var(--mnelys-duration-fast) var(--mnelys-easing-standard);
+}
+
+.choice:hover {
+  background-color: var(--mnelys-color-surface-hover);
+}
+
+.choiceActive {
+  background-color: var(--mnelys-color-accent-soft);
+  border-color: var(--mnelys-color-accent);
+  color: var(--mnelys-color-accent);
+  font-weight: var(--mnelys-font-weight-medium);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--mnelys-space-1) var(--mnelys-space-4);
+  margin: 0;
+}
+
+.facts dt {
+  color: var(--mnelys-color-text-muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-family: var(--mnelys-font-mono);
+}

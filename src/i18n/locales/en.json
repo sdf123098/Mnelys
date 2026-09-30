@@ -1,0 +1,59 @@
+{
+  "app": {
+    "name": "Mnelys",
+    "chineseName": "忆涟",
+    "tagline": "AI-native Minecraft launcher and development workspace"
+  },
+  "nav": {
+    "instances": "Instances",
+    "accounts": "Accounts",
+    "tasks": "Tasks",
+    "settings": "Settings"
+  },
+  "status": {
+    "checking": "Checking the Mnelys core…",
+    "coreConnected": "Core connected",
+    "coreUnavailable": "Core unavailable"
+  },
+  "home": {
+    "heading": "Welcome to Mnelys",
+    "intro": "This build is the M1 shell. The Rust core reports version {{version}} (contract v{{contractVersion}}).",
+    "runtimeHeading": "Runtime",
+    "platform": "Platform",
+    "architecture": "Architecture",
+    "webview": "Web view",
+    "debugBuild": "Debug build"
+  },
+  "instances": {
+    "heading": "Instances",
+    "empty": "No instances yet. Instance creation arrives with the first vertical slice."
+  },
+  "accounts": {
+    "heading": "Accounts",
+    "empty": "No accounts yet. Microsoft, offline and external Yggdrasil sign-in arrive with the account slice."
+  },
+  "tasks": {
+    "heading": "Tasks",
+    "empty": "Nothing is running. Download and install tasks will appear here."
+  },
+  "settings": {
+    "heading": "Settings",
+    "language": "Language",
+    "languageDescription": "Applies immediately, without a restart.",
+    "about": "About",
+    "aboutDescription": "Mnelys is at the M1 shell stage: window, navigation, a typed core boundary and internationalization. It cannot install or launch Minecraft yet."
+  },
+  "error": {
+    "title": "Something went wrong",
+    "retry": "Retry",
+    "coreUnavailable": "The Mnelys core is not reachable. This usually means the desktop shell is not running the Rust backend.",
+    "coreNotImplemented": "The core has not implemented that capability yet.",
+    "coreInvalidRequest": "The core rejected the request as invalid.",
+    "coreIo": "A file operation failed.",
+    "coreNetwork": "A network operation failed.",
+    "coreUnauthorized": "That request was not authorized.",
+    "coreConflict": "That request conflicted with existing state.",
+    "coreInternal": "The core reported an internal error.",
+    "unknown": "An unknown error occurred."
+  }
+}

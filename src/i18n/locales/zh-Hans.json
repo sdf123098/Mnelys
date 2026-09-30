@@ -1,0 +1,59 @@
+{
+  "app": {
+    "name": "Mnelys",
+    "chineseName": "忆涟",
+    "tagline": "面向玩家与模组开发者的 AI 原生 Minecraft 启动器与开发工作区"
+  },
+  "nav": {
+    "instances": "实例",
+    "accounts": "账户",
+    "tasks": "任务",
+    "settings": "设置"
+  },
+  "status": {
+    "checking": "正在检查 Mnelys 核心…",
+    "coreConnected": "核心已连接",
+    "coreUnavailable": "核心不可用"
+  },
+  "home": {
+    "heading": "欢迎使用 Mnelys",
+    "intro": "当前构建是 M1 外壳。Rust 核心版本 {{version}}（契约 v{{contractVersion}}）。",
+    "runtimeHeading": "运行时",
+    "platform": "平台",
+    "architecture": "架构",
+    "webview": "Web 视图",
+    "debugBuild": "调试构建"
+  },
+  "instances": {
+    "heading": "实例",
+    "empty": "还没有实例。实例创建功能将随第一个垂直切片提供。"
+  },
+  "accounts": {
+    "heading": "账户",
+    "empty": "还没有账户。Microsoft、离线与外置 Yggdrasil 登录将随账户切片提供。"
+  },
+  "tasks": {
+    "heading": "任务",
+    "empty": "当前没有正在运行的任务。下载与安装任务会显示在这里。"
+  },
+  "settings": {
+    "heading": "设置",
+    "language": "界面语言",
+    "languageDescription": "切换后立即生效，无需重启。",
+    "about": "关于",
+    "aboutDescription": "Mnelys 目前处于 M1 外壳阶段：窗口、导航、类型化核心边界与国际化。尚不具备安装或启动 Minecraft 的能力。"
+  },
+  "error": {
+    "title": "出错了",
+    "retry": "重试",
+    "coreUnavailable": "无法连接 Mnelys 核心。通常意味着桌面外壳没有运行 Rust 后端。",
+    "coreNotImplemented": "核心尚未实现该能力。",
+    "coreInvalidRequest": "核心判定请求无效。",
+    "coreIo": "文件操作失败。",
+    "coreNetwork": "网络操作失败。",
+    "coreUnauthorized": "该请求未获授权。",
+    "coreConflict": "该请求与现有状态冲突。",
+    "coreInternal": "核心报告了内部错误。",
+    "unknown": "发生了未知错误。"
+  }
+}

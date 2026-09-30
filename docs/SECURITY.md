@@ -9,7 +9,7 @@ Do not disclose suspected vulnerabilities in a public issue. Until a dedicated p
 
 ## Trust boundaries
 
-- Views and ViewModels never read or persist raw tokens.
+- Frontend components and state stores never read or persist raw tokens.
 - Credentials are persisted only through platform vault adapters: Windows Credential Manager/DPAPI, macOS Keychain, and Linux Secret Service.
 - Passwords are never persisted. Short-lived access tokens remain in memory only as long as required.
 - OAuth uses the system browser, PKCE, state validation, and a loopback callback with a random port and timeout.
@@ -20,7 +20,7 @@ Do not disclose suspected vulnerabilities in a public issue. Until a dedicated p
 
 ## Supply chain
 
-- Dependencies use central package management and locked stable versions.
+- Dependencies use locked stable versions: `src-tauri/Cargo.lock` and `pnpm-lock.yaml` are committed and must be consistent with their manifests.
 - Release inputs must be traceable; release builds produce an SBOM and third-party notices.
 - Update manifests and remote rule packages require signature verification before use.
 - Signing keys, OAuth client secrets, API keys, and notarization credentials never enter the repository.

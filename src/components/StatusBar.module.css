@@ -1,0 +1,38 @@
+.bar {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-3);
+  height: var(--mnelys-statusbar-height);
+  padding: 0 var(--mnelys-space-4);
+  background-color: var(--mnelys-color-surface);
+  border-top: 1px solid var(--mnelys-color-border);
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-xs);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: var(--mnelys-radius-pill);
+  background-color: var(--mnelys-color-border-strong);
+}
+
+.indicatorOk {
+  background-color: var(--mnelys-color-success);
+}
+
+.indicatorError {
+  background-color: var(--mnelys-color-danger);
+}
+
+.detail {
+  font-family: var(--mnelys-font-mono);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

@@ -18,6 +18,9 @@ dist/
 src-tauri/target/
 bundle/
 
+# Tauri generated ACL schemas
+src-tauri/gen/schemas/
+
 # Generated packages and publishing output
 *.nupkg
 *.snupkg

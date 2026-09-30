@@ -18,3 +18,4 @@ Do not rewrite an accepted decision to change its outcome. Add a new ADR that su
 - [0003 — Chinese product name and brand source artwork](0003-chinese-name-and-brand-source-artwork.md)
 - [0004 — macOS release targets Apple Silicon only](0004-macos-arm64-only.md)
 - [0005 — Runtime and UI baseline: Tauri v2](0005-runtime-and-ui-baseline-tauri.md)
+- [0006 — Frontend framework and application stack: React and TypeScript](0006-frontend-framework-and-application-stack.md)

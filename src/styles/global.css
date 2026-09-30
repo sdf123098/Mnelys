@@ -1,0 +1,105 @@
+/*
+ * Base layer: reset, document defaults, and the two product-wide rules.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+ * ADR 0005/0006: nothing in this app may sample the desktop behind the window. The
+ * token layer already avoids translucent surfaces; this rule makes an accidental
+ * `backdrop-filter` in a component a no-op instead of a regression that only shows up
+ * on a platform that supports it.
+ */
+*,
+*::before,
+*::after {
+  backdrop-filter: none !important;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--mnelys-font-sans);
+  font-size: var(--mnelys-font-size-md);
+  font-weight: var(--mnelys-font-weight-regular);
+  line-height: var(--mnelys-line-height-normal);
+  color: var(--mnelys-color-text);
+  background-color: var(--mnelys-color-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The desktop shell owns the window chrome; the app must not add a second scrollbar. */
+body {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--mnelys-font-size-xl);
+  font-weight: var(--mnelys-font-weight-semibold);
+  line-height: var(--mnelys-line-height-tight);
+}
+
+h2 {
+  font-size: var(--mnelys-font-size-lg);
+  font-weight: var(--mnelys-font-weight-semibold);
+  line-height: var(--mnelys-line-height-tight);
+}
+
+a {
+  color: var(--mnelys-color-accent);
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--mnelys-font-mono);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mnelys-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Text selection stays opaque; a translucent highlight reads as a rendering bug here. */
+::selection {
+  background-color: var(--mnelys-color-accent-soft);
+  color: var(--mnelys-color-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

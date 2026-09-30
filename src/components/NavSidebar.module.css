@@ -1,0 +1,55 @@
+.sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-4);
+  padding: var(--mnelys-space-4) var(--mnelys-space-3);
+  background-color: var(--mnelys-color-surface-sunken);
+  border-right: 1px solid var(--mnelys-color-border);
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  padding: var(--mnelys-space-2) var(--mnelys-space-3);
+}
+
+.brandName {
+  font-size: var(--mnelys-font-size-lg);
+  font-weight: var(--mnelys-font-weight-semibold);
+  line-height: var(--mnelys-line-height-tight);
+}
+
+.brandMeta {
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-xs);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: block;
+  padding: var(--mnelys-space-2) var(--mnelys-space-3);
+  border-radius: var(--mnelys-radius-md);
+  color: var(--mnelys-color-text);
+  font-weight: var(--mnelys-font-weight-medium);
+  transition: background-color var(--mnelys-duration-fast) var(--mnelys-easing-standard);
+}
+
+.link:hover {
+  background-color: var(--mnelys-color-surface-hover);
+}
+
+.linkActive {
+  background-color: var(--mnelys-color-accent-soft);
+  color: var(--mnelys-color-accent);
+}
