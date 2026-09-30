@@ -1,7 +1,10 @@
 # M0 packaging PoC report
 
-Status: In progress — cross-platform payloads built; target-platform packaging gates remain
+Status: **Historical — describes the superseded .NET/Avalonia baseline**
 Last updated: 2026-07-19
+
+> [!WARNING]
+> This report measures the .NET 10 / Avalonia 12 implementation that [ADR 0005](adr/0005-runtime-and-ui-baseline-tauri.md) replaced on 2026-09-30. That implementation has been removed from `main` and remains only in Git history. The numbers below — including the 50,602,905-byte Windows x64 single-file EXE — are **not** evidence for the Tauri v2 baseline. The Tauri baseline must produce its own packaging evidence, and the reproduction scripts listed at the end of this document no longer exist.
 
 ## Baseline
 

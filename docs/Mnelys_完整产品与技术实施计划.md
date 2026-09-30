@@ -1,15 +1,25 @@
-# Mnelys Minecraft Launcher 完整产品与技术实施计划（Avalonia 重制版）
+# Mnelys Minecraft Launcher 完整产品与技术实施计划
 
 > 文档类型：产品计划书 / 技术架构方案 / 交付实施基线
 > 项目定位：面向玩家与模组开发者的 AI 原生 Minecraft Java Edition 启动器
 > 中文名：忆涟
-> 技术基线：C# 14、.NET 10 LTS、Avalonia 12.x
+> 桌面壳与运行时：Tauri 2.x（Rust 核心 + 平台 WebView），见 [ADR 0005](adr/0005-runtime-and-ui-baseline-tauri.md)
+> 前端框架：未决定，待 ADR 0006
 > 项目形态：全新独立项目，不继承 Prism Launcher 代码与 Git 历史
 > 正式平台：Windows 10/11 x64、macOS 13+ Apple Silicon、主流 Linux x86_64
-> 交付形态：Windows 单 EXE、macOS DMG、Linux AppImage
-> 窗口材质：不使用 Windows Mica、Acrylic 或其他系统背景材质
-> 文档状态：新项目立项基线
-> 更新日期：2026-07-19
+> 交付形态：Windows NSIS 安装包与便携版、macOS DMG、Linux AppImage
+> 窗口材质：不使用 Windows Mica、Acrylic、macOS vibrancy 或其他系统背景材质
+> 文档状态：立项基线；技术章节待按 Tauri v2 重写
+> 更新日期：2026-09-30（技术基线章节的最后一次实质更新：2026-07-19）
+
+> [!WARNING]
+> **本文档的技术章节仍基于已被取代的 .NET 10 / Avalonia 12 基线**（原 ADR 0002）。项目已于 2026-09-30 改为 Tauri v2（[ADR 0005](adr/0005-runtime-and-ui-baseline-tauri.md)）。
+>
+> **仍然有效**：第 4～8 节（定位、目标用户、产品原则、版本范围、UI/UX 与无 Mica 规范）、第 12～23 节（账户、实例与 Java、加载器、下载缓存与镜像、内容平台、陶瓦联机、开发者工作区、AI 诊断、任务与通知、数据模型、安全、更新系统）、第 25～30 节（三平台交付形态、CI、测试、可观测性、许可与合规），以及第 32～34 节中的非技术条目。这些描述的是与技术栈无关的产品与领域设计，重做时应继续遵循。
+>
+> **已被取代、待重写**：Avalonia/.NET 选型与 AOT 约束（§2.2、§9、§24.4）、按 .NET 解决方案组织的仓库结构（§11）、`dotnet publish` 打包命令（§24～§26）、CI 中的 `dotnet format` 与 AXAML 检查（§27.1），以及第 35 节按周排期的具体任务。
+>
+> 技术章节的重写安排在 ADR 0006 确定前端框架之后，届时本文档同步更新。
 
 ---
 
@@ -585,7 +595,7 @@ Mnelys/
 ├─ README.md
 ├─ LICENSE
 ├─ docs/
-│  ├─ Mnelys_完整产品与技术实施计划_Avalonia.md
+│  ├─ Mnelys_完整产品与技术实施计划.md
 │  ├─ ARCHITECTURE.md
 │  ├─ DESIGN_SPEC.md
 │  ├─ SECURITY.md
@@ -1724,4 +1734,4 @@ Avalonia 是此项目的产品最优解：它比 Qt 静态单文件路线减少�
 - .NET 单文件部署：<https://learn.microsoft.com/dotnet/core/deploying/single-file/overview>
 - .NET Native AOT：<https://learn.microsoft.com/dotnet/core/deploying/native-aot/>
 
-> 版本说明：本计划按 2026-07-19 可用的 .NET 10 与 Avalonia 12 文档编写。创建仓库时应再次锁定具体 SDK/包补丁版本，并把版本号写入 `global.json` 与 `Directory.Packages.props`。
+> 版本说明：本文档的技术章节按 2026-07-19 可用的 .NET 10 与 Avalonia 12 文档编写，该基线已于 2026-09-30 被 Tauri v2 取代。重写技术章节时，应把 Rust、Tauri 与前端依赖的具体版本分别写入 `rust-toolchain.toml`、`Cargo.toml`、`Cargo.lock` 以及前端锁文件。

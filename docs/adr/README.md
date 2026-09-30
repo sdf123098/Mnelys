@@ -14,6 +14,7 @@ Do not rewrite an accepted decision to change its outcome. Add a new ADR that su
 ## Index
 
 - [0001 — Project identity and clean-room boundary](0001-project-identity-and-clean-room-boundary.md)
-- [0002 — Runtime and UI baseline](0002-runtime-and-ui-baseline.md)
+- [0002 — Runtime and UI baseline](0002-runtime-and-ui-baseline.md) — superseded by 0005
 - [0003 — Chinese product name and brand source artwork](0003-chinese-name-and-brand-source-artwork.md)
 - [0004 — macOS release targets Apple Silicon only](0004-macos-arm64-only.md)
+- [0005 — Runtime and UI baseline: Tauri v2](0005-runtime-and-ui-baseline-tauri.md)

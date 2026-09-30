@@ -1,17 +1,22 @@
 # Build output
-bin/
-obj/
 artifacts/
 TestResults/
 coverage/
 
-# IDE and editor state
-.vs/
-.idea/
-.vscode/
-*.user
-*.suo
-*.userprefs
+# Rust / Cargo
+target/
+**/*.rs.bk
+
+# Node and frontend tooling
+node_modules/
+dist/
+.vite/
+.turbo/
+*.tsbuildinfo
+
+# Tauri bundler output
+src-tauri/target/
+bundle/
 
 # Generated packages and publishing output
 *.nupkg
@@ -20,6 +25,16 @@ publish/
 AppDir/
 *.AppImage
 *.dmg
+*.msi
+*.exe
+
+# IDE and editor state
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userprefs
 
 # Local application data and credentials
 .mnelys/

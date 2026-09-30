@@ -1,35 +1,41 @@
-# Packaging PoC
+# Packaging
 
-The packaging workflows deliberately separate cross-compilation from target-platform packaging and trust operations.
+Platform artifacts are produced by the **Tauri bundler**, driven from the frontend project's scripts. The custom packaging scripts that targeted `dotnet publish` were removed on 2026-09-30 together with the .NET/Avalonia baseline (see [ADR 0005](../docs/adr/0005-runtime-and-ui-baseline-tauri.md)).
+
+The frontend project lands after ADR 0006. The commands below are the intended interface and will be wired up with it.
 
 ## Windows x64
 
-Run from PowerShell on Windows:
+Run on Windows with WebView2 and the MSVC build tools:
 
 ```powershell
-.\packaging\windows\Publish-SingleFile.ps1
+npm run tauri build -- --bundles nsis
 ```
 
-The script publishes into an internal staging directory and copies only `Mnelys.exe` into the delivery directory. Native PDB files in staging are not user artifacts.
+`nsis` produces the installer; the compiled binary can also be shipped as a portable executable without the installer wrapper. Authenticode signing requires a code-signing certificate. Unsigned local builds are acceptable for a proof of concept but must not be published.
 
 ## macOS arm64
 
-Run on an Apple Silicon Mac with the .NET 10 SDK and Xcode command-line tools:
+Run on an Apple Silicon Mac with Xcode command-line tools:
 
 ```bash
-./packaging/macos/build-dmg.sh
+npm run tauri build -- --bundles dmg
 ```
 
-Without `MNELYS_CODESIGN_IDENTITY`, the script uses ad-hoc signing for the PoC. A public artifact requires a Developer ID Application identity, Hardened Runtime verification, notarization, ticket stapling, and Gatekeeper testing. Intel/x64 is intentionally out of scope.
+Without a Developer ID Application identity the build is only ad-hoc signed. A public artifact requires Developer ID signing, Hardened Runtime, notarization, ticket stapling, and Gatekeeper testing. Intel/x64 remains out of scope per [ADR 0004](../docs/adr/0004-macos-arm64-only.md).
 
-## Linux x64
+## Linux x86_64
 
-Run on the selected old-glibc Linux build image with `appimagetool` available:
+Run on the selected old-glibc build image with the Tauri system dependencies installed (`webkit2gtk`, `libayatana-appindicator`, `librsvg`):
 
 ```bash
-./packaging/linux/build-appimage.sh
+npm run tauri build -- --bundles appimage,deb
 ```
 
-The script creates an AppDir, applies executable permissions, and invokes `appimagetool`. Validate the result on the distribution, desktop environment, display-server, GPU, FUSE, and Secret Service matrix before promotion.
+Validate the result across the distribution, desktop environment, display-server, GPU, FUSE, and Secret Service matrix before promotion.
 
-See [the M0 packaging report](../docs/M0_PACKAGING_POC.md) for current evidence and remaining gates.
+## Signing and secrets
+
+Signing identities, notarization credentials, and update signing keys are release-stage secrets. They are never committed to this repository and are supplied through the release environment.
+
+See [the M0 packaging report](../docs/M0_PACKAGING_POC.md) for the superseded Avalonia-baseline evidence. The Tauri baseline must produce its own numbers.

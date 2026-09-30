@@ -13,7 +13,7 @@
 </p>
 
 > [!IMPORTANT]
-> Mnelys is still in the M0 technical-validation phase. The repository currently contains a runnable Avalonia shell and cross-platform packaging proofs of concept, not a complete Minecraft installation and launch workflow.
+> Mnelys is moving its technical baseline from .NET/Avalonia to **Tauri v2** (see [ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)). `main` currently holds only project documentation, brand assets, and decision records — there is **no runnable implementation** yet, and no Minecraft installation or launch workflow.
 
 ## About
 
@@ -36,80 +36,70 @@ These items describe the roadmap and are not all implemented today.
 
 ## Current status
 
-Mnelys is currently at M0, independent setup and technical validation:
+Mnelys is at M0, independent setup and technical validation, restarted after the stack change:
 
 - [x] Independent repository, license, ADRs, and security baseline
-- [x] Pinned .NET 10, C# 14, and Avalonia 12 toolchain
-- [x] Opaque Avalonia Desktop shell without Mica or Acrylic
-- [x] Windows x64 self-contained single-file proof of concept
-- [x] macOS arm64 self-contained payload and `.app` layout proof of concept
-- [x] Linux x64 self-contained payload and AppDir layout proof of concept
-- [ ] macOS hardware signing, notarization, and DMG validation
-- [ ] Linux AppImage builder and distribution-matrix validation
+- [x] Tauri v2 runtime and UI baseline established ([ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md))
+- [x] .NET/Avalonia implementation removed (it remains in this repository's Git history)
+- [ ] Frontend framework decision (ADR 0006, pending)
+- [ ] Rust core skeleton and Tauri command boundary
+- [ ] Windows, macOS, and Linux packaging proof of concept through the Tauri bundler
 - [ ] First end-to-end Vanilla slice
 
-See the [M0 packaging PoC report](docs/M0_PACKAGING_POC.md) for evidence and remaining gates.
+The packaging evidence from the earlier Avalonia implementation is recorded in the [M0 packaging PoC report](docs/M0_PACKAGING_POC.md). It is a historical record and is **not** evidence for the Tauri baseline.
 
 ## Platform scope
 
 | Platform | 1.0 target | Artifact |
 |---|---:|---|
-| Windows 10/11 x64 | Tier A | Self-contained single `Mnelys.exe` |
+| Windows 10/11 x64 | Tier A | NSIS installer and portable executable |
 | macOS 13+ Apple Silicon | Tier A | Signed and notarized DMG |
-| Linux x86_64 | Tier A | AppImage |
+| Linux x86_64 | Tier A | AppImage, with `.deb` alongside |
 | macOS Intel/x64 | Unsupported | No artifact |
 | Windows ARM64 / Linux ARM64 | Deferred | To be evaluated after 1.0 |
 
 ## Technology
 
-- C# 14 and .NET 10 LTS
-- Avalonia 12, AXAML, and compiled bindings
-- MVVM with one-way state updates
-- Central Package Management
-- `System.Text.Json` source generation for upcoming domain slices
-- SQLite, `HttpClientFactory`, and structured logging in the upcoming core skeleton
+- **Tauri 2.x** as the desktop shell and runtime ([ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md))
+- **Rust** for the core: accounts, instances, Java management, downloads, cache, launch pipeline, and IPC
+- Platform webviews: WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux
+- The frontend framework is **not yet decided** (ADR 0006); no production UI code is committed before then
+- The Rust toolchain is pinned in `rust-toolchain.toml`; Node.js and the package manager are pinned in the repository
+- The root window stays opaque: Mica, Acrylic, macOS vibrancy, and desktop sampling are prohibited
+- The frontend reaches native capability only through explicitly declared Tauri commands; capabilities are declared per window and reviewed
 
-Dependencies point inward: Presentation → Application → Domain. Infrastructure, providers, and platform adapters implement ports defined by the inner layers. See the [architecture baseline](docs/ARCHITECTURE.md).
+Dependencies point inward: `presentation → application → domain`. Infrastructure, provider, and platform crates implement ports defined by the inner layers. Tauri types stay inside the command and adapter boundary. See the [architecture baseline](docs/ARCHITECTURE.md).
 
 ## Run locally
 
-Prerequisites:
+Prerequisites (since 2026-09-30):
 
-- .NET SDK `10.0.302`, or a later `10.0.3xx` patch accepted by `global.json`
+- Rust stable toolchain, pinned by `rust-toolchain.toml`
+- Node.js and the package manager pinned in the repository
+- Platform build dependencies: WebView2 and MSVC build tools on Windows; Xcode command line tools on macOS; WebKitGTK, `libayatana-appindicator`, and similar Tauri system packages on Linux
 - Git 2.40+
 
 ```powershell
 git clone https://github.com/sdf123098/Mnelys.git
 cd Mnelys
-dotnet restore Mnelys.slnx
-dotnet run --project src/Mnelys.Desktop/Mnelys.Desktop.csproj
 ```
 
-Verify the Release build and formatting:
+There is no runnable Tauri project on `main` yet; the scaffold lands once ADR 0006 fixes the frontend framework. At that point local development and builds are `npm run tauri dev` and `npm run tauri build`, with exact script names taken from the `package.json` that lands with the frontend project.
 
-```powershell
-dotnet build Mnelys.slnx -c Release
-dotnet format Mnelys.slnx --verify-no-changes --no-restore
-```
+## Packaging
 
-## Packaging proofs of concept
+The three platform artifacts come from the Tauri bundler rather than custom scripts:
 
-Windows x64:
-
-```powershell
-.\packaging\windows\Publish-SingleFile.ps1
-```
-
-macOS arm64:
+| Platform | Bundle target | Artifact |
+|---|---|---|
+| Windows x64 | `nsis` | Installer and portable executable |
+| macOS arm64 | `dmg` | Signed and notarized DMG |
+| Linux x86_64 | `appimage`, `deb` | AppImage (primary) and `.deb` |
 
 ```bash
-./packaging/macos/build-dmg.sh
-```
-
-Linux x64:
-
-```bash
-./packaging/linux/build-appimage.sh
+npm run tauri build -- --bundles nsis
+npm run tauri build -- --bundles dmg
+npm run tauri build -- --bundles appimage,deb
 ```
 
 See the [packaging guide](packaging/README.md) for target-host tools, signing requirements, and current limitations.
@@ -120,12 +110,8 @@ See the [packaging guide](packaging/README.md) for target-host tools, signing re
 Mnelys/
 ├─ assets/                 Canonical branding assets
 ├─ docs/                   Plans, architecture, security, support matrix, and ADRs
-├─ packaging/              Windows, macOS, and Linux packaging scripts
-├─ src/Mnelys.Desktop/     Current Avalonia desktop shell
-├─ Directory.Build.props   Repository-wide build rules
-├─ Directory.Packages.props Central package versions
-├─ global.json             .NET SDK pin
-└─ Mnelys.slnx             Solution entry point
+├─ packaging/              Three-platform packaging notes (artifacts come from the Tauri bundler)
+└─ (pending)               `src-tauri/` and the frontend project, created after ADR 0006
 ```
 
 ## Contributing and clean-room boundary

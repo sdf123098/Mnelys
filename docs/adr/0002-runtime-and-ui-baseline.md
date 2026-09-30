@@ -1,8 +1,11 @@
 # ADR 0002: Runtime and UI baseline
 
-- Status: Accepted
+- Status: **Superseded by [ADR 0005](0005-runtime-and-ui-baseline-tauri.md)** on 2026-09-30
 - Date: 2026-07-19
 - Decision owners: Mnelys maintainers
+
+> [!NOTE]
+> This decision was superseded. The project moved from .NET 10 / Avalonia 12 to Tauri v2. The body below is kept unchanged so the original reasoning stays auditable.
 
 ## Context
 

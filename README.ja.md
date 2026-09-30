@@ -13,7 +13,7 @@
 </p>
 
 > [!IMPORTANT]
-> Mnelys は現在 M0 技術検証段階です。このリポジトリには実行可能な Avalonia シェルと各プラットフォーム向けパッケージング PoC が含まれていますが、Minecraft のインストール／起動機能はまだ完成していません。
+> Mnelys は技術基盤を .NET／Avalonia から **Tauri v2** へ移行中です（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md) を参照）。現在の `main` にはプロジェクト文書、ブランド素材、意思決定の記録しかなく、**実行可能な実装はまだありません**。Minecraft のインストール／起動機能も未実装です。
 
 ## 概要
 
@@ -36,80 +36,70 @@ Prism Launcher のソースコード、アセット、Git 履歴、内部デー�
 
 ## 現在の進捗
 
-現在は M0「独立プロジェクトの確立と技術検証」です。
+現在は M0「独立プロジェクトの確立と技術検証」で、技術スタックの変更により再スタートしています。
 
 - [x] 独立リポジトリ、ライセンス、ADR、セキュリティ基準
-- [x] .NET 10、C# 14、Avalonia 12 のバージョン固定
-- [x] Mica／Acrylic を使わない不透明な Avalonia Desktop シェル
-- [x] Windows x64 自己完結型シングル EXE PoC
-- [x] macOS arm64 自己完結型 payload と `.app` 構造 PoC
-- [x] Linux x64 自己完結型 payload と AppDir 構造 PoC
-- [ ] macOS 実機での署名、公証、DMG 検証
-- [ ] Linux AppImage ビルダーとディストリビューション検証
+- [x] Tauri v2 のランタイム／UI 基準を確立（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
+- [x] .NET／Avalonia の実装を削除（実装自体は本リポジトリの Git 履歴に残っています）
+- [ ] フロントエンドフレームワークの決定（ADR 0006、保留中）
+- [ ] Rust コアの骨組みと Tauri コマンド境界
+- [ ] Tauri bundler による Windows／macOS／Linux のパッケージング PoC
 - [ ] 最初の Vanilla 垂直スライス
 
-検証結果と残っている作業は [M0 パッケージング PoC レポート](docs/M0_PACKAGING_POC.md)を参照してください。
+旧 Avalonia 実装で得たパッケージングの証跡は [M0 パッケージング PoC レポート](docs/M0_PACKAGING_POC.md)にあります。これは履歴であり、**Tauri 基盤の証跡ではありません**。
 
 ## 対応プラットフォーム
 
 | プラットフォーム | 1.0 目標 | 配布物 |
 |---|---:|---|
-| Windows 10/11 x64 | Tier A | 自己完結型シングル `Mnelys.exe` |
+| Windows 10/11 x64 | Tier A | NSIS インストーラーとポータブル実行ファイル |
 | macOS 13+ Apple Silicon | Tier A | 署名・公証済み DMG |
-| Linux x86_64 | Tier A | AppImage |
+| Linux x86_64 | Tier A | AppImage（`.deb` も同梱） |
 | macOS Intel/x64 | 非対応 | 配布物なし |
 | Windows ARM64 / Linux ARM64 | 延期 | 1.0 以降に検討 |
 
 ## 技術構成
 
-- C# 14 / .NET 10 LTS
-- Avalonia 12、AXAML、Compiled Bindings
-- MVVM と単方向状態更新
-- Central Package Management
-- 今後のドメイン実装では `System.Text.Json` Source Generation
-- 今後のコア基盤では SQLite、`HttpClientFactory`、構造化ログ
+- **Tauri 2.x** をデスクトップシェル兼ランタイムとして採用（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
+- **Rust** でコアを実装：アカウント、インスタンス、Java 管理、ダウンロード、キャッシュ、起動パイプライン、IPC
+- プラットフォーム WebView：Windows は WebView2、macOS は WKWebView、Linux は WebKitGTK
+- フロントエンドフレームワークは**未決定**（ADR 0006）。決定まで本番 UI コードはコミットしません
+- Rust ツールチェーンは `rust-toolchain.toml` で固定し、Node.js とパッケージマネージャーもリポジトリ内で固定します
+- ルートウィンドウは不透明を維持：Mica、Acrylic、macOS vibrancy、デスクトップサンプリングは禁止
+- フロントエンドは明示的に宣言した Tauri コマンドを通じてのみネイティブ機能にアクセスし、ケイパビリティはウィンドウ単位で宣言・レビューします
 
-依存方向は Presentation → Application → Domain に限定します。Infrastructure、Provider、Platform Adapter は内側の層で定義した Port を実装します。詳細は[アーキテクチャ基準](docs/ARCHITECTURE.md)を参照してください。
+依存方向は `presentation → application → domain` に限定します。Infrastructure、Provider、Platform の各クレートが内側の層で定義した Port を実装し、Tauri の型はコマンドとアダプターの境界に留めます。詳細は[アーキテクチャ基準](docs/ARCHITECTURE.md)を参照してください。
 
 ## ローカル実行
 
-必要な環境：
+必要な環境（2026-09-30 以降）：
 
-- .NET SDK `10.0.302`、または `global.json` が許可する新しい `10.0.3xx` パッチ
+- `rust-toolchain.toml` で固定された Rust stable ツールチェーン
+- リポジトリ内で固定された Node.js とパッケージマネージャー
+- プラットフォーム別のビルド依存：Windows は WebView2 と MSVC ビルドツール、macOS は Xcode command line tools、Linux は WebKitGTK と `libayatana-appindicator` などの Tauri システムパッケージ
 - Git 2.40+
 
 ```powershell
 git clone https://github.com/sdf123098/Mnelys.git
 cd Mnelys
-dotnet restore Mnelys.slnx
-dotnet run --project src/Mnelys.Desktop/Mnelys.Desktop.csproj
 ```
 
-Release ビルドとフォーマットの確認：
+現在の `main` には実行可能な Tauri プロジェクトはまだありません。スキャフォールドは ADR 0006 でフロントエンドフレームワークを確定した後に追加します。その時点でのローカル起動とビルドは `npm run tauri dev` と `npm run tauri build` で、正確なスクリプト名はフロントエンドと同時に追加される `package.json` に従います。
 
-```powershell
-dotnet build Mnelys.slnx -c Release
-dotnet format Mnelys.slnx --verify-no-changes --no-restore
-```
+## パッケージング
 
-## パッケージング PoC
+3 プラットフォームの配布物はカスタムスクリプトではなく Tauri bundler が生成します。
 
-Windows x64：
-
-```powershell
-.\packaging\windows\Publish-SingleFile.ps1
-```
-
-macOS arm64：
+| プラットフォーム | bundle ターゲット | 配布物 |
+|---|---|---|
+| Windows x64 | `nsis` | インストーラーとポータブル実行ファイル |
+| macOS arm64 | `dmg` | 署名・公証済み DMG |
+| Linux x86_64 | `appimage`、`deb` | AppImage（主）と `.deb` |
 
 ```bash
-./packaging/macos/build-dmg.sh
-```
-
-Linux x64：
-
-```bash
-./packaging/linux/build-appimage.sh
+npm run tauri build -- --bundles nsis
+npm run tauri build -- --bundles dmg
+npm run tauri build -- --bundles appimage,deb
 ```
 
 対象 OS のツール、署名要件、現在の制限は[パッケージングガイド](packaging/README.md)を参照してください。
@@ -120,12 +110,8 @@ Linux x64：
 Mnelys/
 ├─ assets/                 ブランド原本
 ├─ docs/                   計画、設計、セキュリティ、対応表、ADR
-├─ packaging/              Windows、macOS、Linux のパッケージスクリプト
-├─ src/Mnelys.Desktop/     現在の Avalonia Desktop シェル
-├─ Directory.Build.props   リポジトリ全体のビルドルール
-├─ Directory.Packages.props 依存パッケージの中央管理
-├─ global.json             .NET SDK の固定
-└─ Mnelys.slnx             ソリューション
+├─ packaging/              3 プラットフォームのパッケージング手順（成果物は Tauri bundler が生成）
+└─ （未追加）              `src-tauri/` とフロントエンド。ADR 0006 の後に作成
 ```
 
 ## コントリビューションと独立実装

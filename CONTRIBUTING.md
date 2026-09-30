@@ -10,8 +10,9 @@ If a contribution intentionally incorporates third-party code, stop before submi
 
 ## Engineering baseline
 
-- Keep dependencies directed inward: Presentation → Application → Domain, with Infrastructure, Providers, and Platform adapters implementing inward-facing ports.
-- Do not place credentials, authentication calls, archive extraction, installer execution, or launch-command construction in Views or ViewModels.
-- Accept `CancellationToken` in I/O APIs and do not block asynchronous work with `.Result` or `.Wait()`.
-- Use semantic design tokens; do not enable Mica, Acrylic, desktop sampling, or undocumented DWM blur APIs.
+- Keep the Rust core directed inward: `presentation → application → domain`, with infrastructure, provider, and platform crates implementing inward-facing ports. Tauri types stay inside the command and adapter boundary.
+- Do not place credentials, authentication calls, archive extraction, installer execution, or launch-command construction in frontend views or view models.
+- Treat the Tauri capability set as security surface. Add a capability only when a named command requires it, and justify it in the pull request.
+- Make asynchronous APIs cancellable and keep blocking work off the UI thread.
+- Use semantic design tokens; do not enable Mica, Acrylic, macOS vibrancy, desktop sampling, undocumented DWM blur, or transparent window composition.
 - Add or update tests for behavior changes and keep logs free of secrets.

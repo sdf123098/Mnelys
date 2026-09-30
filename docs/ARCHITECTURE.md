@@ -1,26 +1,30 @@
 # Architecture baseline
 
-Status: Accepted for M0
-Last updated: 2026-07-19
+Status: Accepted for M0 (Tauri v2 baseline, see [ADR 0005](adr/0005-runtime-and-ui-baseline-tauri.md))
+Last updated: 2026-09-30
 
 ## Dependency direction
 
-```text
-Mnelys.Desktop
-  └─ Mnelys.Presentation
-       └─ Mnelys.Application
-            └─ Mnelys.Domain
+The Rust core is layered and depends inward only:
 
-Mnelys.Infrastructure ───────┐
-Mnelys.Platform.* ───────────┼─ implements inward-facing ports
-Mnelys.Providers.* ──────────┘
+```text
+mnelys-desktop
+  └─ mnelys-presentation
+       └─ mnelys-application
+            └─ mnelys-domain
+
+mnelys-infrastructure ───────┐
+mnelys-platform-* ───────────┼─ implement inward-facing ports
+mnelys-provider-* ───────────┘
 ```
 
-The Domain project has no dependency on Avalonia, HTTP, SQLite, operating-system APIs, or concrete providers. Application owns use-case orchestration. Presentation owns Views, ViewModels, navigation, and design-system integration but never handles credentials or performs high-risk I/O directly.
+`mnelys-desktop` is the Tauri host: it owns window and tray setup, the command surface exposed to the webview, updater glue, and nothing else of substance. The webview frontend is an outer adapter that may call only the commands the backend explicitly exposes; it never reaches the filesystem, shell, or network on its own.
+
+`mnelys-domain` has no dependency on Tauri, HTTP, SQLite, or operating-system APIs. `mnelys-application` owns use-case orchestration. `mnelys-presentation` owns view models, navigation state, and design-system integration but never handles credentials or performs high-risk I/O directly.
 
 ## Process boundaries
 
-The desktop process hosts the Avalonia UI, application/domain services, ordinary background tasks, and the local IPC client. Java/Minecraft, loader processors, Terracotta/EasyTier, the Developer Daemon, and the update helper execute out of process when their milestone is implemented.
+The Tauri main process hosts the webview, the Rust application and domain services, ordinary background tasks, and the local IPC client. Java/Minecraft, loader processors, Terracotta/EasyTier, the Developer Daemon, and the update helper execute out of process when their milestone is implemented.
 
 ## Provider model
 
@@ -29,10 +33,11 @@ Providers are explicitly registered at compile time and implement capability-spe
 ## Cross-cutting rules
 
 - I/O is asynchronous and cancellable.
-- JSON contracts use source generation.
-- Services are registered explicitly; runtime assembly scanning is prohibited.
+- Contracts crossing the Rust/webview command boundary are typed and versioned; untyped JSON blobs are not an interface.
+- Services are registered explicitly; runtime scanning and dynamic discovery are prohibited.
 - Persistent formats carry schema versions and support rollback-aware migration.
 - Long operations report immutable task snapshots and never block the UI thread.
 - Download mirrors may change transport location but never the original trust hash.
+- Webview capabilities are declared per window and reviewed; a new capability requires a stated justification in the pull request.
 
 Detailed decisions are recorded in [ADR](adr/README.md).

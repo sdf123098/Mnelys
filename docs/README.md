@@ -1,7 +1,7 @@
 # Mnelys 文档索引
 
 - [当前项目进度](PROGRESS.md)
-- [完整产品与技术实施计划](Mnelys_完整产品与技术实施计划_Avalonia.md)
+- [完整产品与技术实施计划](Mnelys_完整产品与技术实施计划.md)
 - [架构基线](ARCHITECTURE.md)
 - [设计规范](DESIGN_SPEC.md)
 - [安全基线](SECURITY.md)
