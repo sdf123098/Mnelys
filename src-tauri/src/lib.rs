@@ -1,15 +1,19 @@
-//! The Mnelys desktop core.
+//! The Mnelys desktop composition root.
 //!
-//! The core is deliberately thin today: it answers the two commands the shell needs and
-//! nothing else. Everything the launcher will eventually do — resolving, downloading,
-//! verifying, launching — belongs behind this boundary, not in the webview (ADR 0005).
+//! This crate owns wiring only: it chooses the concrete log store, installs the state
+//! the command layer reads, and starts the Tauri runtime. The layers underneath —
+//! domain vocabulary, application use-cases, infrastructure adapters and the Tauri
+//! command surface — are separate crates so the dependency direction stays visible.
 
-pub mod error;
+use std::sync::Arc;
 
-mod commands;
+use mnelys_application::{LogLevel, LogService};
+use mnelys_infrastructure::MemoryLogStore;
+use mnelys_presentation::CoreState;
 
-pub use commands::{core_version, runtime_info, COMMAND_NAMES, CONTRACT_VERSION};
-pub use error::{CoreError, CoreErrorCode, CoreResult};
+pub use mnelys_presentation::{
+    CoreError, CoreErrorCode, CoreResult, COMMAND_NAMES, CONTRACT_VERSION,
+};
 
 /// Builds and runs the desktop application.
 ///
@@ -18,11 +22,31 @@ pub use error::{CoreError, CoreErrorCode, CoreResult};
 /// Panics if the Tauri runtime cannot be initialized or if the event loop exits with an
 /// error. There is no meaningful recovery for a shell that cannot start.
 pub fn run() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            commands::core_version,
-            commands::runtime_info
-        ])
+    let logs = LogService::new(Arc::new(MemoryLogStore::default()));
+    logs.record(
+        LogLevel::Info,
+        "core",
+        format!("Mnelys core {} starting", env!("CARGO_PKG_VERSION")),
+    );
+    logs.record(
+        LogLevel::Debug,
+        "core.runtime",
+        format!(
+            "{} / {} · contract v{}",
+            std::env::consts::OS,
+            std::env::consts::ARCH,
+            CONTRACT_VERSION
+        ),
+    );
+    logs.record(
+        LogLevel::Info,
+        "core.commands",
+        format!("{} commands registered", COMMAND_NAMES.len()),
+    );
+
+    let builder = tauri::Builder::default().manage(CoreState::new(logs));
+
+    mnelys_presentation::attach(builder)
         .run(tauri::generate_context!())
         .expect("failed to run the Mnelys desktop shell");
 }

@@ -1793,10 +1793,46 @@ dependencies = [
 name = "mnelys"
 version = "0.1.0"
 dependencies = [
+ "mnelys-application",
+ "mnelys-infrastructure",
+ "mnelys-presentation",
+ "tauri",
+ "tauri-build",
+]
+
+[[package]]
+name = "mnelys-application"
+version = "0.1.0"
+dependencies = [
+ "mnelys-domain",
+ "serde",
+]
+
+[[package]]
+name = "mnelys-domain"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "mnelys-infrastructure"
+version = "0.1.0"
+dependencies = [
+ "mnelys-application",
+ "mnelys-domain",
+]
+
+[[package]]
+name = "mnelys-presentation"
+version = "0.1.0"
+dependencies = [
+ "mnelys-application",
+ "mnelys-domain",
  "serde",
  "serde_json",
  "tauri",
- "tauri-build",
 ]
 
 [[package]]

@@ -2,46 +2,231 @@
   "app": {
     "name": "Mnelys",
     "chineseName": "憶漣",
-    "tagline": "プレイヤーとMod開発者のためのAIネイティブMinecraftランチャー兼開発ワークスペース"
+    "tagline": "プレイヤーとMod開発者のためのAIネイティブMinecraftランチャー兼開発ワークスペース",
+    "stage": "M1シェル"
   },
   "nav": {
+    "label": "メインナビゲーション",
+    "start": "スタート",
     "instances": "インスタンス",
+    "downloads": "ダウンロード",
+    "multiplayer": "マルチプレイ",
+    "developer": "開発",
     "accounts": "アカウント",
-    "tasks": "タスク",
     "settings": "設定"
+  },
+  "topbar": {
+    "theme": "外観：{{theme}}",
+    "tasks": "タスクセンター",
+    "signedOut": "未サインイン"
   },
   "status": {
     "checking": "Mnelysコアを確認しています…",
     "coreConnected": "コア接続済み",
-    "coreUnavailable": "コアに接続できません"
+    "coreUnavailable": "コアに接続できません",
+    "coreUnavailableHint": "Rustコアが接続されていません。pnpm devでUIのみをプレビューする場合は想定どおりです。",
+    "contract": "コントラクト v{{version}}"
   },
-  "home": {
-    "heading": "Mnelysへようこそ",
-    "intro": "このビルドはM1シェルです。Rustコアのバージョンは{{version}}（コントラクト v{{contractVersion}}）です。",
-    "runtimeHeading": "ランタイム",
-    "platform": "プラットフォーム",
-    "architecture": "アーキテクチャ",
-    "webview": "Webビュー",
-    "debugBuild": "デバッグビルド"
+  "theme": {
+    "label": "外観",
+    "description": "システムに従うか、このインストールだけライト／ダークを固定します。",
+    "system": "システム",
+    "light": "ライト",
+    "dark": "ダーク"
+  },
+  "common": {
+    "skipToContent": "コンテンツへスキップ",
+    "comingSoon": "予定",
+    "availableIn": "{{milestone}}で提供",
+    "disabledHint": "この機能はまだ実装されていません。",
+    "open": "開く",
+    "m1": "M1シェル",
+    "m2": "M2バーティカルスライス",
+    "m3": "M3アカウント",
+    "m6": "M6コンテンツ",
+    "m7": "M7マルチプレイ",
+    "m8": "M8開発ワークスペース"
+  },
+  "start": {
+    "heading": "スタート",
+    "description": "アカウントとインスタンスを用意してゲームを起動します。",
+    "welcomeTitle": "起動できるインスタンスがありません",
+    "welcomeBody": "シェルは完成しています。最初のVanillaスライスでバージョンメタデータ、Java検出、起動パイプラインが加わります。",
+    "openInstances": "インスタンスへ",
+    "launch": "ゲームを起動",
+    "launchDisabled": "最初のインスタンスをインストールすると利用できます",
+    "cards": {
+      "account": {
+        "title": "アカウント",
+        "body": "まだアカウントにサインインしていません。",
+        "value": "未サインイン"
+      },
+      "instances": {
+        "title": "インスタンス",
+        "body": "Mod、ワールド、Java設定をインスタンスごとに分離します。",
+        "value": "0件"
+      },
+      "downloads": {
+        "title": "ダウンロード",
+        "body": "メタデータ、Java、コンテンツのダウンロードがここに並びます。",
+        "value": "待機中"
+      }
+    },
+    "nextHeading": "次に来るもの",
+    "nextBody": "このシェルがM1の成果物です。次のマイルストーンでVanillaの経路が実際に動きます。",
+    "steps": {
+      "metadata": {
+        "title": "バージョンメタデータとJava",
+        "body": "Mojangのメタデータを解決し、適合するランタイムを選び、全ファイルを検証します。"
+      },
+      "instance": {
+        "title": "インスタンスのアトミック作成",
+        "body": "ステージングに書き込み、すべての成果物を検証し、全体が成功したときだけ確定します。"
+      },
+      "launch": {
+        "title": "メインメニューまで起動",
+        "body": "引数配列を組み立て、ログを転送し、終了理由を分類します。"
+      }
+    }
   },
   "instances": {
     "heading": "インスタンス",
-    "empty": "インスタンスはまだありません。インスタンス作成は最初のバーティカルスライスで提供されます。"
+    "description": "各インスタンスはゲームディレクトリ、Mod、ワールド、Java設定、ログを独自に持ちます。",
+    "create": "新規インスタンス",
+    "emptyTitle": "インスタンスはまだありません",
+    "emptyBody": "インスタンス作成は最初のVanillaスライスで提供されます。それまでは偽のリストではなく、正直な空状態を表示します。",
+    "plannedTitle": "インスタンスの仕組み",
+    "plannedBody": "作成、コピー、インポート、エクスポート、修復は同じインストール計画を共有します。",
+    "plannedNotice": "ファイルが検証されアトミックに確定した後だけインスタンスが一覧に現れます。失敗したインストールが半端な状態で残ることはありません。"
+  },
+  "downloads": {
+    "heading": "ダウンロード",
+    "description": "メタデータ、Javaランタイム、ローダー、コンテンツを1つのキューで扱います。",
+    "emptyTitle": "ダウンロードはありません",
+    "emptyBody": "ダウンロードサービスはコアスライスに属し、ハッシュ、再開可能な転送、ミラーへのフォールバック、キャンセルに対応します。",
+    "providersHeading": "接続予定のソース",
+    "providersBody": "ミラーは転送先だけを変えます。信頼ハッシュは常に元のソース由来です。",
+    "providers": {
+      "mojang": {
+        "title": "Mojangメタデータ",
+        "body": "バージョンマニフェスト、ライブラリ、アセット。"
+      },
+      "java": {
+        "title": "管理されたJava",
+        "body": "選択したゲームバージョンに適合し、検証済みのランタイム。"
+      },
+      "content": {
+        "title": "Modrinth",
+        "body": "型付きProvider経由でMod、Modpack、リソースパック、シェーダーを取得します。"
+      }
+    }
+  },
+  "multiplayer": {
+    "heading": "マルチプレイ",
+    "description": "公開ポートを開かずに、Terracottaのルームで友人と遊べます。",
+    "createRoom": "ルームを作成",
+    "emptyTitle": "マルチプレイは未接続です",
+    "emptyBody": "このページはルーム作成、メンバー、リレー状態、診断のために予約されています。",
+    "safetyHeading": "セキュリティ基準",
+    "safetyBody": "ローカル管理エンドポイントはループバックのみで待ち受け、短命トークンを使い、公開ポートを自動で開くことはありません。"
   },
   "accounts": {
     "heading": "アカウント",
-    "empty": "アカウントはまだありません。Microsoft・オフライン・外部Yggdrasilのサインインはアカウントスライスで提供されます。"
+    "description": "Microsoft、オフライン、外部YggdrasilのIDを1つのアカウントモデルで扱います。",
+    "add": "アカウントを追加",
+    "signedOut": "アカウント未サインイン",
+    "signedOutBody": "認証情報がWebViewに入ることはありません。コアがリフレッシュトークンをプラットフォームの保管庫に保存します。",
+    "types": {
+      "microsoft": {
+        "title": "Microsoft",
+        "body": "システムブラウザとPKCEによる公式サインイン。"
+      },
+      "offline": {
+        "title": "オフライン",
+        "body": "テストとLANプレイ用の、明確に区別されたローカルID。"
+      },
+      "yggdrasil": {
+        "title": "外部Yggdrasil",
+        "body": "初回接続時に明示的な信頼確認を行うカスタム認証。"
+      }
+    }
   },
-  "tasks": {
-    "heading": "タスク",
-    "empty": "実行中のタスクはありません。ダウンロードとインストールのタスクがここに表示されます。"
+  "developer": {
+    "heading": "開発",
+    "description": "Gradleプロジェクトをインスタンスに紐づけ、1つのワークスペースでビルド、配置、デバッグします。",
+    "gateTitle": "開発者モードはオフです",
+    "gateBody": "オンにすると開発ツールが表示されます。コアのコマンド境界は変わらず、表示される範囲だけが変わります。",
+    "gateAction": "開発者モードを有効にする",
+    "disableAction": "開発者モードをオフにする",
+    "enabledTitle": "開発者モードはオンです",
+    "toolsTitle": "開発ツール",
+    "enabledBody": "これらの機能はランチャーコアが安定した後に、M8開発ワークスペースから予定されています。",
+    "tools": {
+      "build": {
+        "title": "Gradleビルド",
+        "body": "プロジェクト内のWrapperを実行し、ビルド成果物を特定します。"
+      },
+      "debug": {
+        "title": "デバッグ実行",
+        "body": "紐づけたインスタンスへ配置し、JDWPを接続します。"
+      },
+      "daemon": {
+        "title": "開発者デーモン",
+        "body": "CLIとIDEクライアント専用のループバックブリッジ。"
+      }
+    }
   },
   "settings": {
     "heading": "設定",
+    "description": "外観、言語、開発ツール、ビルド情報。",
+    "appearance": "外観",
+    "appearanceDescription": "どのプラットフォームでもウィンドウは不透明です。Mica、Acrylic、vibrancyは使いません。",
     "language": "表示言語",
-    "languageDescription": "再起動なしで即座に反映されます。",
-    "about": "このアプリについて",
-    "aboutDescription": "Mnelysは現在M1シェル段階です。ウィンドウ、ナビゲーション、型付きコア境界、国際化のみを備え、Minecraftのインストールや起動はまだできません。"
+    "languageDescription": "再起動なしで即座に反映され、このインストールに保存されます。",
+    "developer": "開発者モード",
+    "developerDescription": "ナビゲーションに「開発」を表示します。追加のコア機能を許可するものではありません。",
+    "about": "このビルドについて",
+    "aboutDescription": "Mnelysは現在M1シェル段階です。ウィンドウ、ナビゲーション、型付きコア境界、国際化、デザインシステムを備えていますが、Minecraftのインストールや起動はまだできません。",
+    "platform": "プラットフォーム",
+    "webview": "Webビュー",
+    "coreVersion": "コアバージョン",
+    "contract": "コントラクト",
+    "icons": "インターフェースアイコン",
+    "iconsDescription": "すべてのインターフェースアイコンはLucide（ISC）です。アプリアイコンはMnelysの原本アートワークのままです。"
+  },
+  "tasks": {
+    "title": "タスクセンター",
+    "description": "長時間の処理と、このセッションのコアログ。",
+    "emptyTitle": "タスクはありません",
+    "emptyBody": "長時間の処理はRustコアから段階、速度、キャンセル、再試行の状態を報告します。",
+    "footer": "タスクセンターはM2バーティカルスライスで接続されます。",
+    "close": "タスクセンターを閉じる",
+    "tabs": {
+      "label": "タスクセンターのセクション",
+      "tasks": "タスク",
+      "logs": "ログ"
+    },
+    "logs": {
+      "loading": "コアログを読み込み中…",
+      "emptyTitle": "ログはありません",
+      "emptyBody": "このセッションではまだ何も記録されていません。アプリの実行中に新しいログがここに表示されます。",
+      "errorTitle": "ログを利用できません",
+      "errorBody": "コアがログバッファを返しませんでした。シェルの他の部分は引き続き動作します。",
+      "count": "件数：{{count}}",
+      "clear": "ログを消去",
+      "clearError": "コアはログを消去できませんでした。もう一度お試しください。",
+      "confirmTitle": "すべてのログを消去しますか？",
+      "confirmBody": "このセッションのメモリ内ログからすべての項目を削除します。元に戻せません。",
+      "confirmAction": "ログを消去",
+      "confirmCancel": "キャンセル",
+      "level": {
+        "trace": "トレース",
+        "debug": "デバッグ",
+        "info": "情報",
+        "warn": "警告",
+        "error": "エラー"
+      }
+    }
   },
   "error": {
     "title": "エラーが発生しました",

@@ -2,46 +2,231 @@
   "app": {
     "name": "Mnelys",
     "chineseName": "忆涟",
-    "tagline": "AI-native Minecraft launcher and development workspace"
+    "tagline": "AI-native Minecraft launcher and developer workspace",
+    "stage": "M1 shell"
   },
   "nav": {
+    "label": "Main navigation",
+    "start": "Start",
     "instances": "Instances",
+    "downloads": "Downloads",
+    "multiplayer": "Multiplayer",
+    "developer": "Developer",
     "accounts": "Accounts",
-    "tasks": "Tasks",
     "settings": "Settings"
+  },
+  "topbar": {
+    "theme": "Appearance: {{theme}}",
+    "tasks": "Task center",
+    "signedOut": "Not signed in"
   },
   "status": {
     "checking": "Checking the Mnelys core…",
     "coreConnected": "Core connected",
-    "coreUnavailable": "Core unavailable"
+    "coreUnavailable": "Core unavailable",
+    "coreUnavailableHint": "No Rust core is attached. This is expected in the browser-only pnpm dev preview.",
+    "contract": "contract v{{version}}"
   },
-  "home": {
-    "heading": "Welcome to Mnelys",
-    "intro": "This build is the M1 shell. The Rust core reports version {{version}} (contract v{{contractVersion}}).",
-    "runtimeHeading": "Runtime",
-    "platform": "Platform",
-    "architecture": "Architecture",
-    "webview": "Web view",
-    "debugBuild": "Debug build"
+  "theme": {
+    "label": "Appearance",
+    "description": "Follow the system, or force a light or dark shell for this install.",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "common": {
+    "skipToContent": "Skip to content",
+    "comingSoon": "Planned",
+    "availableIn": "Arrives in {{milestone}}",
+    "disabledHint": "This capability is not implemented yet.",
+    "open": "Open",
+    "m1": "M1 shell",
+    "m2": "M2 vertical slice",
+    "m3": "M3 accounts",
+    "m6": "M6 content",
+    "m7": "M7 multiplayer",
+    "m8": "M8 developer workspace"
+  },
+  "start": {
+    "heading": "Start",
+    "description": "Prepare an account and an instance, then launch the game.",
+    "welcomeTitle": "No instance is ready to launch",
+    "welcomeBody": "The shell is in place. The first Vanilla slice will add metadata, Java discovery and the launch pipeline.",
+    "openInstances": "Go to instances",
+    "launch": "Launch game",
+    "launchDisabled": "Available after the first instance is installed",
+    "cards": {
+      "account": {
+        "title": "Account",
+        "body": "No account is signed in yet.",
+        "value": "Not signed in"
+      },
+      "instances": {
+        "title": "Instances",
+        "body": "Instances keep mods, worlds and Java settings isolated.",
+        "value": "0 installed"
+      },
+      "downloads": {
+        "title": "Downloads",
+        "body": "Metadata, Java and content downloads will be queued here.",
+        "value": "Idle"
+      }
+    },
+    "nextHeading": "What comes next",
+    "nextBody": "This shell is the M1 deliverable. The next milestone makes the Vanilla path real.",
+    "steps": {
+      "metadata": {
+        "title": "Version metadata and Java",
+        "body": "Resolve Mojang metadata, choose a matching runtime and verify every file."
+      },
+      "instance": {
+        "title": "Atomic instance creation",
+        "body": "Stage the instance, verify all artifacts and commit only when everything succeeds."
+      },
+      "launch": {
+        "title": "Launch to the main menu",
+        "body": "Build the argument array, stream logs and classify the exit."
+      }
+    }
   },
   "instances": {
     "heading": "Instances",
-    "empty": "No instances yet. Instance creation arrives with the first vertical slice."
+    "description": "Each instance owns its game directory, mods, worlds, Java selection and logs.",
+    "create": "New instance",
+    "emptyTitle": "No instances yet",
+    "emptyBody": "Instance creation arrives with the first Vanilla slice. Until then this page is an honest empty state, not a mock list.",
+    "plannedTitle": "How instances will work",
+    "plannedBody": "Create, copy, import, export and repair all share one install plan.",
+    "plannedNotice": "An instance becomes visible only after its files are verified and committed atomically, so a failed install never leaves a half-usable entry."
+  },
+  "downloads": {
+    "heading": "Downloads",
+    "description": "One queue for metadata, Java runtimes, loaders and content.",
+    "emptyTitle": "Nothing is downloading",
+    "emptyBody": "The download service belongs to the core slice. It will support hashes, resumable transfers, mirror fallback and cancellation.",
+    "providersHeading": "Planned sources",
+    "providersBody": "Mirrors may change transport only; the trust hash always comes from the original source.",
+    "providers": {
+      "mojang": {
+        "title": "Mojang metadata",
+        "body": "Version manifests, libraries and assets."
+      },
+      "java": {
+        "title": "Managed Java",
+        "body": "Verified runtimes matched to the selected game version."
+      },
+      "content": {
+        "title": "Modrinth",
+        "body": "Mods, packs, resource packs and shaders through a typed provider."
+      }
+    }
+  },
+  "multiplayer": {
+    "heading": "Multiplayer",
+    "description": "Terracotta rooms for playing with friends without opening a public port.",
+    "createRoom": "Create room",
+    "emptyTitle": "Multiplayer is not wired up",
+    "emptyBody": "This page is reserved for room creation, members, relay status and diagnostics.",
+    "safetyHeading": "Security baseline",
+    "safetyBody": "The local management endpoint will listen on loopback only, use a short-lived token and never open a public port automatically."
   },
   "accounts": {
     "heading": "Accounts",
-    "empty": "No accounts yet. Microsoft, offline and external Yggdrasil sign-in arrive with the account slice."
+    "description": "Microsoft, offline and external Yggdrasil identities share one account model.",
+    "add": "Add account",
+    "signedOut": "No account is signed in",
+    "signedOutBody": "Credentials never enter the webview. The core will keep refresh tokens in the platform vault.",
+    "types": {
+      "microsoft": {
+        "title": "Microsoft",
+        "body": "Official sign-in through the system browser with PKCE."
+      },
+      "offline": {
+        "title": "Offline",
+        "body": "A clearly labelled local identity for testing and LAN play."
+      },
+      "yggdrasil": {
+        "title": "External Yggdrasil",
+        "body": "Custom authentication with an explicit trust prompt."
+      }
+    }
   },
-  "tasks": {
-    "heading": "Tasks",
-    "empty": "Nothing is running. Download and install tasks will appear here."
+  "developer": {
+    "heading": "Developer",
+    "description": "Bind a Gradle project to an instance, build, deploy and debug from one workspace.",
+    "gateTitle": "Developer mode is off",
+    "gateBody": "Turn it on to reveal developer tools. The core keeps the same command boundary; the mode only changes the visible surface.",
+    "gateAction": "Enable developer mode",
+    "disableAction": "Turn off developer mode",
+    "enabledTitle": "Developer mode is on",
+    "toolsTitle": "Developer tools",
+    "enabledBody": "These capabilities are scheduled after the launcher core is stable, starting with the M8 developer workspace.",
+    "tools": {
+      "build": {
+        "title": "Gradle build",
+        "body": "Run the project wrapper and locate the built artifact."
+      },
+      "debug": {
+        "title": "Debug run",
+        "body": "Deploy to the bound instance and attach JDWP."
+      },
+      "daemon": {
+        "title": "Developer daemon",
+        "body": "A loopback-only bridge for CLI and IDE clients."
+      }
+    }
   },
   "settings": {
     "heading": "Settings",
+    "description": "Appearance, language, developer tools and build facts.",
+    "appearance": "Appearance",
+    "appearanceDescription": "The window stays opaque on every platform. No Mica, Acrylic or vibrancy.",
     "language": "Language",
-    "languageDescription": "Applies immediately, without a restart.",
-    "about": "About",
-    "aboutDescription": "Mnelys is at the M1 shell stage: window, navigation, a typed core boundary and internationalization. It cannot install or launch Minecraft yet."
+    "languageDescription": "Applies immediately and persists for this install.",
+    "developer": "Developer mode",
+    "developerDescription": "Shows the Developer section in the navigation. It does not grant additional core capabilities.",
+    "about": "About this build",
+    "aboutDescription": "Mnelys is at the M1 shell stage: window, navigation, a typed core boundary, internationalization and the design system. It cannot install or launch Minecraft yet.",
+    "platform": "Platform",
+    "webview": "Web view",
+    "coreVersion": "Core version",
+    "contract": "Contract",
+    "icons": "Interface icons",
+    "iconsDescription": "Every interface icon comes from Lucide (ISC). The application icon remains the Mnelys source artwork."
+  },
+  "tasks": {
+    "title": "Task center",
+    "description": "Long-running work and this session's core log.",
+    "emptyTitle": "No tasks",
+    "emptyBody": "Long-running work will report its stage, speed, cancellation and retry state from the Rust core.",
+    "footer": "The task center connects with the M2 vertical slice.",
+    "close": "Close task center",
+    "tabs": {
+      "label": "Task center sections",
+      "tasks": "Tasks",
+      "logs": "Logs"
+    },
+    "logs": {
+      "loading": "Reading the core log…",
+      "emptyTitle": "No log entries",
+      "emptyBody": "Nothing has been recorded in this session yet. New entries appear here while the app runs.",
+      "errorTitle": "Logs unavailable",
+      "errorBody": "The core did not return its log buffer. The rest of the shell keeps working.",
+      "count": "Entries: {{count}}",
+      "clear": "Clear logs",
+      "clearError": "The core did not clear the log. Try again.",
+      "confirmTitle": "Clear all log entries?",
+      "confirmBody": "This removes every entry from this session's in-memory log. It cannot be undone.",
+      "confirmAction": "Clear logs",
+      "confirmCancel": "Cancel",
+      "level": {
+        "trace": "Trace",
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error"
+      }
+    }
   },
   "error": {
     "title": "Something went wrong",

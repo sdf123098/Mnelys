@@ -2,46 +2,231 @@
   "app": {
     "name": "Mnelys",
     "chineseName": "忆涟",
-    "tagline": "面向玩家与模组开发者的 AI 原生 Minecraft 启动器与开发工作区"
+    "tagline": "面向玩家与模组开发者的 AI 原生 Minecraft 启动器与开发工作区",
+    "stage": "M1 外壳"
   },
   "nav": {
+    "label": "主导航",
+    "start": "开始",
     "instances": "实例",
+    "downloads": "下载",
+    "multiplayer": "联机",
+    "developer": "开发",
     "accounts": "账户",
-    "tasks": "任务",
     "settings": "设置"
+  },
+  "topbar": {
+    "theme": "外观：{{theme}}",
+    "tasks": "任务中心",
+    "signedOut": "未登录"
   },
   "status": {
     "checking": "正在检查 Mnelys 核心…",
     "coreConnected": "核心已连接",
-    "coreUnavailable": "核心不可用"
+    "coreUnavailable": "核心不可用",
+    "coreUnavailableHint": "当前没有连接 Rust 核心。使用 pnpm dev 单独预览界面时，这是预期情况。",
+    "contract": "契约 v{{version}}"
   },
-  "home": {
-    "heading": "欢迎使用 Mnelys",
-    "intro": "当前构建是 M1 外壳。Rust 核心版本 {{version}}（契约 v{{contractVersion}}）。",
-    "runtimeHeading": "运行时",
-    "platform": "平台",
-    "architecture": "架构",
-    "webview": "Web 视图",
-    "debugBuild": "调试构建"
+  "theme": {
+    "label": "外观",
+    "description": "跟随系统，或为本次安装强制使用浅色、深色界面。",
+    "system": "跟随系统",
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "common": {
+    "skipToContent": "跳到主要内容",
+    "comingSoon": "计划中",
+    "availableIn": "将在 {{milestone}} 提供",
+    "disabledHint": "该能力尚未实现。",
+    "open": "打开",
+    "m1": "M1 外壳",
+    "m2": "M2 垂直切片",
+    "m3": "M3 账户",
+    "m6": "M6 内容平台",
+    "m7": "M7 联机",
+    "m8": "M8 开发者工作区"
+  },
+  "start": {
+    "heading": "开始",
+    "description": "先准备账户与实例，然后启动游戏。",
+    "welcomeTitle": "还没有可以启动的实例",
+    "welcomeBody": "外壳已经就绪。首个 Vanilla 切片将补上版本元数据、Java 发现与启动管线。",
+    "openInstances": "前往实例",
+    "launch": "启动游戏",
+    "launchDisabled": "安装首个实例后可用",
+    "cards": {
+      "account": {
+        "title": "账户",
+        "body": "尚未登录任何账户。",
+        "value": "未登录"
+      },
+      "instances": {
+        "title": "实例",
+        "body": "实例用于隔离模组、存档与 Java 设置。",
+        "value": "0 个实例"
+      },
+      "downloads": {
+        "title": "下载",
+        "body": "版本元数据、Java 与内容下载会在这里排队。",
+        "value": "空闲"
+      }
+    },
+    "nextHeading": "后续切片",
+    "nextBody": "当前外壳是 M1 交付物，下一个里程碑会让 Vanilla 路径真正可用。",
+    "steps": {
+      "metadata": {
+        "title": "版本元数据与 Java",
+        "body": "解析 Mojang 元数据，选择匹配的运行时并校验每个文件。"
+      },
+      "instance": {
+        "title": "原子化创建实例",
+        "body": "先写入暂存区，校验全部产物，只有整体成功才提交。"
+      },
+      "launch": {
+        "title": "启动到游戏主菜单",
+        "body": "构建参数数组，实时转发日志并分类退出原因。"
+      }
+    }
   },
   "instances": {
     "heading": "实例",
-    "empty": "还没有实例。实例创建功能将随第一个垂直切片提供。"
+    "description": "每个实例拥有独立的游戏目录、模组、存档、Java 选择与日志。",
+    "create": "新建实例",
+    "emptyTitle": "还没有实例",
+    "emptyBody": "实例创建随首个 Vanilla 切片提供。在那之前，这里展示的是如实说明的空状态，而不是假数据列表。",
+    "plannedTitle": "实例将如何工作",
+    "plannedBody": "创建、复制、导入、导出与修复共用同一份安装计划。",
+    "plannedNotice": "只有文件全部校验并原子提交后，实例才会出现在列表中；失败的安装不会留下半成品。"
+  },
+  "downloads": {
+    "heading": "下载",
+    "description": "元数据、Java 运行时、加载器与内容共用一条下载队列。",
+    "emptyTitle": "当前没有下载",
+    "emptyBody": "下载服务属于核心切片，将支持哈希校验、断点续传、镜像回退与取消。",
+    "providersHeading": "计划接入的来源",
+    "providersBody": "镜像只改变传输位置，信任哈希始终来自原始来源。",
+    "providers": {
+      "mojang": {
+        "title": "Mojang 元数据",
+        "body": "版本清单、库与资源文件。"
+      },
+      "java": {
+        "title": "托管 Java",
+        "body": "与游戏版本匹配且经过校验的运行时。"
+      },
+      "content": {
+        "title": "Modrinth",
+        "body": "通过类型化 Provider 接入模组、整合包、资源包与光影。"
+      }
+    }
+  },
+  "multiplayer": {
+    "heading": "联机",
+    "description": "通过陶瓦房间与朋友联机，无需开放公网端口。",
+    "createRoom": "创建房间",
+    "emptyTitle": "联机尚未接入",
+    "emptyBody": "这一页为房间创建、成员、中继状态与诊断预留。",
+    "safetyHeading": "安全基线",
+    "safetyBody": "本机管理接口只监听回环地址，使用短期令牌，并且不会自动开放公网端口。"
   },
   "accounts": {
     "heading": "账户",
-    "empty": "还没有账户。Microsoft、离线与外置 Yggdrasil 登录将随账户切片提供。"
+    "description": "Microsoft、离线与外置 Yggdrasil 身份共用同一套账户模型。",
+    "add": "添加账户",
+    "signedOut": "尚未登录账户",
+    "signedOutBody": "凭据不会进入 WebView；核心将刷新令牌保存在平台保险库。",
+    "types": {
+      "microsoft": {
+        "title": "Microsoft",
+        "body": "通过系统浏览器与 PKCE 完成官方登录。"
+      },
+      "offline": {
+        "title": "离线",
+        "body": "明确标记的本地身份，用于测试与局域网游戏。"
+      },
+      "yggdrasil": {
+        "title": "外置 Yggdrasil",
+        "body": "自定义认证，并在首次连接时给出明确信任提示。"
+      }
+    }
   },
-  "tasks": {
-    "heading": "任务",
-    "empty": "当前没有正在运行的任务。下载与安装任务会显示在这里。"
+  "developer": {
+    "heading": "开发",
+    "description": "把 Gradle 项目绑定到实例，在同一工作区构建、部署与调试。",
+    "gateTitle": "开发者模式未开启",
+    "gateBody": "开启后才会显示开发工具。核心命令边界不变，该模式只改变可见界面。",
+    "gateAction": "开启开发者模式",
+    "disableAction": "关闭开发者模式",
+    "enabledTitle": "开发者模式已开启",
+    "toolsTitle": "开发工具",
+    "enabledBody": "这些能力安排在启动器核心稳定之后，从 M8 开发者工作区开始。",
+    "tools": {
+      "build": {
+        "title": "Gradle 构建",
+        "body": "调用项目内的 Wrapper 并定位构建产物。"
+      },
+      "debug": {
+        "title": "调试运行",
+        "body": "部署到绑定实例并附加 JDWP。"
+      },
+      "daemon": {
+        "title": "开发者 Daemon",
+        "body": "仅供 CLI 与 IDE 使用的回环桥接。"
+      }
+    }
   },
   "settings": {
     "heading": "设置",
+    "description": "外观、语言、开发工具与构建信息。",
+    "appearance": "外观",
+    "appearanceDescription": "三平台窗口都保持不透明，不使用 Mica、Acrylic 或 vibrancy。",
     "language": "界面语言",
-    "languageDescription": "切换后立即生效，无需重启。",
-    "about": "关于",
-    "aboutDescription": "Mnelys 目前处于 M1 外壳阶段：窗口、导航、类型化核心边界与国际化。尚不具备安装或启动 Minecraft 的能力。"
+    "languageDescription": "切换后立即生效，并为本次安装保留。",
+    "developer": "开发者模式",
+    "developerDescription": "在导航中显示“开发”分区；不会授予额外的核心能力。",
+    "about": "关于当前构建",
+    "aboutDescription": "Mnelys 目前处于 M1 外壳阶段：窗口、导航、类型化核心边界、国际化与设计系统。尚不具备安装或启动 Minecraft 的能力。",
+    "platform": "平台",
+    "webview": "Web 视图",
+    "coreVersion": "核心版本",
+    "contract": "契约",
+    "icons": "界面图标",
+    "iconsDescription": "所有界面图标来自 Lucide（ISC）。应用图标仍使用 Mnelys 原始品牌素材。"
+  },
+  "tasks": {
+    "title": "任务中心",
+    "description": "长任务与本次会话的核心日志。",
+    "emptyTitle": "暂无任务",
+    "emptyBody": "长任务会由 Rust 核心上报阶段、速度、取消与重试状态。",
+    "footer": "任务中心将随 M2 垂直切片接入。",
+    "close": "关闭任务中心",
+    "tabs": {
+      "label": "任务中心分区",
+      "tasks": "任务",
+      "logs": "日志"
+    },
+    "logs": {
+      "loading": "正在读取核心日志…",
+      "emptyTitle": "暂无日志",
+      "emptyBody": "本次会话尚未记录任何内容。应用运行期间，新日志会显示在这里。",
+      "errorTitle": "日志不可用",
+      "errorBody": "核心没有返回日志缓冲区，界面其余部分仍可正常使用。",
+      "count": "条目：{{count}}",
+      "clear": "清空日志",
+      "clearError": "核心未能清空日志，请重试。",
+      "confirmTitle": "清空全部日志？",
+      "confirmBody": "这会移除本次会话内存日志中的全部条目，且无法撤销。",
+      "confirmAction": "清空日志",
+      "confirmCancel": "取消",
+      "level": {
+        "trace": "跟踪",
+        "debug": "调试",
+        "info": "信息",
+        "warn": "警告",
+        "error": "错误"
+      }
+    }
   },
   "error": {
     "title": "出错了",

@@ -36,15 +36,19 @@
 
 ## 当前进度
 
-当前处于 M0“独立立项与技术验证”，并因技术路线切换而重新开始：
+当前处于 M1“Design System 与 Shell”，M0 的桌面打包与运行时验证仍未关闭：
 
 - [x] 独立仓库、许可证、ADR 与安全基线
 - [x] 确立 Tauri v2 运行时与 UI 基线（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
 - [x] 移除 .NET/Avalonia 存量实现（实现本身仍保留在本仓库 Git 历史中）
 - [x] 确定前端框架与技术栈（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）
 - [x] Rust 核心骨架、命令边界与前后端契约测试
-- [x] React 前端工程、三语 i18n 与基础组件测试
-- [ ] Windows / macOS / Linux 三平台打包 PoC（Tauri bundler）
+- [x] 设计系统 token、浅色 / 深色主题与基础控件
+- [x] 单窗口 Shell、响应式导航、任务中心、设置与开发者模式
+- [x] 界面图标统一为 Lucide（ISC），见 [ICONS.md](docs/ICONS.md)
+- [x] 核心日志面板、原生 `<dialog>` 确认框与 Cargo workspace 分层骨架
+- [x] GitHub Actions：前端检查、三平台 Rust 矩阵与三平台桌面打包工作流
+- [ ] Tauri 桌面运行时、DPI 与三平台打包产物证据
 - [ ] 首个 Vanilla 垂直切片
 
 上一轮 Avalonia 实现取得的打包证据见 [M0 打包 PoC 报告](docs/M0_PACKAGING_POC.md)。那是历史记录，**不构成 Tauri 基线的证据**。
@@ -62,9 +66,9 @@
 ## 技术栈
 
 - **Tauri 2.x** 作为桌面壳与运行时（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
-- **Rust** 实现核心：账户、实例、Java 管理、下载、缓存、启动管线与 IPC
+- **Rust** 实现核心：账户、实例、Java 管理、下载、缓存、启动管线与 IPC。核心是 Cargo workspace（domain / application / infrastructure / presentation），`src-tauri` 只做组合根
 - 平台 WebView 渲染：Windows 用 WebView2，macOS 用 WKWebView，Linux 用 WebKitGTK
-- 前端为 **React 19 + TypeScript**（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)），Vite 构建，`react-router` 采用 hash 路由，服务端状态用 TanStack Query，瞬时状态用 Zustand，界面文本用 i18next
+- 前端为 **React 19 + TypeScript**（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)），Vite 构建，`react-router` 采用 hash 路由，服务端状态用 TanStack Query，瞬时状态用 Zustand，界面文本用 i18next，界面图标用 Lucide（ISC，见 [ICONS.md](docs/ICONS.md)）
 - Rust 工具链由 `rust-toolchain.toml` 固定；Node.js 与 pnpm 版本在 `package.json` 中固定
 - 根窗口保持不透明：禁用 Mica、Acrylic、macOS vibrancy 与桌面采样；全局样式表以 `backdrop-filter: none !important` 兜底
 - 前端只能通过显式声明的 Tauri 命令接触原生能力，且 `invoke` 只允许出现在 `src/ipc/`；能力集按窗口声明并逐项评审
@@ -104,6 +108,12 @@ pnpm tauri:dev                                     # 启动桌面应用（会先
 | `pnpm test`                           | Vitest + Testing Library             |
 | `pnpm tauri:dev` / `pnpm tauri:build` | Tauri 开发与打包                     |
 
+## 持续集成与打包
+
+- [`CI`](.github/workflows/ci.yml)：前端格式、Lint、类型检查、测试与构建；Windows / macOS / Linux 三平台执行 `cargo fmt`、`cargo clippy -D warnings` 与 `cargo test`。
+- [`Desktop packages`](.github/workflows/desktop-package.yml)：手动触发或 `v*` 标签运行，上传 NSIS、macOS arm64 DMG 与 AppImage。产物未签名，仅用于构建验证；Apple 签名与公证需要仓库外凭据。
+- 常规验证以 CI 为准，本地桌面构建仅用于必须取得产物或交互调试的例外场景。
+
 > `src-tauri/` 的编译期会校验前端产物存在。若要单独跑 `cargo check`、`cargo test` 或 `cargo clippy`，必须先执行一次 `pnpm build`，否则 `tauri::generate_context!` 会因找不到 `dist/` 而失败。
 
 ## 打包
@@ -131,6 +141,7 @@ Windows 目标显式指定为 `x86_64-pc-windows-msvc`；macOS 为 `aarch64-appl
 ```text
 Mnelys/
 ├─ assets/                 品牌源文件
+├─ crates/                 Rust 核心分层：domain / application / infrastructure / presentation
 ├─ docs/                   计划、架构、安全、支持矩阵与 ADR
 ├─ packaging/              三平台打包说明（产物由 Tauri bundler 生成）
 ├─ src/                    React 19 前端
@@ -142,18 +153,19 @@ Mnelys/
 │  ├─ state/               跨页面瞬时状态
 │  ├─ styles/              Token 与全局样式
 │  └─ test/                测试初始化
-├─ src-tauri/              Tauri v2 壳与 Rust 核心
+├─ src-tauri/              Tauri v2 壳、窗口配置与组合根
 │  ├─ capabilities/        按窗口声明的能力集
 │  ├─ icons/               应用图标
-│  ├─ src/                 commands、error 与 `run()` 入口
+│  ├─ src/                 组合根：装配状态、挂载命令、启动运行时
 │  └─ tests/               前后端命令契约测试
+├─ Cargo.toml / Cargo.lock  工作区清单与依赖锁
 ├─ package.json / pnpm-lock.yaml
 ├─ rust-toolchain.toml
 ├─ tsconfig.json / vite.config.ts / eslint.config.js
 └─ .prettierrc.json
 ```
 
-`crates/` 分层（domain / application / presentation / infrastructure / providers / platform）计划在 M1 引入；M0 阶段 Rust 代码保留在 `src-tauri/src/` 内。
+Rust 采用 Cargo workspace 分层：`mnelys-domain`（失败词汇）、`mnelys-application`（用例与端口）、`mnelys-infrastructure`（适配器）、`mnelys-presentation`（Tauri 命令与 handler）；`src-tauri` 仅负责组合。Providers 与 platform 适配器等对应能力出现后再拆分为独立 crate。
 
 ## 贡献与独立实现边界
 

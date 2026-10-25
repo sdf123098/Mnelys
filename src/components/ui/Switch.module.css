@@ -1,0 +1,87 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mnelys-space-4);
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: none;
+  cursor: pointer;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  min-width: 0;
+}
+
+.label {
+  font-weight: var(--mnelys-font-weight-medium);
+  cursor: pointer;
+}
+
+.description {
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  width: 2.5rem;
+  height: 1.5rem;
+  flex: none;
+  border: 1px solid var(--mnelys-color-border-strong);
+  border-radius: var(--mnelys-radius-pill);
+  background-color: var(--mnelys-color-surface-sunken);
+  transition:
+    background-color var(--mnelys-duration-fast) var(--mnelys-easing-standard),
+    border-color var(--mnelys-duration-fast) var(--mnelys-easing-standard);
+}
+
+.thumb {
+  position: absolute;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--mnelys-radius-pill);
+  background-color: var(--mnelys-color-surface);
+  box-shadow: var(--mnelys-shadow-panel);
+  transition: transform var(--mnelys-duration-normal) var(--mnelys-easing-standard);
+}
+
+.input:checked + .track {
+  background-color: var(--mnelys-color-accent);
+  border-color: var(--mnelys-color-accent);
+}
+
+.input:checked + .track .thumb {
+  transform: translateX(1rem);
+}
+
+.input:focus-visible + .track {
+  outline: 2px solid var(--mnelys-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.input:disabled + .track {
+  opacity: 0.5;
+}

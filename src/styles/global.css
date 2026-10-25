@@ -26,6 +26,11 @@ body,
   height: 100%;
 }
 
+html {
+  overscroll-behavior: none;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   font-family: var(--mnelys-font-sans);
@@ -69,9 +74,21 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input,
+select,
+textarea {
   font: inherit;
   color: inherit;
+}
+
+button {
+  background: none;
+}
+
+svg {
+  display: block;
+  flex: none;
 }
 
 code,

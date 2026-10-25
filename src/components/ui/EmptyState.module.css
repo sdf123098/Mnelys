@@ -1,0 +1,40 @@
+.empty {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--mnelys-space-2);
+  padding: var(--mnelys-space-7) var(--mnelys-space-5);
+  background-color: var(--mnelys-color-surface);
+  border: 1px dashed var(--mnelys-color-border-strong);
+  border-radius: var(--mnelys-radius-lg);
+  text-align: center;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: var(--mnelys-space-2);
+  border-radius: var(--mnelys-radius-pill);
+  background-color: var(--mnelys-color-surface-sunken);
+  color: var(--mnelys-color-text-muted);
+}
+
+.empty h2 {
+  font-size: var(--mnelys-font-size-lg);
+  font-weight: var(--mnelys-font-weight-semibold);
+}
+
+.empty p {
+  max-width: 38rem;
+  color: var(--mnelys-color-text-muted);
+}
+
+.action {
+  margin-top: var(--mnelys-space-2);
+}
+
+.footnote {
+  font-size: var(--mnelys-font-size-xs);
+}

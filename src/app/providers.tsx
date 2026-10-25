@@ -1,6 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { usePreferences } from '@/state/preferences-store';
+import { applyTheme } from '@/state/theme';
 
 function createQueryClient(): QueryClient {
   return new QueryClient({
@@ -22,6 +26,16 @@ function createQueryClient(): QueryClient {
 
 export function AppProviders({ children }: { readonly children: ReactNode }) {
   const [queryClient] = useState(createQueryClient);
+  const theme = usePreferences((state) => state.theme);
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.resolvedLanguage ?? 'en';
+  }, [i18n, i18n.resolvedLanguage]);
 
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

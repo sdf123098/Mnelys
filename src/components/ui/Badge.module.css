@@ -1,0 +1,45 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mnelys-space-1);
+  max-width: 100%;
+  padding: 0.125rem var(--mnelys-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--mnelys-radius-pill);
+  font-size: var(--mnelys-font-size-xs);
+  font-weight: var(--mnelys-font-weight-medium);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.neutral {
+  background-color: var(--mnelys-color-surface-sunken);
+  border-color: var(--mnelys-color-border);
+  color: var(--mnelys-color-text-muted);
+}
+
+.accent {
+  background-color: var(--mnelys-color-accent-soft);
+  border-color: transparent;
+  color: var(--mnelys-color-accent);
+}
+
+.success {
+  background-color: var(--mnelys-color-success-soft);
+  color: var(--mnelys-color-success);
+}
+
+.warning {
+  background-color: var(--mnelys-color-warning-soft);
+  color: var(--mnelys-color-warning);
+}
+
+.danger {
+  background-color: var(--mnelys-color-danger-soft);
+  color: var(--mnelys-color-danger);
+}
+
+.info {
+  background-color: var(--mnelys-color-info-soft);
+  color: var(--mnelys-color-info);
+}

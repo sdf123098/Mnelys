@@ -36,15 +36,19 @@ These items describe the roadmap and are not all implemented today.
 
 ## Current status
 
-Mnelys is at M0, independent setup and technical validation, restarted after the stack change:
+Mnelys is at M1, Design System and Shell. The M0 packaging and desktop runtime checks remain open:
 
 - [x] Independent repository, license, ADRs, and security baseline
 - [x] Tauri v2 runtime and UI baseline established ([ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md))
 - [x] .NET/Avalonia implementation removed (it remains in this repository's Git history)
 - [x] Frontend framework and stack decided ([ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md))
 - [x] Rust core skeleton, command boundary, and cross-boundary contract tests
-- [x] React frontend project, three-language i18n, and component tests
-- [ ] Windows, macOS, and Linux packaging proof of concept through the Tauri bundler
+- [x] Design tokens, light/dark themes, and accessible base controls
+- [x] Single-window shell, responsive navigation, task center, settings, and developer mode
+- [x] Interface icons consolidated on Lucide (ISC), see [ICONS.md](docs/ICONS.md)
+- [x] Core log panel, a native `<dialog>` confirmation, and the Cargo workspace layering skeleton
+- [x] GitHub Actions: frontend checks, a three-platform Rust matrix, and desktop packaging workflows
+- [ ] Tauri desktop runtime, DPI checks, and three-platform packaging evidence
 - [ ] First end-to-end Vanilla slice
 
 The packaging evidence from the earlier Avalonia implementation is recorded in the [M0 packaging PoC report](docs/M0_PACKAGING_POC.md). It is a historical record and is **not** evidence for the Tauri baseline.
@@ -62,9 +66,9 @@ The packaging evidence from the earlier Avalonia implementation is recorded in t
 ## Technology
 
 - **Tauri 2.x** as the desktop shell and runtime ([ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md))
-- **Rust** for the core: accounts, instances, Java management, downloads, cache, launch pipeline, and IPC
+- **Rust** for the core: accounts, instances, Java management, downloads, cache, launch pipeline, and IPC. The core is a Cargo workspace (domain / application / infrastructure / presentation); `src-tauri` is only the composition root
 - Platform webviews: WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux
-- The frontend is **React 19 with TypeScript** ([ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)), built by Vite, with hash routing through `react-router`, TanStack Query for server state, Zustand for transient state, and i18next for UI text
+- The frontend is **React 19 with TypeScript** ([ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)), built by Vite, with hash routing through `react-router`, TanStack Query for server state, Zustand for transient state, i18next for UI text, and Lucide for interface icons (ISC, see [ICONS.md](docs/ICONS.md))
 - The Rust toolchain is pinned in `rust-toolchain.toml`; Node.js and pnpm are pinned in `package.json`
 - The root window stays opaque: Mica, Acrylic, macOS vibrancy, and desktop sampling are prohibited; a global `backdrop-filter: none !important` rule is the fallback
 - The frontend reaches native capability only through explicitly declared Tauri commands, and `invoke` may only appear inside `src/ipc/`; capabilities are declared per window and reviewed
@@ -104,6 +108,12 @@ Scripts in `package.json`:
 | `pnpm test`                           | Vitest with Testing Library                    |
 | `pnpm tauri:dev` / `pnpm tauri:build` | Tauri development and packaging                |
 
+## Continuous integration and packaging
+
+- [`CI`](.github/workflows/ci.yml) runs frontend format, lint, type-check, tests, and build, plus `cargo fmt`, `cargo clippy -D warnings`, and `cargo test` on Windows, macOS, and Linux.
+- [`Desktop packages`](.github/workflows/desktop-package.yml) runs on demand or on `v*` tags and uploads an NSIS installer, a macOS arm64 DMG, and an AppImage. The artifacts are unsigned build evidence; signing and notarization need credentials supplied outside the repository.
+- CI is the normal verification path. Local desktop builds are reserved for cases that genuinely need an artifact or interactive debugging.
+
 > `src-tauri/` validates the frontend output at compile time. To run `cargo check`, `cargo test`, or `cargo clippy` on their own, you must run `pnpm build` first, or `tauri::generate_context!` fails because `dist/` is missing.
 
 ## Packaging
@@ -131,6 +141,7 @@ See the [packaging guide](packaging/README.md) for target-host tools, signing re
 ```text
 Mnelys/
 ├─ assets/                 Canonical branding assets
+├─ crates/                 Rust core layers: domain / application / infrastructure / presentation
 ├─ docs/                   Plans, architecture, security, support matrix, and ADRs
 ├─ packaging/              Three-platform packaging notes (artifacts come from the Tauri bundler)
 ├─ src/                    React 19 frontend
@@ -142,18 +153,19 @@ Mnelys/
 │  ├─ state/               Cross-page transient state
 │  ├─ styles/              Tokens and global styles
 │  └─ test/                Test setup
-├─ src-tauri/              Tauri v2 shell and Rust core
+├─ src-tauri/              Tauri v2 shell, window configuration, and composition root
 │  ├─ capabilities/        Per-window capability sets
 │  ├─ icons/               Application icons
-│  ├─ src/                 commands, error, and the `run()` entry point
+│  ├─ src/                 Composition root: installs state, mounts commands, starts the runtime
 │  └─ tests/               Cross-boundary command contract tests
+├─ Cargo.toml / Cargo.lock  Workspace manifest and dependency lock
 ├─ package.json / pnpm-lock.yaml
 ├─ rust-toolchain.toml
 ├─ tsconfig.json / vite.config.ts / eslint.config.js
 └─ .prettierrc.json
 ```
 
-The `crates/` split (domain / application / presentation / infrastructure / providers / platform) is planned for M1; during M0 the Rust code stays inside `src-tauri/src/`.
+The Rust core is a Cargo workspace: `mnelys-domain` (failure vocabulary), `mnelys-application` (use-cases and ports), `mnelys-infrastructure` (adapters), and `mnelys-presentation` (Tauri commands and handler); `src-tauri` only composes them. Provider and platform crates will split out when the capabilities that need them exist.
 
 ## Contributing and clean-room boundary
 

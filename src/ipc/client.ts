@@ -51,6 +51,11 @@ export const core = {
   version: (): Promise<CommandResult<'core_version'>> => call('core_version', {}),
   /** Host facts the UI adapts to. Never used to branch a security decision. */
   runtimeInfo: (): Promise<CommandResult<'runtime_info'>> => call('runtime_info', {}),
+  /** Newest core log entries first. Omit the limit to read the whole buffer. */
+  logs: (limit?: number): Promise<CommandResult<'app_logs'>> =>
+    call('app_logs', limit === undefined ? {} : { limit }),
+  /** Drops the in-memory log and returns how many entries were removed. */
+  clearLogs: (): Promise<CommandResult<'clear_app_logs'>> => call('clear_app_logs', {}),
 } as const;
 
 export type MnelysCore = typeof core;

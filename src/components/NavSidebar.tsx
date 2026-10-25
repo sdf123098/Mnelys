@@ -1,38 +1,56 @@
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 
-import styles from './NavSidebar.module.css';
+import { SECTIONS } from '@/app/navigation';
+import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui/Icon';
+import { usePreferences } from '@/state/preferences-store';
 
-const SECTIONS = [
-  { to: '/instances', labelKey: 'nav.instances' },
-  { to: '/accounts', labelKey: 'nav.accounts' },
-  { to: '/tasks', labelKey: 'nav.tasks' },
-  { to: '/settings', labelKey: 'nav.settings' },
-] as const;
+import styles from './NavSidebar.module.css';
 
 export function NavSidebar() {
   const { t } = useTranslation();
+  const developerMode = usePreferences((state) => state.developerMode);
+
+  const sections = SECTIONS.filter(
+    (section) => section.inNav && (!section.developerOnly || developerMode),
+  );
 
   return (
-    <nav className={styles.sidebar} aria-label={t('app.name')}>
+    <nav className={styles.sidebar} aria-label={t('nav.label')}>
       <div className={styles.brand}>
-        <span className={styles.brandName}>{t('app.chineseName')}</span>
-        <span className={styles.brandMeta}>{t('app.name')}</span>
+        <span className={styles.brandMark} aria-hidden="true">
+          {t('app.chineseName').slice(0, 1)}
+        </span>
+        <span className={styles.brandText}>
+          <span className={styles.brandName}>{t('app.chineseName')}</span>
+          <span className={styles.brandMeta}>{t('app.name')}</span>
+        </span>
       </div>
+
       <ul className={styles.list}>
-        {SECTIONS.map((section) => (
-          <li key={section.to}>
+        {sections.map((section) => (
+          <li key={section.id}>
             <NavLink
               to={section.to}
+              title={t(section.labelKey)}
+              aria-label={t(section.labelKey)}
               className={({ isActive }) =>
                 isActive ? `${styles.link} ${styles.linkActive}` : styles.link
               }
             >
-              {t(section.labelKey)}
+              <span className={styles.icon} aria-hidden="true">
+                <Icon name={section.icon} size={19} />
+              </span>
+              <span className={styles.label}>{t(section.labelKey)}</span>
             </NavLink>
           </li>
         ))}
       </ul>
+
+      <div className={styles.footer}>
+        <Badge tone="neutral">{t('app.stage')}</Badge>
+      </div>
     </nav>
   );
 }

@@ -4,6 +4,22 @@ Platform artifacts are produced by the **Tauri bundler**, driven from the fronte
 
 The frontend project and the Tauri shell have landed (see [ADR 0006](../docs/adr/0006-frontend-framework-and-application-stack.md)); the commands below are the scripts defined in `package.json`. No three-platform artifact has been produced yet, so every number in the M0 packaging report still needs to be reproduced on this baseline.
 
+## CI packaging
+
+The primary path is the [`Desktop packages`](../.github/workflows/desktop-package.yml) workflow. It runs on `workflow_dispatch` and on `v*` tags, and uploads:
+
+| Artifact             | Runner       | Contents                                 |
+| -------------------- | ------------ | ---------------------------------------- |
+| `mnelys-windows-x64` | Windows      | NSIS installer and portable `mnelys.exe` |
+| `mnelys-macos-arm64` | macOS arm64  | Unsigned DMG                             |
+| `mnelys-linux-x64`   | Ubuntu 22.04 | AppImage                                 |
+
+Artifacts are build evidence, not releases. They are unsigned and expire after 14 days. Promotion requires code signing, notarization, and the manual gates listed below.
+
+The Rust crates form one workspace rooted at the repository, so the bundler writes to `target/release/bundle/` rather than `src-tauri/target/`.
+
+The [`CI`](../.github/workflows/ci.yml) workflow runs the frontend checks and a Windows/macOS/Linux Rust matrix (`fmt`, `clippy -D warnings`, `cargo test`). Local desktop builds are only needed when a specific artifact or interactive debugging requires them.
+
 ## Windows x64
 
 Run on Windows with WebView2 and the MSVC build tools:
@@ -21,6 +37,8 @@ Run on an Apple Silicon Mac with Xcode command-line tools:
 ```bash
 pnpm tauri:build --target aarch64-apple-darwin -- --bundles dmg
 ```
+
+The CI workflow uses the same target and produces an unsigned DMG. A universal binary is intentionally not built: Intel/x64 is out of scope under ADR 0004.
 
 Without a Developer ID Application identity the build is only ad-hoc signed. A public artifact requires Developer ID signing, Hardened Runtime, notarization, ticket stapling, and Gatekeeper testing. Intel/x64 remains out of scope per [ADR 0004](../docs/adr/0004-macos-arm64-only.md).
 

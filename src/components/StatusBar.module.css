@@ -2,7 +2,7 @@
   grid-area: status;
   display: flex;
   align-items: center;
-  gap: var(--mnelys-space-3);
+  gap: var(--mnelys-space-2);
   height: var(--mnelys-statusbar-height);
   padding: 0 var(--mnelys-space-4);
   background-color: var(--mnelys-color-surface);
@@ -14,25 +14,36 @@
 }
 
 .indicator {
-  width: 0.5rem;
-  height: 0.5rem;
+  display: grid;
+  place-items: center;
   flex: none;
-  border-radius: var(--mnelys-radius-pill);
-  background-color: var(--mnelys-color-border-strong);
+  color: var(--mnelys-color-border-strong);
 }
 
 .indicatorOk {
-  background-color: var(--mnelys-color-success);
+  color: var(--mnelys-color-success);
 }
 
 .indicatorError {
-  background-color: var(--mnelys-color-danger);
+  color: var(--mnelys-color-danger);
+}
+
+.indicatorPending svg {
+  animation: mnelys-spin 900ms linear infinite;
 }
 
 .detail {
+  overflow: hidden;
   font-family: var(--mnelys-font-mono);
+  text-overflow: ellipsis;
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+@keyframes mnelys-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

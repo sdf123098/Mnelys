@@ -10,7 +10,7 @@
  * here match the ones the Rust side registers.
  */
 
-export const CONTRACT_VERSION = 1;
+export const CONTRACT_VERSION = 2;
 
 /** Result of `core_version` — the start-up handshake that keeps both halves in step. */
 export interface CoreVersion {
@@ -27,6 +27,18 @@ export interface RuntimeInfo {
   readonly family: 'webview2' | 'wkwebview' | 'webkitgtk' | 'unknown';
 }
 
+/** Severity of one core log entry, mirroring `mnelys_application::LogLevel`. */
+export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
+
+/** Result item of `app_logs`. Timestamps stay numeric; formatting is the UI's job. */
+export interface AppLogEntry {
+  readonly id: number;
+  readonly timestampMs: number;
+  readonly level: LogLevel;
+  readonly target: string;
+  readonly message: string;
+}
+
 /**
  * Command name to argument and result types. Commands that take no arguments
  * declare `Record<string, never>` so the client keeps one call signature.
@@ -34,6 +46,8 @@ export interface RuntimeInfo {
 export interface CommandContract {
   core_version: { args: Record<string, never>; result: CoreVersion };
   runtime_info: { args: Record<string, never>; result: RuntimeInfo };
+  app_logs: { args: { readonly limit?: number }; result: AppLogEntry[] };
+  clear_app_logs: { args: Record<string, never>; result: number };
 }
 
 export type CommandName = keyof CommandContract;
@@ -44,4 +58,6 @@ export type CommandResult<K extends CommandName> = CommandContract[K]['result'];
 export const COMMAND_NAMES = [
   'core_version',
   'runtime_info',
+  'app_logs',
+  'clear_app_logs',
 ] as const satisfies readonly CommandName[];

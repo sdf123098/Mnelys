@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--mnelys-space-4);
+  flex-wrap: wrap;
+}
+
+.text {
+  display: flex;
+  flex: 1 1 24rem;
+  flex-direction: column;
+  gap: var(--mnelys-space-2);
+  min-width: 0;
+}
+
+.eyebrow {
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-xs);
+  font-weight: var(--mnelys-font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-3);
+  flex-wrap: wrap;
+}
+
+.description {
+  max-width: 52rem;
+  color: var(--mnelys-color-text-muted);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-2);
+  flex-wrap: wrap;
+}

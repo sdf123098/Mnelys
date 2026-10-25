@@ -1,26 +1,29 @@
 # Mnelys 项目进度
 
-- 最后更新：2026-09-30
-- 当前里程碑：M0 — 独立立项与技术验证（因技术路线切换而重启）
-- 状态：进行中
+- 最后更新：2026-10-26
+- 当前里程碑：M1 — Design System 与 Shell（M0 验证项仍未全部关闭）
+- 状态：进行中（核心日志、分层骨架与 CI 工作流已落地，等待首次远端运行证据）
 
 ## 当前快照
 
-| 项目           | 当前值                                                                                    |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| 产品名         | Mnelys                                                                                    |
-| 中文名         | 忆涟                                                                                      |
-| 应用 ID        | `io.mnelys.launcher`                                                                      |
-| 许可证         | MIT                                                                                       |
-| 默认分支       | `main`                                                                                    |
-| 桌面壳与运行时 | Tauri 2.x                                                                                 |
-| 核心语言       | Rust（stable，`rust-toolchain.toml` 固定）                                                |
-| 前端框架       | React 19 + TypeScript（[ADR 0006](adr/0006-frontend-framework-and-application-stack.md)） |
-| 前端构建与路由 | Vite + `createHashRouter`（hash 路由，三平台 WebView 一致）                               |
-| 前端状态与样式 | TanStack Query + Zustand；CSS Modules 与语义 Token                                        |
-| 本地化         | i18next，`zh-Hans` / `en` / `ja` 目录键集必须完全一致                                     |
-| 平台 WebView   | WebView2 / WKWebView / WebKitGTK                                                          |
-| 窗口材质       | 不透明，无 Mica、Acrylic、vibrancy                                                        |
+| 项目           | 当前值                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| 产品名         | Mnelys                                                                                      |
+| 中文名         | 忆涟                                                                                        |
+| 应用 ID        | `io.mnelys.launcher`                                                                        |
+| 许可证         | MIT                                                                                         |
+| 默认分支       | `main`                                                                                      |
+| 桌面壳与运行时 | Tauri 2.x                                                                                   |
+| 核心语言       | Rust（stable，`rust-toolchain.toml` 固定）                                                  |
+| 前端框架       | React 19 + TypeScript（[ADR 0006](adr/0006-frontend-framework-and-application-stack.md)）   |
+| 前端构建与路由 | Vite + `createHashRouter`（hash 路由，三平台 WebView 一致）                                 |
+| 前端状态与样式 | TanStack Query + Zustand；CSS Modules 与语义 Token                                          |
+| Rust 分层      | Cargo workspace：domain / application / infrastructure / presentation；`src-tauri` 为组合根 |
+| 持续集成       | GitHub Actions：前端检查、三平台 Rust 矩阵、三平台桌面打包（手动或标签触发）                |
+| 本地化         | i18next，`zh-Hans` / `en` / `ja` 目录键集必须完全一致                                       |
+| 界面图标       | Lucide（ISC），经单一注册表封装（[ICONS.md](ICONS.md)）                                     |
+| 平台 WebView   | WebView2 / WKWebView / WebKitGTK                                                            |
+| 窗口材质       | 不透明，无 Mica、Acrylic、vibrancy                                                          |
 
 远端仓库：<https://github.com/sdf123098/Mnelys>
 
@@ -43,6 +46,37 @@
 - 本轮修掉两个真实缺陷：
   - `src-tauri/src/commands/mod.rs` 未重导出 `#[tauri::command]` 生成的隐藏宏（`__cmd__*` 与 `__tauri_command_name_*`）。命令放在子模块时，`generate_handler!` 按与命令相同的路径解析这些宏，缺失即报 `error[E0433]`。
   - `CoreError.details` 在 Rust 侧是 `Option<String>`，TypeScript 侧曾写成 `Readonly<Record<string, string>>`；`src-tauri/tests/contract.rs` 只校验 wire code，抓不到这类形状漂移。
+
+## 2026-10-26 M1 外壳切片
+
+本轮交付了可在浏览器预览的前端外壳。它仍然**不具备安装或启动 Minecraft 的能力**，所有未实现动作都禁用并标注里程碑，没有伪造实例、账户或下载记录。
+
+- 设计系统：补齐字号、间距、层级、阴影、状态色与动效 token；落地 `system` / `light` / `dark` 三种外观，选择持久化，并在首屏渲染前应用以避免闪烁。
+- 单窗口 Shell：两级宽度导航（220 px 常规 / 64 px 紧凑）、顶栏、状态栏、跳转主内容链接、可见焦点环、`prefers-reduced-motion` 处理。
+- 任务中心：右侧模态抽屉，含焦点陷阱、Esc 关闭和焦点归还；空状态明确说明任务流将在 M2 接入。
+- 基础控件：`Button` / `ButtonLink`、`IconButton`、`Badge`、`Card`、`PageHeader`、`EmptyState`、`SegmentedControl`（原生 radio 组）、`Switch`（原生 checkbox）。
+- 页面：开始、实例、下载、联机、账户、开发、设置，均为诚实的空状态或规划说明。
+- 模式：普通 / 开发者模式持久化；开发者分区按模式显示，设置页开关与开发页开关保持一致。
+- 本地化：简中、英、日三套目录键集一致；设置页可切换并持久化，同时同步 `document.lang`。
+- 图标：全部界面图标改用 Lucide（ISC），经 `src/components/ui/Icon.tsx` 单一注册表封装；应用图标继续使用品牌源图。见 [ICONS.md](ICONS.md)。
+- 其它修正：补 `favicon` 消除浏览器 404；Tauri 窗口初始与最小尺寸与 [DESIGN_SPEC](DESIGN_SPEC.md) 对齐为 1280×800 / 900×600。
+
+验证结果：
+
+- `pnpm format:check`、`pnpm lint`、`pnpm typecheck`、`pnpm build`、`pnpm test` 全部通过；8 个测试文件、18 个用例。
+- 前端构建产物：JS 466.65 kB（gzip 149.04 kB），CSS 26.76 kB（gzip 4.82 kB）。
+- 在 Vite 浏览器预览中检查了 1440×900 与 1000×800、浅色与深色、主题循环、任务抽屉（打开 / Esc / 焦点归还）、跳过链接、开发者模式以及简中 / 英 / 日切换。
+- 浏览器状态栏显示"核心不可用"属预期：预览环境没有 Rust 核心进程。本机仍缺 MSVC 生成工具与 WebView2，Tauri 桌面运行时未验证。
+
+## 2026-10-26 M1 收尾：核心分层与日志面板
+
+- Rust 拆为 Cargo workspace：`mnelys-domain`（失败词汇）、`mnelys-application`（`LogService` + `LogStore` 端口）、`mnelys-infrastructure`（`MemoryLogStore`）、`mnelys-presentation`（Tauri 命令与 handler）；`src-tauri` 只保留组合根职责。
+- 命令契约升至 v2，新增 `app_logs`（最新在前，可按 `limit` 截取）与 `clear_app_logs`（清空并返回条数）。日志上限 500 条，仅在内存中保留。
+- 任务中心新增“任务 / 日志”两分区；日志面板只在可见时每 3 秒轮询，提供加载、空态、失败重试与清空操作。
+- 新增基于原生 `<dialog>` 的通用 `Dialog`。清空日志确认使用它，顶层、焦点约束、Esc 与焦点归还都由平台提供；当前只有一个模态叠加层，因此不另建 OverlayHost。
+- 三语文案补齐任务中心分区、日志级别与清空确认；契约测试继续校验命令名、错误码与契约版本。
+- 新增 `.github/workflows/ci.yml`（前端检查 + Windows / macOS / Linux Rust 矩阵）与 `.github/workflows/desktop-package.yml`（NSIS、macOS arm64 DMG、AppImage；手动触发或 `v*` 标签）。
+- 本地验证：`cargo fmt --all --check`、前端 `format:check`、`lint`、`typecheck`、`test`（8 个测试文件、20 个用例）与 `build` 通过。Rust 编译、三平台测试与打包证据等待 CI 首次运行；本机 crates.io 索引不可达，无法在本地补跑 `cargo check`。
 
 ## 已完成
 
@@ -74,7 +108,24 @@
 - [ ] 三平台 WebView 兼容基线与启动冒烟。
 - [ ] 用 Tauri bundler 产出 NSIS、DMG、AppImage 三平台 PoC，并记录体积与冷启动数据。
 - [ ] 在 Apple Silicon Mac 上完成签名、公证与 Gatekeeper 验证。
-- [ ] 建立 CI 三平台构建、格式与打包检查。
+- [x] 建立 CI 三平台构建、格式与打包检查（工作流已落地；首次远端证据待运行）。
+
+### Design System 与 Shell（M1，进行中）
+
+- [x] 语义 token、浅色 / 深色主题与系统跟随。
+- [x] 单窗口 Shell：导航、顶栏、状态栏、跳转链接与内容滚动复位。
+- [x] 基础控件与原生语义（radio 组、checkbox switch、可见焦点）。
+- [x] 任务中心抽屉：模态语义、焦点陷阱、Esc 关闭、焦点归还。
+- [x] 七个一级页面骨架与诚实的未实现状态。
+- [x] 普通 / 开发者模式持久化与导航显隐。
+- [x] 三语界面与语言切换持久化。
+- [x] 界面图标统一为 Lucide（ISC）并经注册表封装。
+- [x] 前端格式、Lint、类型检查、构建与 20 个单元测试全部通过。
+- [x] 日志面板（任务中心“日志”分区）与基于原生 `<dialog>` 的通用 `Dialog`。
+- [x] `crates/` 分层骨架：domain / application / infrastructure / presentation；`src-tauri` 负责组合。
+- [ ] Tauri 桌面运行时的三平台冒烟与 125% / 150% / 200% DPI 检查。
+- [ ] 三平台桌面视觉回归（浏览器预览不能替代）。
+- [ ] 基于 tauri-driver 的 E2E 冒烟。
 
 ### 上一轮 Avalonia 基线（已弃用，仅作存档）
 
@@ -83,14 +134,22 @@
 
 ## 尚未完成与阻塞项
 
-### Tauri 基线的 M0 工作
+### Tauri 基线的 M0 收尾
 
-- [ ] 搭建 Rust 分层骨架：domain / application / presentation / infrastructure / providers / platform（当前 `src-tauri/src/` 只有错误类型与 runtime 命令；`crates/` 计划在 M1 引入）。
-- [ ] 用 Tauri bundler 产出 NSIS、DMG、AppImage 三平台 PoC，并记录体积与冷启动数据。
+- [ ] 由 GitHub Actions 三平台矩阵执行 `cargo test`；工作流已就绪，等待首次远端运行并记录结果。
+- [ ] 由 `Desktop packages` 工作流产出 NSIS、macOS arm64 DMG 与 AppImage，记录体积；冷启动数据仍需真实桌面运行。
 - [ ] 建立三平台 WebView 兼容基线（WebView2 / WKWebView / WebKitGTK）与启动冒烟。
-- [ ] 在 Apple Silicon Mac 上完成签名、公证与 Gatekeeper 验证。
-- [ ] 建立 CI 三平台构建、格式与打包检查。
-- [ ] 本机缺少 MSVC 生成工具与 WebView2 运行时前提下，`cargo test`、`pnpm tauri:dev`、`pnpm tauri:build` 都无法在 Windows 上运行；M0 退出前必须在具备该工具的机器上补跑一次。
+- [ ] 在 Apple Silicon Mac 上完成 Developer ID 签名、公证、staple 与 Gatekeeper 验证；需要仓库外提供的 Apple 凭据。
+- [x] 建立 CI 三平台前端检查、Rust 格式 / Clippy / 测试与桌面打包工作流（`.github/workflows/`）。
+- [ ] 在首次远端运行通过后，把打包体积、启动结果与运行链接补入本文档。
+
+### M1 收尾
+
+- [x] 日志面板（任务中心“日志”分区）与基于原生 `<dialog>` 的通用 `Dialog`。
+- [x] 引入 `crates/` 分层骨架（domain / application / infrastructure / presentation；providers / platform 等能力出现后再拆）。
+- [ ] 在真实 Tauri 窗口中验证 100%～200% DPI、缩放与窗口装饰。
+- [ ] 三平台桌面运行的视觉回归，浏览器预览不能替代。
+- [ ] 基于 tauri-driver 的 E2E 冒烟。
 
 ### 产品
 
@@ -98,11 +157,11 @@
 
 ## 下一步
 
-1. 复现三平台打包 PoC，取得 Tauri 基线自己的数据。
-2. 冻结命令面并引入 `crates/` 分层骨架。
-3. 开始首个 Vanilla 垂直切片。
+1. 推送后运行 `CI` 与 `Desktop packages`，修复首次运行的平台差异，并把三平台测试结果、产物体积与运行链接记入本文档。
+2. 在具备图形桌面的 Windows / macOS / Linux 环境补做真实窗口的 100%～200% DPI、缩放、窗口装饰与视觉回归；CI 的无头打包不能替代这一步。
+3. 进入 M2 Vanilla 垂直切片：元数据、下载与校验、Java 发现、实例创建、启动到主菜单。
 
-目标平台打包验证可与骨架开发并行进行，但在 M0 退出前必须完成。
+目标平台打包由 CI 产出，但启动冒烟、DPI 与 Apple 签名/公证仍需对应的真实桌面环境和仓库外凭据。
 
 ## 更新规则
 

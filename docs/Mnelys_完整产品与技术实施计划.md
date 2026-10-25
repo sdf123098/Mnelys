@@ -472,6 +472,7 @@ AppWindow
 | 瞬时 UI 状态 | Zustand，禁止在其中复制核心数据                                                                |
 | 样式         | CSS Modules + CSS 自定义属性 design token                                                      |
 | 本地化       | i18next / react-i18next（`zh-Hans` / `en` / `ja`）                                             |
+| 界面图标     | Lucide（ISC），经 `src/components/ui/Icon.tsx` 单一注册表封装，见 [ICONS.md](ICONS.md)         |
 | 序列化       | `serde` + `serde_json`，请求与响应为显式结构体                                                 |
 | 数据库       | SQLite，经 Repository 隔离                                                                     |
 | HTTP         | 核心侧统一客户端，显式超时与重试策略                                                           |

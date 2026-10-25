@@ -1,0 +1,222 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--mnelys-z-drawer);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: var(--mnelys-color-scrim);
+  cursor: default;
+  animation: mnelys-fade var(--mnelys-duration-normal) var(--mnelys-easing-standard);
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(26rem, 92vw);
+  background-color: var(--mnelys-color-surface);
+  border-left: 1px solid var(--mnelys-color-border);
+  box-shadow: var(--mnelys-shadow-drawer);
+  animation: mnelys-slide var(--mnelys-duration-emphasis) var(--mnelys-easing-emphasis);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mnelys-space-3);
+  padding: var(--mnelys-space-4) var(--mnelys-space-4) var(--mnelys-space-4) var(--mnelys-space-5);
+  border-bottom: 1px solid var(--mnelys-color-border);
+}
+
+.headerIcon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: var(--mnelys-radius-md);
+  background-color: var(--mnelys-color-accent-soft);
+  color: var(--mnelys-color-accent);
+}
+
+.heading {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  min-width: 0;
+}
+
+.heading h2 {
+  font-size: var(--mnelys-font-size-lg);
+  font-weight: var(--mnelys-font-weight-semibold);
+}
+
+.heading p {
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+.tabs {
+  padding: var(--mnelys-space-3) var(--mnelys-space-4);
+  border-bottom: 1px solid var(--mnelys-color-border);
+}
+
+.body {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  padding: var(--mnelys-space-5);
+  overflow-y: auto;
+}
+
+.bodyLogs {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: var(--mnelys-space-4);
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--mnelys-space-2);
+  text-align: center;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: var(--mnelys-space-2);
+  border-radius: var(--mnelys-radius-pill);
+  background-color: var(--mnelys-color-surface-sunken);
+  color: var(--mnelys-color-text-muted);
+}
+
+.empty h3 {
+  font-size: var(--mnelys-font-size-md);
+  font-weight: var(--mnelys-font-weight-semibold);
+}
+
+.empty p {
+  max-width: 20rem;
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-2);
+  padding: var(--mnelys-space-3) var(--mnelys-space-5);
+  border-top: 1px solid var(--mnelys-color-border);
+}
+
+.footerSpacer {
+  flex: 1 1 auto;
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-3);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.logItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  padding: var(--mnelys-space-3);
+  border: 1px solid var(--mnelys-color-border);
+  border-radius: var(--mnelys-radius-md);
+  background-color: var(--mnelys-color-surface-sunken);
+}
+
+.logMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mnelys-space-2);
+}
+
+.logTime {
+  color: var(--mnelys-color-text-muted);
+  font-family: var(--mnelys-font-mono);
+  font-size: var(--mnelys-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.logTarget {
+  overflow: hidden;
+  color: var(--mnelys-color-text-muted);
+  font-family: var(--mnelys-font-mono);
+  font-size: var(--mnelys-font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logMessage {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--mnelys-font-size-sm);
+  line-height: var(--mnelys-line-height-normal);
+}
+
+.logStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-2);
+  margin: 0;
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+.logStatus svg {
+  animation: mnelys-log-spin 900ms linear infinite;
+}
+
+.bodyLogs .empty {
+  margin: auto;
+}
+
+.dialogError {
+  margin: 0;
+  color: var(--mnelys-color-danger);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+@keyframes mnelys-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes mnelys-slide {
+  from {
+    transform: translateX(1.5rem);
+    opacity: 0.6;
+  }
+}
+
+@keyframes mnelys-log-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

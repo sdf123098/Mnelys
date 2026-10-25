@@ -1,26 +1,29 @@
 # Architecture baseline
 
-Status: Accepted for M0 (Tauri v2 baseline, see [ADR 0005](adr/0005-runtime-and-ui-baseline-tauri.md))
-Last updated: 2026-09-30
+Status: Accepted (Tauri v2 baseline, see [ADR 0005](adr/0005-runtime-and-ui-baseline-tauri.md))
+Last updated: 2026-10-26
 
 ## Dependency direction
 
-The Rust core is layered and depends inward only:
+The Rust core is a Cargo workspace and depends inward only:
 
 ```text
-mnelys-desktop
-  └─ mnelys-presentation
-       └─ mnelys-application
-            └─ mnelys-domain
-
-mnelys-infrastructure ───────┐
-mnelys-platform-* ───────────┼─ implement inward-facing ports
-mnelys-provider-* ───────────┘
+src-tauri (composition root, package `mnelys`)
+  ├─ mnelys-presentation
+  │    └─ mnelys-application
+  │         └─ mnelys-domain
+  └─ mnelys-infrastructure ── implements ports declared by ──> mnelys-application
 ```
 
-`mnelys-desktop` is the Tauri host: it owns window and tray setup, the command surface exposed to the webview, updater glue, and nothing else of substance. The webview frontend is an outer adapter that may call only the commands the backend explicitly exposes; it never reaches the filesystem, shell, or network on its own.
+- `mnelys-domain` holds stable vocabulary and rules. It has no dependency on Tauri, HTTP, SQLite, or operating-system APIs.
+- `mnelys-application` owns use-cases and the ports they need. `LogService` and the `LogStore` port are the first real example.
+- `mnelys-infrastructure` implements those ports. `MemoryLogStore` is the bounded in-memory adapter used by the M1 shell.
+- `mnelys-presentation` owns the Tauri command surface, the generated handler and the state commands receive. It translates transport requests into application calls and contains no business rules.
+- `src-tauri` is the composition root: it chooses adapters, installs state, configures the window and starts the runtime. Its own source stays limited to wiring.
 
-`mnelys-domain` has no dependency on Tauri, HTTP, SQLite, or operating-system APIs. `mnelys-application` owns use-case orchestration. `mnelys-presentation` owns view models, navigation state, and design-system integration but never handles credentials or performs high-risk I/O directly.
+Providers and platform adapters do not exist yet. They will be added as sibling crates that implement ports from `mnelys-application`, never as dependencies from the inside out.
+
+The webview frontend is an outer adapter that may call only the commands the backend explicitly exposes; it never reaches the filesystem, shell, or network on its own. View models, routing and design-system integration live in `src/`, not in `mnelys-presentation`.
 
 ## Process boundaries
 

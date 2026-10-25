@@ -7,6 +7,11 @@ import './styles/tokens.css';
 import './styles/global.css';
 
 import { App } from './App';
+import { usePreferences } from './state/preferences-store';
+import { applyTheme } from './state/theme';
+
+// Apply the stored palette before the first paint; the provider only keeps it in sync.
+applyTheme(usePreferences.getState().theme);
 
 const container = document.getElementById('root');
 

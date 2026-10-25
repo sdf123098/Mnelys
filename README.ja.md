@@ -36,15 +36,19 @@ Prism Launcher のソースコード、アセット、Git 履歴、内部デー�
 
 ## 現在の進捗
 
-現在は M0「独立プロジェクトの確立と技術検証」で、技術スタックの変更により再スタートしています。
+現在は M1「デザインシステムとシェル」です。M0 のデスクトップ実行とパッケージング検証はまだ残っています。
 
 - [x] 独立リポジトリ、ライセンス、ADR、セキュリティ基準
 - [x] Tauri v2 のランタイム／UI 基準を確立（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
 - [x] .NET／Avalonia の実装を削除（実装自体は本リポジトリの Git 履歴に残っています）
 - [x] フロントエンドのフレームワークと技術スタックを決定（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）
 - [x] Rust コアの骨組み、コマンド境界、フロントエンドとの契約テスト
-- [x] React フロントエンド、3 言語 i18n、コンポーネントテスト
-- [ ] Tauri bundler による Windows／macOS／Linux のパッケージング PoC
+- [x] デザイントークン、ライト／ダークテーマ、アクセシブルな基本コントロール
+- [x] シングルウィンドウシェル、レスポンシブナビゲーション、タスクセンター、設定、開発者モード
+- [x] インターフェースアイコンを Lucide（ISC）に統一（[ICONS.md](docs/ICONS.md)）
+- [x] コアログパネル、ネイティブ `<dialog>` の確認ダイアログ、Cargo workspace のレイヤー骨組み
+- [x] GitHub Actions：フロントエンド検査、3 プラットフォームの Rust マトリクス、デスクトップパッケージング
+- [ ] Tauri デスクトップ実行、DPI 検証、3 プラットフォームのパッケージ成果物の証跡
 - [ ] 最初の Vanilla 垂直スライス
 
 旧 Avalonia 実装で得たパッケージングの証跡は [M0 パッケージング PoC レポート](docs/M0_PACKAGING_POC.md)にあります。これは履歴であり、**Tauri 基盤の証跡ではありません**。
@@ -62,9 +66,9 @@ Prism Launcher のソースコード、アセット、Git 履歴、内部デー�
 ## 技術構成
 
 - **Tauri 2.x** をデスクトップシェル兼ランタイムとして採用（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
-- **Rust** でコアを実装：アカウント、インスタンス、Java 管理、ダウンロード、キャッシュ、起動パイプライン、IPC
+- **Rust** でコアを実装：アカウント、インスタンス、Java 管理、ダウンロード、キャッシュ、起動パイプライン、IPC。コアは Cargo workspace（domain / application / infrastructure / presentation）で、`src-tauri` は組み立て役に徹します
 - プラットフォーム WebView：Windows は WebView2、macOS は WKWebView、Linux は WebKitGTK
-- フロントエンドは **React 19 + TypeScript**（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）。Vite でビルドし、`react-router` のハッシュルーティング、サーバー状態に TanStack Query、一時状態に Zustand、UI テキストに i18next を使用
+- フロントエンドは **React 19 + TypeScript**（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）。Vite でビルドし、`react-router` のハッシュルーティング、サーバー状態に TanStack Query、一時状態に Zustand、UI テキストに i18next、インターフェースアイコンに Lucide（ISC、[ICONS.md](docs/ICONS.md)）を使用
 - Rust ツールチェーンは `rust-toolchain.toml`、Node.js と pnpm は `package.json` で固定
 - ルートウィンドウは不透明を維持：Mica、Acrylic、macOS vibrancy、デスクトップサンプリングは禁止。グローバルスタイルの `backdrop-filter: none !important` が最終的な防波堤です
 - フロントエンドは明示的に宣言した Tauri コマンドを通じてのみネイティブ機能にアクセスし、`invoke` は `src/ipc/` 以外に書けません。ケイパビリティはウィンドウ単位で宣言・レビューします
@@ -104,6 +108,12 @@ pnpm tauri:dev                                     # デスクトップアプリ
 | `pnpm test`                           | Vitest + Testing Library                |
 | `pnpm tauri:dev` / `pnpm tauri:build` | Tauri の開発とパッケージング            |
 
+## CI とパッケージング
+
+- [`CI`](.github/workflows/ci.yml) はフロントエンドのフォーマット、Lint、型チェック、テスト、ビルドに加え、Windows / macOS / Linux で `cargo fmt`、`cargo clippy -D warnings`、`cargo test` を実行します。
+- [`Desktop packages`](.github/workflows/desktop-package.yml) は手動実行または `v*` タグで NSIS インストーラー、macOS arm64 DMG、AppImage を生成してアップロードします。成果物は未署名のビルド証跡であり、署名と公証にはリポジトリ外の認証情報が必要です。
+- 通常の検証は CI を基準とし、ローカルのデスクトップビルドは成果物や対話的デバッグが必要な例外時だけ行います。
+
 > `src-tauri/` はコンパイル時にフロントエンド成果物の存在を検証します。`cargo check`、`cargo test`、`cargo clippy` を単体で実行する場合は、先に `pnpm build` を実行してください。`dist/` がないと `tauri::generate_context!` が失敗します。
 
 ## パッケージング
@@ -131,6 +141,7 @@ Windows は `x86_64-pc-windows-msvc`、macOS は `aarch64-apple-darwin` を明�
 ```text
 Mnelys/
 ├─ assets/                 ブランド原本
+├─ crates/                 Rust コアのレイヤー：domain / application / infrastructure / presentation
 ├─ docs/                   計画、設計、セキュリティ、対応表、ADR
 ├─ packaging/              3 プラットフォームのパッケージング手順（成果物は Tauri bundler が生成）
 ├─ src/                    React 19 フロントエンド
@@ -142,18 +153,19 @@ Mnelys/
 │  ├─ state/               ページをまたぐ一時状態
 │  ├─ styles/              トークンとグローバルスタイル
 │  └─ test/                テスト初期化
-├─ src-tauri/              Tauri v2 シェルと Rust コア
+├─ src-tauri/              Tauri v2 シェル、ウィンドウ設定、組み立て役
 │  ├─ capabilities/        ウィンドウ単位のケイパビリティ
 │  ├─ icons/               アプリアイコン
-│  ├─ src/                 commands、error、`run()` エントリー
+│  ├─ src/                 組み立て：状態の設置、コマンドの登録、ランタイム起動
 │  └─ tests/               フロントエンドとのコマンド契約テスト
+├─ Cargo.toml / Cargo.lock  ワークスペース定義と依存ロック
 ├─ package.json / pnpm-lock.yaml
 ├─ rust-toolchain.toml
 ├─ tsconfig.json / vite.config.ts / eslint.config.js
 └─ .prettierrc.json
 ```
 
-`crates/` の分割（domain / application / presentation / infrastructure / providers / platform）は M1 で導入予定です。M0 の Rust コードは `src-tauri/src/` に置きます。
+Rust コアは Cargo workspace です：`mnelys-domain`（失敗の語彙）、`mnelys-application`（ユースケースとポート）、`mnelys-infrastructure`（アダプター）、`mnelys-presentation`（Tauri コマンドとハンドラー）。`src-tauri` はそれらを組み立てるだけです。Provider と platform のクレートは、必要とする機能が現れた段階で分割します。
 
 ## コントリビューションと独立実装
 

@@ -3,9 +3,12 @@ import type { RouteObject } from 'react-router-dom';
 
 import { AppShell } from '@/components/AppShell';
 import { AccountsRoute } from '@/routes/AccountsRoute';
+import { DeveloperRoute } from '@/routes/DeveloperRoute';
+import { DownloadsRoute } from '@/routes/DownloadsRoute';
 import { InstancesRoute } from '@/routes/InstancesRoute';
+import { MultiplayerRoute } from '@/routes/MultiplayerRoute';
 import { SettingsRoute } from '@/routes/SettingsRoute';
-import { TasksRoute } from '@/routes/TasksRoute';
+import { StartRoute } from '@/routes/StartRoute';
 
 /**
  * The one route table (ADR 0006).
@@ -19,12 +22,15 @@ export const routes: RouteObject[] = [
     path: '/',
     element: <AppShell />,
     children: [
-      { index: true, element: <Navigate to="/instances" replace /> },
+      { index: true, element: <Navigate to="/start" replace /> },
+      { path: 'start', element: <StartRoute /> },
       { path: 'instances', element: <InstancesRoute /> },
+      { path: 'downloads', element: <DownloadsRoute /> },
+      { path: 'multiplayer', element: <MultiplayerRoute /> },
+      { path: 'developer', element: <DeveloperRoute /> },
       { path: 'accounts', element: <AccountsRoute /> },
-      { path: 'tasks', element: <TasksRoute /> },
       { path: 'settings', element: <SettingsRoute /> },
-      { path: '*', element: <Navigate to="/instances" replace /> },
+      { path: '*', element: <Navigate to="/start" replace /> },
     ],
   },
 ];

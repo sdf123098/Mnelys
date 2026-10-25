@@ -1,0 +1,61 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--mnelys-space-5);
+  background-color: var(--mnelys-color-surface);
+  border: 1px solid var(--mnelys-color-border);
+  border-radius: var(--mnelys-radius-lg);
+  box-shadow: var(--mnelys-shadow-panel);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--mnelys-space-3);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: var(--mnelys-radius-md);
+  background-color: var(--mnelys-color-accent-soft);
+  color: var(--mnelys-color-accent);
+}
+
+.heading {
+  display: flex;
+  flex: 1 1 11rem;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  min-width: 0;
+}
+
+.heading h2 {
+  font-size: var(--mnelys-font-size-md);
+  font-weight: var(--mnelys-font-weight-semibold);
+}
+
+.heading p {
+  color: var(--mnelys-color-text-muted);
+}
+
+.badge {
+  flex: none;
+  margin-left: auto;
+}
+
+.body {
+  margin-top: var(--mnelys-space-4);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mnelys-space-2);
+  margin-top: var(--mnelys-space-4);
+}
