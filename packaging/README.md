@@ -8,8 +8,8 @@ The frontend project and the Tauri shell have landed (see [ADR 0006](../docs/adr
 
 The primary path is the [`Desktop packages`](../.github/workflows/desktop-package.yml) workflow. It runs on `workflow_dispatch` and on `v*` tags, and uploads:
 
-| Artifact                     | Runner       | Contents                                 |
-| ---------------------------- | ------------ | ---------------------------------------- |
+| Artifact                      | Runner       | Contents                                 |
+| ----------------------------- | ------------ | ---------------------------------------- |
 | `mnelys-windows-x64-unsigned` | Windows      | NSIS installer and portable `mnelys.exe` |
 | `mnelys-macos-arm64-unsigned` | macOS arm64  | Unsigned DMG                             |
 | `mnelys-linux-x64-unsigned`   | Ubuntu 22.04 | AppImage                                 |

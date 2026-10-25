@@ -110,10 +110,7 @@ mod tests {
         }
 
         let entries = store.recent(4);
-        let messages: Vec<&str> = entries
-            .iter()
-            .map(|entry| entry.message.as_str())
-            .collect();
+        let messages: Vec<&str> = entries.iter().map(|entry| entry.message.as_str()).collect();
         assert_eq!(messages, ["third", "second", "first"]);
     }
 
