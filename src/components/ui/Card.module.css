@@ -46,7 +46,7 @@
 
 .badge {
   flex: none;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .body {

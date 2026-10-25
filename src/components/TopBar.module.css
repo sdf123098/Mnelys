@@ -46,7 +46,7 @@
 }
 
 .account {
-  margin-left: var(--mnelys-space-1);
+  margin-inline-start: var(--mnelys-space-1);
 }
 
 @media (max-width: 1199px) {

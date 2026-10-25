@@ -6,6 +6,7 @@ import styles from './AppShell.module.css';
 import { NavSidebar } from './NavSidebar';
 import { StatusBar } from './StatusBar';
 import { TaskCenterDrawer } from './TaskCenterDrawer';
+import { TitleBar } from './TitleBar';
 import { TopBar } from './TopBar';
 
 /**
@@ -37,6 +38,7 @@ export function AppShell() {
       >
         {t('common.skipToContent')}
       </a>
+      <TitleBar />
       <NavSidebar />
       <TopBar />
       <main id="main-content" ref={contentRef} className={styles.content} tabIndex={-1}>

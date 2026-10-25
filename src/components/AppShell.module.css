@@ -2,11 +2,14 @@
   position: relative;
   display: grid;
   grid-template-areas:
+    'titlebar titlebar'
     'sidebar topbar'
     'sidebar content'
     'status  status';
   grid-template-columns: var(--mnelys-sidebar-width) minmax(0, 1fr);
-  grid-template-rows: var(--mnelys-topbar-height) minmax(0, 1fr) var(--mnelys-statusbar-height);
+  grid-template-rows:
+    var(--mnelys-titlebar-height) var(--mnelys-topbar-height) minmax(0, 1fr)
+    var(--mnelys-statusbar-height);
   height: 100%;
   background-color: var(--mnelys-color-canvas);
 }
@@ -32,7 +35,7 @@
 .skipLink {
   position: absolute;
   top: var(--mnelys-space-2);
-  left: var(--mnelys-space-2);
+  inset-inline-start: var(--mnelys-space-2);
   z-index: calc(var(--mnelys-z-drawer) + 10);
   padding: var(--mnelys-space-2) var(--mnelys-space-4);
   background-color: var(--mnelys-color-surface);

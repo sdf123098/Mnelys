@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
 
+import { AccentPicker } from '@/components/ui/AccentPicker';
 import { Card } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SegmentedControl, type SegmentOption } from '@/components/ui/SegmentedControl';
 import { Switch } from '@/components/ui/Switch';
-import { isSupportedLanguage, persistLanguage } from '@/i18n';
-import { LANGUAGE_LABELS, SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/i18n/resources';
+import { persistLanguage } from '@/i18n';
+import { LANGUAGE_LABELS, matchLanguage, SUPPORTED_LANGUAGES } from '@/i18n/resources';
 import { useCoreVersion, useRuntimeInfo } from '@/ipc/hooks';
 import { usePreferences, type ThemePreference } from '@/state/preferences-store';
 
@@ -21,13 +22,7 @@ export function SettingsRoute() {
   const developerMode = usePreferences((state) => state.developerMode);
   const setDeveloperMode = usePreferences((state) => state.setDeveloperMode);
 
-  const currentLanguage: SupportedLanguage = isSupportedLanguage(i18n.resolvedLanguage)
-    ? i18n.resolvedLanguage
-    : 'en';
-
-  const languageOptions: readonly SegmentOption<SupportedLanguage>[] = SUPPORTED_LANGUAGES.map(
-    (language) => ({ value: language, label: LANGUAGE_LABELS[language] }),
-  );
+  const currentLanguage = matchLanguage(i18n.resolvedLanguage ?? 'en');
 
   const themeOptions: readonly SegmentOption<ThemePreference>[] = [
     { value: 'system', label: t('theme.system'), icon: 'monitor' },
@@ -35,7 +30,7 @@ export function SettingsRoute() {
     { value: 'dark', label: t('theme.dark'), icon: 'moon' },
   ];
 
-  async function changeLanguage(language: SupportedLanguage): Promise<void> {
+  async function changeLanguage(language: string): Promise<void> {
     persistLanguage(language);
     await i18n.changeLanguage(language);
   }
@@ -54,20 +49,27 @@ export function SettingsRoute() {
             onChange={setTheme}
           />
           <p className={pages.caption}>{t('theme.description')}</p>
+          <AccentPicker />
+          <p className={pages.caption}>{t('settings.accentDescription')}</p>
         </div>
       </Card>
 
       <Card title={t('settings.language')} description={t('settings.languageDescription')}>
         <div className={pages.settingBlock}>
-          <SegmentedControl
-            name="language"
-            label={t('settings.language')}
+          <select
+            className={pages.select}
             value={currentLanguage}
-            options={languageOptions}
-            onChange={(language) => {
-              void changeLanguage(language);
+            aria-label={t('settings.language')}
+            onChange={(event) => {
+              void changeLanguage(event.target.value);
             }}
-          />
+          >
+            {SUPPORTED_LANGUAGES.map((language) => (
+              <option key={language} value={language} lang={language}>
+                {LANGUAGE_LABELS[language]}
+              </option>
+            ))}
+          </select>
         </div>
       </Card>
 

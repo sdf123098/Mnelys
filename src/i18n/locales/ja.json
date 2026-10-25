@@ -1,9 +1,14 @@
 {
   "app": {
     "name": "Mnelys",
-    "chineseName": "憶漣",
     "tagline": "プレイヤーとMod開発者のためのAIネイティブMinecraftランチャー兼開発ワークスペース",
     "stage": "M1シェル"
+  },
+  "window": {
+    "minimize": "最小化",
+    "maximize": "最大化",
+    "restore": "元のサイズに戻す",
+    "close": "閉じる"
   },
   "nav": {
     "label": "メインナビゲーション",
@@ -181,6 +186,24 @@
     "description": "外観、言語、開発ツール、ビルド情報。",
     "appearance": "外観",
     "appearanceDescription": "どのプラットフォームでもウィンドウは不透明です。Mica、Acrylic、vibrancyは使いません。",
+    "accent": "アクセントカラー",
+    "accentDescription": "主要な操作、選択状態、フォーカスに使われます。既定はMnelysのピンクです。",
+    "accentPresets": "アクセントカラーのプリセット",
+    "accentBrand": "Mnelysピンク",
+    "accentPink": "マゼンタ",
+    "accentRed": "レッド",
+    "accentOrange": "オレンジ",
+    "accentAmber": "アンバー",
+    "accentGreen": "グリーン",
+    "accentTeal": "ティール",
+    "accentBlue": "ブルー",
+    "accentIndigo": "インディゴ",
+    "accentViolet": "バイオレット",
+    "accentCustom": "カスタムアクセントカラー",
+    "accentHex": "アクセントカラーの16進数値",
+    "accentInvalid": "色は #RRGGBB または #RGB 形式で入力してください。",
+    "accentReset": "Mnelysピンクに戻す",
+    "accentAdjusted": "このテーマで文字が読みやすいように明度を自動調整しました。",
     "language": "表示言語",
     "languageDescription": "再起動なしで即座に反映され、このインストールに保存されます。",
     "developer": "開発者モード",

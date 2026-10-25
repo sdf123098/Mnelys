@@ -41,7 +41,7 @@
 
 .primary {
   background-color: var(--mnelys-color-accent);
-  color: var(--mnelys-color-text-inverse);
+  color: var(--mnelys-color-on-accent);
 }
 
 .primary:hover:not(:disabled) {

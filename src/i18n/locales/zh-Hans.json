@@ -1,9 +1,14 @@
 {
   "app": {
-    "name": "Mnelys",
-    "chineseName": "忆涟",
+    "name": "忆涟",
     "tagline": "面向玩家与模组开发者的 AI 原生 Minecraft 启动器与开发工作区",
     "stage": "M1 外壳"
+  },
+  "window": {
+    "minimize": "最小化",
+    "maximize": "最大化",
+    "restore": "还原",
+    "close": "关闭"
   },
   "nav": {
     "label": "主导航",
@@ -181,6 +186,24 @@
     "description": "外观、语言、开发工具与构建信息。",
     "appearance": "外观",
     "appearanceDescription": "三平台窗口都保持不透明，不使用 Mica、Acrylic 或 vibrancy。",
+    "accent": "强调色",
+    "accentDescription": "用于主要操作、选中状态与焦点。默认使用忆涟粉。",
+    "accentPresets": "强调色预设",
+    "accentBrand": "忆涟粉",
+    "accentPink": "品红",
+    "accentRed": "红色",
+    "accentOrange": "橙色",
+    "accentAmber": "琥珀",
+    "accentGreen": "绿色",
+    "accentTeal": "青色",
+    "accentBlue": "蓝色",
+    "accentIndigo": "靛蓝",
+    "accentViolet": "紫色",
+    "accentCustom": "自定义强调色",
+    "accentHex": "强调色十六进制值",
+    "accentInvalid": "请输入 #RRGGBB 或 #RGB 格式的颜色。",
+    "accentReset": "恢复忆涟粉",
+    "accentAdjusted": "为保证文字在当前主题下清晰可读，已自动调整亮度。",
     "language": "界面语言",
     "languageDescription": "切换后立即生效，并为本次安装保留。",
     "developer": "开发者模式",

@@ -146,6 +146,24 @@
   max-width: 34rem;
 }
 
+.select {
+  width: fit-content;
+  min-width: 12rem;
+  max-width: 100%;
+  min-height: 2.25rem;
+  padding: 0 var(--mnelys-space-3);
+  border: 1px solid var(--mnelys-color-border);
+  border-radius: var(--mnelys-radius-md);
+  background-color: var(--mnelys-color-surface);
+  color: var(--mnelys-color-text);
+  font-size: var(--mnelys-font-size-sm);
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--mnelys-color-focus-ring);
+  outline-offset: 2px;
+}
+
 .sectionHeader {
   display: flex;
   flex-direction: column;

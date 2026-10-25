@@ -6,7 +6,7 @@
   min-height: 0;
   padding: var(--mnelys-space-3);
   background-color: var(--mnelys-color-surface-sunken);
-  border-right: 1px solid var(--mnelys-color-border);
+  border-inline-end: 1px solid var(--mnelys-color-border);
   overflow: hidden;
 }
 
@@ -26,7 +26,7 @@
   flex: none;
   border-radius: var(--mnelys-radius-md);
   background-color: var(--mnelys-color-accent);
-  color: var(--mnelys-color-text-inverse);
+  color: var(--mnelys-color-on-accent);
   font-size: var(--mnelys-font-size-lg);
   font-weight: var(--mnelys-font-weight-semibold);
   line-height: 1;
@@ -93,7 +93,7 @@
   position: absolute;
   top: 25%;
   bottom: 25%;
-  left: 0;
+  inset-inline-start: 0;
   width: 2px;
   border-radius: var(--mnelys-radius-pill);
   background-color: var(--mnelys-color-accent);

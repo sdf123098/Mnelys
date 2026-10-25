@@ -7,11 +7,17 @@ import './styles/tokens.css';
 import './styles/global.css';
 
 import { App } from './App';
+import { detectPlatform } from './ipc/window';
 import { usePreferences } from './state/preferences-store';
-import { applyTheme } from './state/theme';
+import { applyAccent, applyTheme, resolveStoredTheme } from './state/theme';
 
-// Apply the stored palette before the first paint; the provider only keeps it in sync.
-applyTheme(usePreferences.getState().theme);
+// Apply the stored palette and accent before the first paint; the providers only keep
+// them in sync afterwards. The platform lands on the root so the title bar can reserve
+// the macOS traffic-light space without a layout shift.
+document.documentElement.dataset['os'] = detectPlatform();
+const storedPreferences = usePreferences.getState();
+applyTheme(storedPreferences.theme);
+applyAccent(storedPreferences.accent, resolveStoredTheme(storedPreferences.theme));
 
 const container = document.getElementById('root');
 

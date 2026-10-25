@@ -61,9 +61,9 @@ export default tseslint.config(
     },
   },
   {
-    // The single module allowed to touch the Tauri API surface. Everything else must
-    // reach the core through it, which is what makes the capability surface reviewable.
-    files: ['src/ipc/client.ts'],
+    // The modules allowed to touch the Tauri API surface. Everything else must reach
+    // the core through the client, which is what makes the capability surface reviewable.
+    files: ['src/ipc/client.ts', 'src/ipc/window.ts'],
     rules: {
       'no-restricted-imports': 'off',
     },

@@ -20,11 +20,10 @@ export function NavSidebar() {
     <nav className={styles.sidebar} aria-label={t('nav.label')}>
       <div className={styles.brand}>
         <span className={styles.brandMark} aria-hidden="true">
-          {t('app.chineseName').slice(0, 1)}
+          {t('app.name').slice(0, 1)}
         </span>
         <span className={styles.brandText}>
-          <span className={styles.brandName}>{t('app.chineseName')}</span>
-          <span className={styles.brandMeta}>{t('app.name')}</span>
+          <span className={styles.brandName}>{t('app.name')}</span>
         </span>
       </div>
 

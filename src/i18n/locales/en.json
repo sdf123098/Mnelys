@@ -1,9 +1,14 @@
 {
   "app": {
     "name": "Mnelys",
-    "chineseName": "忆涟",
     "tagline": "AI-native Minecraft launcher and developer workspace",
     "stage": "M1 shell"
+  },
+  "window": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "restore": "Restore",
+    "close": "Close"
   },
   "nav": {
     "label": "Main navigation",
@@ -181,6 +186,24 @@
     "description": "Appearance, language, developer tools and build facts.",
     "appearance": "Appearance",
     "appearanceDescription": "The window stays opaque on every platform. No Mica, Acrylic or vibrancy.",
+    "accent": "Accent colour",
+    "accentDescription": "Colours primary actions, selection and focus. The default is the Mnelys pink.",
+    "accentPresets": "Accent presets",
+    "accentBrand": "Mnelys pink",
+    "accentPink": "Magenta",
+    "accentRed": "Red",
+    "accentOrange": "Orange",
+    "accentAmber": "Amber",
+    "accentGreen": "Green",
+    "accentTeal": "Teal",
+    "accentBlue": "Blue",
+    "accentIndigo": "Indigo",
+    "accentViolet": "Violet",
+    "accentCustom": "Custom accent colour",
+    "accentHex": "Accent hex value",
+    "accentInvalid": "Enter a colour as #RRGGBB or #RGB.",
+    "accentReset": "Reset to Mnelys pink",
+    "accentAdjusted": "The lightness was adjusted so text stays readable in this theme.",
     "language": "Language",
     "languageDescription": "Applies immediately and persists for this install.",
     "developer": "Developer mode",

@@ -59,13 +59,13 @@
 .thumb {
   position: absolute;
   top: 0.1875rem;
-  left: 0.1875rem;
+  inset-inline-start: 0.1875rem;
   width: 1rem;
   height: 1rem;
   border-radius: var(--mnelys-radius-pill);
   background-color: var(--mnelys-color-surface);
   box-shadow: var(--mnelys-shadow-panel);
-  transition: transform var(--mnelys-duration-normal) var(--mnelys-easing-standard);
+  transition: inset-inline-start var(--mnelys-duration-normal) var(--mnelys-easing-standard);
 }
 
 .input:checked + .track {
@@ -74,7 +74,7 @@
 }
 
 .input:checked + .track .thumb {
-  transform: translateX(1rem);
+  inset-inline-start: calc(100% - 1.1875rem);
 }
 
 .input:focus-visible + .track {

@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "忆涟 · Mnelys",
+        "title": "Mnelys",
         "width": 1280,
         "height": 800,
         "minWidth": 900,
@@ -21,7 +21,7 @@
         "center": true,
         "resizable": true,
         "fullscreen": false,
-        "decorations": true,
+        "decorations": false,
         "transparent": false,
         "theme": null
       }

@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { isRtlLanguage } from '@/i18n/resources';
 import { usePreferences } from '@/state/preferences-store';
-import { applyTheme } from '@/state/theme';
+import { applyAccent, applyTheme, useResolvedTheme } from '@/state/theme';
 
 function createQueryClient(): QueryClient {
   return new QueryClient({
@@ -27,14 +28,19 @@ function createQueryClient(): QueryClient {
 export function AppProviders({ children }: { readonly children: ReactNode }) {
   const [queryClient] = useState(createQueryClient);
   const theme = usePreferences((state) => state.theme);
+  const accent = usePreferences((state) => state.accent);
+  const resolvedTheme = useResolvedTheme(theme);
   const { i18n } = useTranslation();
 
   useEffect(() => {
     applyTheme(theme);
-  }, [theme]);
+    applyAccent(accent, resolvedTheme);
+  }, [theme, accent, resolvedTheme]);
 
   useEffect(() => {
-    document.documentElement.lang = i18n.resolvedLanguage ?? 'en';
+    const language = i18n.resolvedLanguage ?? 'en';
+    document.documentElement.lang = language;
+    document.documentElement.dir = isRtlLanguage(language) ? 'rtl' : 'ltr';
   }, [i18n, i18n.resolvedLanguage]);
 
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;

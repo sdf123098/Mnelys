@@ -4,5 +4,13 @@
   "description": "Baseline capability set for the Mnelys main window. New permissions are added here deliberately, one at a time (ADR 0005, ADR 0006).",
   "platforms": ["windows", "macOS", "linux"],
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": [
+    "core:default",
+    "core:window:allow-start-dragging",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-is-maximized",
+    "core:window:allow-close",
+    "core:window:allow-set-title"
+  ]
 }

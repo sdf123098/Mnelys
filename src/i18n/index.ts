@@ -1,12 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { resources, SUPPORTED_LANGUAGES, type SupportedLanguage } from './resources';
+import { matchLanguage, resources, SUPPORTED_LANGUAGES, type SupportedLanguage } from './resources';
 
 export const LANGUAGE_STORAGE_KEY = 'mnelys.language';
 
 export function isSupportedLanguage(value: unknown): value is SupportedLanguage {
-  return typeof value === 'string' && (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
+  return typeof value === 'string' && SUPPORTED_LANGUAGES.includes(value);
 }
 
 /**
@@ -27,9 +27,7 @@ export function resolveInitialLanguage(stored?: string | null): SupportedLanguag
     return candidate;
   }
   const preferred = typeof navigator === 'undefined' ? '' : navigator.language;
-  if (preferred.startsWith('zh')) return 'zh-Hans';
-  if (preferred.startsWith('ja')) return 'ja';
-  return 'en';
+  return matchLanguage(preferred);
 }
 
 export function persistLanguage(language: SupportedLanguage): void {
