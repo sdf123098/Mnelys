@@ -8,13 +8,22 @@ The frontend project and the Tauri shell have landed (see [ADR 0006](../docs/adr
 
 The primary path is the [`Desktop packages`](../.github/workflows/desktop-package.yml) workflow. It runs on `workflow_dispatch` and on `v*` tags, and uploads:
 
-| Artifact             | Runner       | Contents                                 |
-| -------------------- | ------------ | ---------------------------------------- |
-| `mnelys-windows-x64` | Windows      | NSIS installer and portable `mnelys.exe` |
-| `mnelys-macos-arm64` | macOS arm64  | Unsigned DMG                             |
-| `mnelys-linux-x64`   | Ubuntu 22.04 | AppImage                                 |
+| Artifact                     | Runner       | Contents                                 |
+| ---------------------------- | ------------ | ---------------------------------------- |
+| `mnelys-windows-x64-unsigned` | Windows      | NSIS installer and portable `mnelys.exe` |
+| `mnelys-macos-arm64-unsigned` | macOS arm64  | Unsigned DMG                             |
+| `mnelys-linux-x64-unsigned`   | Ubuntu 22.04 | AppImage                                 |
 
-Artifacts are build evidence, not releases. They are unsigned and expire after 14 days. Promotion requires code signing, notarization, and the manual gates listed below.
+Artifacts are **unsigned test builds**, not releases. They expire after 14 days and are not attached to a GitHub Release. Windows SmartScreen and macOS Gatekeeper will warn; installing them is a deliberate test action. Promotion to a release requires code signing, notarization, and the manual gates listed below.
+
+You do not need a local toolchain to obtain them. Open the run in the repository's Actions tab and download the artifact, or use the CLI:
+
+```bash
+gh run list --workflow desktop-package.yml
+gh run download <run-id> -n mnelys-windows-x64-unsigned
+```
+
+Unzip the artifact to get the installer and the portable executable. Each run is tied to a commit SHA, so a test build can always be traced back to its source.
 
 The Rust crates form one workspace rooted at the repository, so the bundler writes to `target/release/bundle/` rather than `src-tauri/target/`.
 

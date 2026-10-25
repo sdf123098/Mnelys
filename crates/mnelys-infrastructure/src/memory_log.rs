@@ -109,8 +109,8 @@ mod tests {
                 .expect("memory store never fails");
         }
 
-        let messages: Vec<&str> = store
-            .recent(4)
+        let entries = store.recent(4);
+        let messages: Vec<&str> = entries
             .iter()
             .map(|entry| entry.message.as_str())
             .collect();

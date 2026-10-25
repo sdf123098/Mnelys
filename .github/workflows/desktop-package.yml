@@ -24,7 +24,7 @@ jobs:
             os: windows-latest
             rust-target: ''
             bundles: nsis
-            artifact: mnelys-windows-x64
+            artifact: mnelys-windows-x64-unsigned
             paths: |
               target/release/bundle/nsis/*.exe
               target/release/mnelys.exe
@@ -32,13 +32,13 @@ jobs:
             os: macos-latest
             rust-target: --target aarch64-apple-darwin
             bundles: dmg
-            artifact: mnelys-macos-arm64
+            artifact: mnelys-macos-arm64-unsigned
             paths: target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           - target-name: linux-x64
             os: ubuntu-22.04
             rust-target: ''
             bundles: appimage
-            artifact: mnelys-linux-x64
+            artifact: mnelys-linux-x64-unsigned
             paths: target/release/bundle/appimage/*.AppImage
 
     steps:
