@@ -305,6 +305,15 @@
   overflow-wrap: anywhere;
 }
 
+.rowArt {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border: 1px solid var(--mnelys-color-border);
+  border-radius: var(--mnelys-radius-sm);
+  object-fit: cover;
+}
+
 .rowActions {
   display: flex;
   flex-wrap: wrap;

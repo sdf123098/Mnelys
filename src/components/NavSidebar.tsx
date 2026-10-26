@@ -19,9 +19,7 @@ export function NavSidebar() {
   return (
     <nav className={styles.sidebar} aria-label={t('nav.label')}>
       <div className={styles.brand}>
-        <span className={styles.brandMark} aria-hidden="true">
-          {t('app.name').slice(0, 1)}
-        </span>
+        <img className={styles.brandMark} src="/app-icon.png" alt="" width={36} height={36} />
         <span className={styles.brandText}>
           <span className={styles.brandName}>{t('app.name')}</span>
         </span>

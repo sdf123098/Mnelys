@@ -5,6 +5,7 @@ import { findSection, SECTIONS } from '@/app/navigation';
 import { ButtonLink } from '@/components/ui/Button';
 import { Icon, type IconName } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
+import { useAccounts } from '@/ipc/hooks';
 import { THEME_PREFERENCES, usePreferences, type ThemePreference } from '@/state/preferences-store';
 import { useUiStore } from '@/state/ui-store';
 
@@ -35,6 +36,8 @@ export function TopBar() {
   const theme = usePreferences((state) => state.theme);
   const setTheme = usePreferences((state) => state.setTheme);
   const openTaskCenter = useUiStore((state) => state.openTaskCenter);
+  const accounts = useAccounts();
+  const signedInAs = accounts.data?.find((account) => account.selected)?.name;
 
   const themeLabel = t(THEME_LABEL_KEYS[theme]);
 
@@ -63,10 +66,10 @@ export function TopBar() {
           variant="ghost"
           size="sm"
           icon="accounts"
-          aria-label={t('topbar.signedOut')}
+          aria-label={signedInAs ?? t('topbar.signedOut')}
           className={styles.account}
         >
-          {t('topbar.signedOut')}
+          {signedInAs ?? t('topbar.signedOut')}
         </ButtonLink>
       </div>
     </header>

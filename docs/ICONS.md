@@ -16,7 +16,7 @@ Every interface pictogram in the React frontend comes from an open-source icon s
 | Single source of truth     | `src/components/ui/Icon.tsx`                                                  |
 | Application icon exception | The Mnelys brand artwork described in `assets/branding/README.md`, not Lucide |
 
-The application icon is brand identity, not interface iconography. It is never replaced by an icon-set glyph.
+The application icon is brand identity, not interface iconography. It is never replaced by an icon-set glyph, and the navigation rail renders the icon image itself (`public/app-icon.png`) rather than a letter from the product name.
 
 ## Usage rules
 

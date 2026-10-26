@@ -2,7 +2,7 @@
 
 Platform artifacts are produced by the **Tauri bundler**, driven from the frontend project's scripts. The custom packaging scripts that targeted `dotnet publish` were removed on 2026-09-30 together with the .NET/Avalonia baseline (see [ADR 0005](../docs/adr/0005-runtime-and-ui-baseline-tauri.md)).
 
-The frontend project and the Tauri shell have landed (see [ADR 0006](../docs/adr/0006-frontend-framework-and-application-stack.md)); the commands below are the scripts defined in `package.json`. No three-platform artifact has been produced yet, so every number in the M0 packaging report still needs to be reproduced on this baseline.
+The frontend project and the Tauri shell have landed (see [ADR 0006](../docs/adr/0006-frontend-framework-and-application-stack.md)); the commands below are the scripts defined in `package.json`. The `Desktop packages` workflow has produced unsigned artifacts for all three targets, but the sizes in the M0 packaging report are Avalonia-era and are not reused as Tauri evidence.
 
 ## CI packaging
 
@@ -15,6 +15,8 @@ The primary path is the [`Desktop packages`](../.github/workflows/desktop-packag
 | `mnelys-linux-x64-unsigned`   | Ubuntu 22.04 | AppImage                                 |
 
 Artifacts are **unsigned test builds**, not releases. They expire after 14 days and are not attached to a GitHub Release. Windows SmartScreen and macOS Gatekeeper will warn; installing them is a deliberate test action. Promotion to a release requires code signing, notarization, and the manual gates listed below.
+
+First recorded run: [`Desktop packages` run 40262368596](https://github.com/sdf123098/Mnelys/actions/runs/40262368596) — all three jobs green. Downloaded artifact zip sizes were 6,782,945 B (Windows x64), 6,696,204 B (macOS arm64) and 81,688,402 B (Linux x64). Nobody has installed or launched these yet; cold-start and runtime behaviour remain unverified.
 
 You do not need a local toolchain to obtain them. Open the run in the repository's Actions tab and download the artifact, or use the CLI:
 

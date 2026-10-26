@@ -7,9 +7,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Dialog } from '@/components/ui/Dialog';
-import { EmptyState } from '@/components/ui/EmptyState';
 import { Icon } from '@/components/ui/Icon';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { InstalledContentGroups } from '@/components/InstalledContentGroups';
 import type { ContentKind, ContentProviderId } from '@/ipc/commands';
 import { describeError } from '@/ipc/messages';
 import {
@@ -380,7 +380,7 @@ interface ContentSectionProps {
 }
 
 function ContentSection({ instanceId, gameVersion, loader }: ContentSectionProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const providers = useContentProviders();
   const installed = useInstalledContent(instanceId);
   const installContent = useInstallContent();
@@ -407,6 +407,7 @@ function ContentSection({ instanceId, gameVersion, loader }: ContentSectionProps
 
   const availableProviders = providers.data ?? [];
   const providerMissing = availableProviders.length === 0;
+  const numberFormat = useMemo(() => new Intl.NumberFormat(i18n.language), [i18n.language]);
 
   function install(projectId: string): void {
     setError(null);
@@ -529,10 +530,13 @@ function ContentSection({ instanceId, gameVersion, loader }: ContentSectionProps
                   <span className={pages.rowTitle}>{project.name}</span>
                   <span className={pages.rowMeta}>{project.summary}</span>
                   <span className={pages.rowMeta}>
-                    {project.author} · {t(CONTENT_KIND_KEYS[project.kind])} ·{' '}
-                    {t('instances.contentDownloads', { count: project.downloads })}
+                    {project.author} ·{' '}
+                    {t('instances.contentDownloads', {
+                      total: numberFormat.format(project.downloads),
+                    })}
                   </span>
                 </div>
+                <Badge tone="neutral">{t(CONTENT_KIND_KEYS[project.kind])}</Badge>
                 <Button
                   size="sm"
                   variant="primary"
@@ -557,42 +561,19 @@ function ContentSection({ instanceId, gameVersion, loader }: ContentSectionProps
       </Card>
 
       <Card title={t('instances.installedTitle')} icon="library">
-        {installed.data !== undefined && installed.data.length === 0 ? (
-          <EmptyState
-            icon="package"
-            title={t('instances.installedEmptyTitle')}
-            description={t('instances.installedEmptyBody')}
-          />
-        ) : (
-          <ul className={pages.list}>
-            {installed.data?.map((item) => (
-              <li key={`${item.provider}-${item.projectId}`} className={pages.row}>
-                <div className={pages.rowMain}>
-                  <span className={pages.rowTitle}>{item.name}</span>
-                  <span className={pages.rowMeta}>
-                    {t(CONTENT_KIND_KEYS[item.kind])} · {item.filename}
-                  </span>
-                </div>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  icon="trash"
-                  disabled={removeContent.isPending}
-                  onClick={() => {
-                    setError(null);
-                    removeContent
-                      .mutateAsync({ instanceId, projectId: item.projectId })
-                      .catch((cause: unknown) => {
-                        setError(describeError(cause, t));
-                      });
-                  }}
-                >
-                  {t('instances.contentRemove')}
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
+        <InstalledContentGroups
+          items={installed.data ?? []}
+          removeLabel={t('instances.contentRemove')}
+          disabled={removeContent.isPending}
+          emptyTitle={t('instances.installedEmptyTitle')}
+          emptyBody={t('instances.installedEmptyBody')}
+          onRemove={(projectId) => {
+            setError(null);
+            removeContent.mutateAsync({ instanceId, projectId }).catch((cause: unknown) => {
+              setError(describeError(cause, t));
+            });
+          }}
+        />
       </Card>
     </>
   );

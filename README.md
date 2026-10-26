@@ -51,10 +51,10 @@ M1–M6 的核心能力已实现，尚缺真实桌面环境中的运行证据与
 - [x] 离线、Yggdrasil 与 Microsoft 设备码账户；密钥库存储，令牌不跨越 IPC
 - [x] Fabric / Quilt / Legacy Fabric 元数据加载器
 - [x] Forge / NeoForge 安装器管线
-- [x] Modrinth / CurseForge 搜索、安装、移除与实例清单导入导出
+- [x] 资源站一级页面：Modrinth / CurseForge 搜索、按资源类型分组安装与移除，实例清单导入导出
 - [x] GitHub Actions：前端检查、三平台 Rust 矩阵与三平台桌面打包
 - [ ] 真实桌面启动到主菜单、DPI 与三平台视觉回归
-- [ ] 三平台打包体积、签名与公证证据
+- [ ] 产物安装验证与签名 / 公证证据（三平台未签名产物体积已记入 [PROGRESS](docs/PROGRESS.md)）
 
 上一轮 Avalonia 实现取得的打包证据见 [M0 打包 PoC 报告](docs/M0_PACKAGING_POC.md)。那是历史记录，**不构成 Tauri 基线的证据**。
 

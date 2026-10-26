@@ -51,10 +51,10 @@ The M1–M6 core is implemented; real-desktop evidence and release artifacts are
 - [x] Offline, Yggdrasil, and Microsoft device-code accounts; keystore storage with tokens kept off IPC
 - [x] Fabric / Quilt / Legacy Fabric metadata loaders
 - [x] Forge / NeoForge installer pipeline
-- [x] Modrinth / CurseForge search, install, remove, and instance-manifest export/import
+- [x] Content hub: Modrinth / CurseForge search, installs grouped by resource type, removal, and instance-manifest export/import
 - [x] GitHub Actions: frontend checks, a three-platform Rust matrix, and desktop packaging
 - [ ] Real-desktop launch to the main menu, DPI, and three-platform visual regression
-- [ ] Three-platform artifact sizes, signing, and notarization evidence
+- [ ] Installing the artifacts on real desktops plus signing and notarization evidence (unsigned sizes are recorded in [PROGRESS](docs/PROGRESS.md))
 
 The packaging evidence from the earlier Avalonia implementation is recorded in the [M0 packaging PoC report](docs/M0_PACKAGING_POC.md). It is a historical record and is **not** evidence for the Tauri baseline.
 

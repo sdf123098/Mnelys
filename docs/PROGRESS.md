@@ -24,6 +24,7 @@
 | 本地化         | 10 套目录：`en` / `zh-Hans` / `zh-Hant` / `ja` / `ko` / `fr` / `de` / `es` / `pt-BR` / `ru`；键集必须与 `en` 完全一致 |
 | 主题           | 浅色 / 深色 / 跟随系统；默认强调色为品牌粉 `#C2185B`，支持预设与自定义十六进制色                                      |
 | 标题栏         | 自绘标题栏；macOS 保留原生交通灯并以 overlay 方式留位                                                                 |
+| 一级页面       | 开始 / 实例 / 下载 / 资源站 / 联机 / 设置；账户与任务中心为顶栏入口，开发分区受开发者模式控制                         |
 | 界面图标       | Lucide（ISC），经单一注册表封装（[ICONS.md](ICONS.md)）                                                               |
 | 平台 WebView   | WebView2 / WKWebView / WebKitGTK                                                                                      |
 | 窗口材质       | 不透明，无 Mica、Acrylic、vibrancy                                                                                    |
@@ -124,10 +125,22 @@
 ## 2026-10-26 本地验证结果
 
 - 前端：`pnpm format:check`、`pnpm lint`、`pnpm typecheck`、`pnpm test`、`pnpm build` 全部通过；8 个测试文件、38 个用例。
-- 前端构建产物：JS 710.12 kB（gzip 217.85 kB），CSS 38.34 kB（gzip 6.38 kB）；仅有 >500 kB 分块提示，未做代码分割。
+- 前端构建产物：JS 730.57 kB（gzip 222.24 kB），CSS 39.69 kB（gzip 6.51 kB）；仅有 >500 kB 分块提示，未做代码分割。
 - Rust：`cargo fmt --all --check`、`cargo clippy --workspace --all-targets -- -D warnings` 通过，零告警。
-- 本机可执行的 Rust 测试 107 个（domain 34、application 20、infrastructure 53）全部通过。`mnelys-presentation`（4 个）与 `src-tauri` 契约测试（3 个）的测试二进制在本机 Windows GNU 环境无法加载——它们依赖 WinRT API set DLL，属环境限制而非代码失败；以 CI 的 MSVC / Linux / macOS 运行为权威证据。
+- 本机可执行的 Rust 测试 107 个（domain 34、application 20、infrastructure 53）全部通过。`mnelys-presentation`（4 个）与 `src-tauri` 契约测试（3 个）的测试二进制在本机 Windows GNU 环境无法加载——它们依赖 WinRT API set DLL，属环境限制而非代码失败；完整测试以 CI 为准。
+- GitHub Actions 首次远端验证通过（[CI run 40261698848](https://github.com/sdf123098/Mnelys/actions/runs/40261698848)）：前端检查与 Windows / macOS / Linux 三平台 Rust 作业全部成功；Linux 侧共执行 114 个 Rust 测试（domain 34、application 20、infrastructure 53、presentation 4、契约 3），零失败。
 - 浏览器预览验证过强调色预设与自定义色、10 种语言切换、自绘标题栏布局与窄屏导航；真实 Tauri 窗口、DPI 与三平台打包仍待 CI 与桌面环境。
+- `Desktop packages` 首次远端运行（[run 40262368596](https://github.com/sdf123098/Mnelys/actions/runs/40262368596)）三个作业全部成功，产物 zip 体积：`mnelys-windows-x64-unsigned` 6 782 945 B、`mnelys-macos-arm64-unsigned` 6 696 204 B、`mnelys-linux-x64-unsigned` 81 688 402 B。这些是未签名测试产物，保留 14 天，不是正式版本。
+
+## 2026-10-26 资源站与界面接线收口
+
+- 新增一级页面 **资源站**（`/content`，`src/routes/ContentRoute.tsx`）：平台切换、五类资源分段控件、游戏版本与加载器筛选、目标实例选择与安装，以及按类型分组的已安装内容。内容浏览不再只存在于实例详情里。
+- 已安装内容改为按 `mod / 资源包 / 光影 / 世界 / 数据包` 分组（`src/components/InstalledContentGroups.tsx`），资源站与实例详情共用；搜索结果行带类型徽标。
+- 侧栏品牌标记不再用产品名首字占位，改为应用图标本体 `public/app-icon.png`（与文档 favicon 同一 128×128 派生，`public/favicon.png` 已改名）。
+- 顶栏账户入口接入 `list_accounts`：显示当前选中账户名，无账户时才回落到"未登录"。
+- 下载量按界面语言用 `Intl.NumberFormat` 分组显示，语言目录里 `{{count}}` 改为 `{{total}}` 以免与 i18next 复数解析冲突。
+- 10 套语言目录各新增 31 个键（`nav.content` 与 `content.*`），`src/i18n/catalogs.test.ts` 的键集奇偶校验通过；简体中文为"资源站"、日文为"コンテンツ"，切到日文时窗口标题仍是 `Mnelys`。
+- 浏览器接线验证：注入 mock 核心（`@tauri-apps/api/mocks` 的 `mockIPC`）后走完开始、实例、实例详情、资源站、下载、账户、设置七个界面，确认 39 个命令的返回结构都能被界面消费；任务中心显示三种任务状态，资源站搜索 → 安装 → 分组列表链路可用。
 
 ## 已完成
 
@@ -155,11 +168,11 @@
 - [x] 声明 `src-tauri/capabilities/default.json` capability 集（仅 `core:default`）。
 - [x] 落地 i18n 三语目录与键集一致性测试、IPC 客户端与错误类型测试、基础组件测试。
 - [x] 前端在本地通过 `format:check`、`lint`、`build`、`test`；Rust 侧通过 `fmt` 与 `clippy`（含全部测试目标）。
-- [ ] 在装有 MSVC 生成工具的机器上执行 `cargo test`，跑通 `src-tauri/tests/contract.rs` 与 Rust 单元测试。
+- [x] 由 GitHub Actions 三平台矩阵执行 `cargo test`，跑通 `src-tauri/tests/contract.rs` 与全部 Rust 单元测试。
 - [ ] 三平台 WebView 兼容基线与启动冒烟。
-- [ ] 用 Tauri bundler 产出 NSIS、DMG、AppImage 三平台 PoC，并记录体积与冷启动数据。
+- [ ] 在开发者本机安装并运行 NSIS / DMG / AppImage 产物，记录体积与冷启动数据。
 - [ ] 在 Apple Silicon Mac 上完成签名、公证与 Gatekeeper 验证。
-- [x] 建立 CI 三平台构建、格式与打包检查（工作流已落地；首次远端证据待运行）。
+- [x] 建立 CI 三平台构建、格式与打包检查（工作流已落地并通过首次远端运行）。
 
 ### Design System 与 Shell（M1）
 
@@ -203,12 +216,12 @@
 
 ### Tauri 基线的 M0 收尾
 
-- [ ] 由 GitHub Actions 三平台矩阵执行 `cargo test`；工作流已就绪，等待首次远端运行并记录结果。
-- [ ] 由 `Desktop packages` 工作流产出 NSIS、macOS arm64 DMG 与 AppImage，记录体积；冷启动数据仍需真实桌面运行。
+- [x] 由 GitHub Actions 三平台矩阵执行 `cargo test`（含 `src-tauri/tests/contract.rs`）；[CI run 40261698848](https://github.com/sdf123098/Mnelys/actions/runs/40261698848) 全绿。
+- [x] 由 `Desktop packages` 工作流产出 NSIS、macOS arm64 DMG 与 AppImage 并记录体积（[run 40262368596](https://github.com/sdf123098/Mnelys/actions/runs/40262368596)）；冷启动数据仍需真实桌面运行。
 - [ ] 建立三平台 WebView 兼容基线（WebView2 / WKWebView / WebKitGTK）与启动冒烟。
 - [ ] 在 Apple Silicon Mac 上完成 Developer ID 签名、公证、staple 与 Gatekeeper 验证；需要仓库外提供的 Apple 凭据。
-- [x] 建立 CI 三平台前端检查、Rust 格式 / Clippy / 测试与桌面打包工作流（`.github/workflows/`）。
-- [ ] 在首次远端运行通过后，把打包体积、启动结果与运行链接补入本文档。
+- [x] 建立 CI 三平台前端检查、Rust 格式 / Clippy / 测试与桌面打包工作流（`.github/workflows/`），并通过首次远端运行。
+- [x] 首次远端运行的产物体积与运行链接已记入本文档；安装与启动结果待真实桌面环境。
 
 ### M1 收尾
 
@@ -230,7 +243,7 @@
 
 ## 下一步
 
-1. 推送后运行 `CI` 与 `Desktop packages`，修复首次运行的平台差异，并把三平台测试结果、产物体积与下载链接记入本文档。
+1. 在开发者机器上安装 CI 产出的三平台未签名包，记录冷启动与首屏数据；后续平台差异仍由 `CI` 与 `Desktop packages` 兜底。
 2. 在具备图形桌面的 Windows / macOS / Linux 环境补做真实窗口的 100%～200% DPI、缩放、窗口装饰与视觉回归；CI 的无头打包不能替代这一步。
 3. 用真实账户与网络完成一次 Vanilla 和一种加载器实例的端到端启动，补齐 M2–M6 的运行证据。
 4. 根据实测结果决定首个 0.2 预发布范围；在此之前不发布中间版本。

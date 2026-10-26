@@ -1,9 +1,9 @@
 import type { IconName } from '@/components/ui/Icon';
 
 /**
- * The primary information architecture from the product plan: Start, Instances,
- * Downloads, Multiplayer, Developer (mode-gated), Settings. Accounts is a destination
- * reachable from the top bar, not a primary rail item.
+ * The primary information architecture: Start, Instances, Downloads, Content (the
+ * resource hub), Multiplayer, Developer (mode-gated), Settings. Accounts is a
+ * destination reachable from the top bar, not a primary rail item.
  */
 export const SECTIONS = [
   {
@@ -27,6 +27,14 @@ export const SECTIONS = [
     to: '/downloads',
     labelKey: 'nav.downloads',
     icon: 'downloads',
+    inNav: true,
+    developerOnly: false,
+  },
+  {
+    id: 'content',
+    to: '/content',
+    labelKey: 'nav.content',
+    icon: 'library',
     inNav: true,
     developerOnly: false,
   },

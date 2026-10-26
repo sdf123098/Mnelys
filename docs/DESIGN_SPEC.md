@@ -31,6 +31,7 @@ Mnelys uses a stable, opaque, content-first desktop surface. Windows Mica, Acryl
 ## Shell layout
 
 - Navigation rail: 220 px standard, 64 px icon-only compact rail below 1200 px. Each rail link keeps an accessible name and a tooltip in compact mode.
+- Primary pages: Start, Instances, Downloads, Content (the resource hub), Multiplayer, Settings. Accounts and the task center are reached from the top bar; the developer section appears only in developer mode.
 - Top bar: one visual page title, theme control, task-center control, account entry.
 - Status bar: persistent core/runtime health with a non-color indicator.
 - Task center: modal drawer from the right, with a focus trap, Escape to close, and focus restored to the opener.
@@ -52,7 +53,7 @@ Mnelys uses a stable, opaque, content-first desktop surface. Windows Mica, Acryl
 
 - Interface icons come from Lucide (ISC) through the single registry in `src/components/ui/Icon.tsx`. See [ICONS.md](ICONS.md).
 - Icons inherit `currentColor`, default to 18 px at 1.75 stroke width, and are decorative unless given a label.
-- The application icon is the canonical Mnelys brand artwork and is not part of the interface icon set.
+- The application icon is the canonical Mnelys brand artwork and is not part of the interface icon set. The rail's brand mark renders that same PNG (`public/app-icon.png`, the 128 px derivative also used as the document favicon); it is never a letter taken from the product name.
 
 ## Semantic tokens
 

@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 
 import { AppShell } from '@/components/AppShell';
 import { AccountsRoute } from '@/routes/AccountsRoute';
+import { ContentRoute } from '@/routes/ContentRoute';
 import { DeveloperRoute } from '@/routes/DeveloperRoute';
 import { DownloadsRoute } from '@/routes/DownloadsRoute';
 import { InstanceDetailRoute } from '@/routes/InstanceDetailRoute';
@@ -28,6 +29,7 @@ export const routes: RouteObject[] = [
       { path: 'instances', element: <InstancesRoute /> },
       { path: 'instances/:id', element: <InstanceDetailRoute /> },
       { path: 'downloads', element: <DownloadsRoute /> },
+      { path: 'content', element: <ContentRoute /> },
       { path: 'multiplayer', element: <MultiplayerRoute /> },
       { path: 'developer', element: <DeveloperRoute /> },
       { path: 'accounts', element: <AccountsRoute /> },

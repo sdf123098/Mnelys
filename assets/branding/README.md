@@ -24,11 +24,17 @@ The source file is preserved without recompression or editing. Do not overwrite 
 
 All generated assets must be reviewed at native size. Do not rely only on a large preview because fine linework and the eye mark may become unclear at launcher and taskbar sizes.
 
-## M0 derivatives
+## Current derivatives
 
-| File                                        |          Size | SHA-256                                                            |
-| ------------------------------------------- | ------------: | ------------------------------------------------------------------ |
-| `src/Mnelys.Desktop/Assets/mnelys-icon.png` | 285,593 bytes | `5CF72B2F765E087BA55CC28804C867FB1F48B4EE1F418F979097BB983656439D` |
-| `src/Mnelys.Desktop/Assets/mnelys.ico`      | 134,825 bytes | `BA1BC7A548D7EC55ECC1EC194069892B1A127B3FD6540C3E7083B35477C9AEF1` |
+Generated from the canonical JPEG during the M0/Tauri baseline work. Paths reflect the repository as it stands after the .NET/Avalonia removal (ADR 0005).
 
-These are mechanical PoC derivatives from the canonical JPEG. They require native-size visual review before a public release and do not replace the master artwork.
+| File                              | Usage                             |          Size | SHA-256                                                            |
+| --------------------------------- | --------------------------------- | ------------: | ------------------------------------------------------------------ |
+| `src-tauri/icons/mnelys-icon.png` | 512 px square master              | 285,593 bytes | `5CF72B2F765E087BA55CC28804C867FB1F48B4EE1F418F979097BB983656439D` |
+| `src-tauri/icons/icon.png`        | 512 px bundle icon                | 295,365 bytes | `E46ABF6EE0CB31C5054E3561B6B10EFC0ED0E863D15412DF885CFA1D66F4B283` |
+| `src-tauri/icons/128x128.png`     | 128 px platform icon              |  27,520 bytes | `8959DB58A410F8FD1C463B7484D7FC8FDABB466641FBA460634A5A4C28258716` |
+| `public/app-icon.png`             | Web favicon and in-app brand mark |  27,520 bytes | `8959DB58A410F8FD1C463B7484D7FC8FDABB466641FBA460634A5A4C28258716` |
+
+`public/app-icon.png` is a byte-for-byte copy of `src-tauri/icons/128x128.png`; it is the only brand raster the frontend renders, and it replaces no Lucide glyph.
+
+These are mechanical derivatives from the canonical JPEG. They require native-size visual review before a public release and do not replace the master artwork.
