@@ -1,58 +1,52 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 
 import {
-  LOADER_KEYS,
-  LOADER_ORDER,
+  CONTENT_KIND_ICONS,
   CONTENT_KIND_KEYS,
   CONTENT_KIND_ORDER,
+  LOADER_KEYS,
+  LOADER_ORDER,
 } from '@/app/wire-labels';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Icon, type IconName } from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/Icon';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
-import { InstalledContentGroups } from '@/components/InstalledContentGroups';
 import type { ContentKind, ContentProviderId } from '@/ipc/commands';
 import { describeError } from '@/ipc/messages';
 import {
   useContentProviders,
   useInstallContent,
-  useInstalledContent,
   useInstances,
-  useRemoveContent,
   useSearchContent,
   useVersions,
 } from '@/ipc/hooks';
 
 import pages from './pages.module.css';
 
-const KIND_ICONS: Readonly<Record<ContentKind, IconName>> = {
-  mod: 'package',
-  resourcepack: 'layers',
-  shader: 'sparkles',
-  world: 'globe',
-  datapack: 'database',
-};
-
 const RESULT_LIMIT = 20;
 
 export function ContentRoute() {
   const { t, i18n } = useTranslation();
+  const [params] = useSearchParams();
   const providers = useContentProviders();
   const versions = useVersions();
   const instances = useInstances();
 
+  const instanceRows = instances.data ?? [];
   const [provider, setProvider] = useState<ContentProviderId>('modrinth');
   const [kind, setKind] = useState<ContentKind>('mod');
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
   const [gameVersion, setGameVersion] = useState('');
   const [loader, setLoader] = useState('');
-  const [instanceId, setInstanceId] = useState('');
+  const [instanceId, setInstanceId] = useState(params.get('instance') ?? '');
   const [error, setError] = useState<string | null>(null);
+  const [failedIcons, setFailedIcons] = useState<ReadonlySet<string>>(new Set());
 
   const search = useSearchContent(
     submitted.trim().length === 0
@@ -66,13 +60,10 @@ export function ContentRoute() {
           limit: RESULT_LIMIT,
         },
   );
-  const installed = useInstalledContent(instanceId === '' ? undefined : instanceId);
   const installContent = useInstallContent();
-  const removeContent = useRemoveContent();
 
   const availableProviders = providers.data ?? [];
   const providerMissing = availableProviders.length === 0;
-  const instanceRows = instances.data ?? [];
   const target = instanceRows.find((instance) => instance.id === instanceId);
 
   const kindOptions = useMemo(
@@ -80,12 +71,27 @@ export function ContentRoute() {
       CONTENT_KIND_ORDER.map((candidate) => ({
         value: candidate,
         label: t(CONTENT_KIND_KEYS[candidate]),
-        icon: KIND_ICONS[candidate],
+        icon: CONTENT_KIND_ICONS[candidate],
       })),
     [t],
   );
 
   const numberFormat = useMemo(() => new Intl.NumberFormat(i18n.language), [i18n.language]);
+
+  /**
+   * A target instance knows its own version and loader. Following them keeps a search
+   * from returning files that cannot load in the instance being installed into.
+   */
+  function chooseInstance(nextId: string): void {
+    setInstanceId(nextId);
+    setError(null);
+    const next = instanceRows.find((instance) => instance.id === nextId);
+    if (next === undefined) {
+      return;
+    }
+    setGameVersion(next.gameVersion);
+    setLoader(next.loader === 'vanilla' ? '' : next.loader);
+  }
 
   function install(projectId: string): void {
     setError(null);
@@ -98,13 +104,6 @@ export function ContentRoute() {
       .catch((cause: unknown) => {
         setError(describeError(cause, t));
       });
-  }
-
-  function remove(projectId: string): void {
-    setError(null);
-    removeContent.mutateAsync({ instanceId, projectId }).catch((cause: unknown) => {
-      setError(describeError(cause, t));
-    });
   }
 
   return (
@@ -122,6 +121,45 @@ export function ContentRoute() {
         }
       >
         <div className={pages.wideBlock}>
+          <SegmentedControl
+            name="content-kind"
+            label={t('content.kind')}
+            value={kind}
+            options={kindOptions}
+            onChange={setKind}
+          />
+
+          <form
+            className={pages.inlineForm}
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSubmitted(query);
+            }}
+          >
+            <div className={`${pages.field} ${pages.fieldGrow}`}>
+              <label className={pages.fieldLabel} htmlFor="browse-query">
+                {t('content.query')}
+              </label>
+              <input
+                id="browse-query"
+                className={pages.input}
+                value={query}
+                spellCheck={false}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                }}
+              />
+            </div>
+            <Button
+              type="submit"
+              variant="primary"
+              icon="compass"
+              disabled={providerMissing || query.trim().length === 0}
+            >
+              {t('content.queryAction')}
+            </Button>
+          </form>
+
           <div className={pages.toolbar}>
             {providerMissing ? null : (
               <div className={pages.field}>
@@ -193,7 +231,7 @@ export function ContentRoute() {
                 className={pages.select}
                 value={instanceId}
                 onChange={(event) => {
-                  setInstanceId(event.target.value);
+                  chooseInstance(event.target.value);
                 }}
               >
                 <option value="">{t('content.targetNone')}</option>
@@ -204,45 +242,17 @@ export function ContentRoute() {
                 ))}
               </select>
             </div>
+            {target === undefined ? null : (
+              <ButtonLink
+                to={`/instances/${encodeURIComponent(target.id)}`}
+                variant="ghost"
+                size="sm"
+                iconRight="arrowRight"
+              >
+                {t('content.installedLink')}
+              </ButtonLink>
+            )}
           </div>
-
-          <SegmentedControl
-            name="content-kind"
-            label={t('content.kind')}
-            value={kind}
-            options={kindOptions}
-            onChange={setKind}
-          />
-
-          <form
-            className={pages.inlineForm}
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSubmitted(query);
-            }}
-          >
-            <div className={pages.field}>
-              <label className={pages.fieldLabel} htmlFor="browse-query">
-                {t('content.query')}
-              </label>
-              <input
-                id="browse-query"
-                className={pages.input}
-                value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                }}
-              />
-            </div>
-            <Button
-              type="submit"
-              variant="primary"
-              icon="compass"
-              disabled={providerMissing || query.trim().length === 0}
-            >
-              {t('content.queryAction')}
-            </Button>
-          </form>
 
           {providerMissing ? <p className={pages.muted}>{t('content.noProviders')}</p> : null}
 
@@ -270,73 +280,62 @@ export function ContentRoute() {
             <p className={pages.muted}>{t('content.noResults')}</p>
           ) : null}
 
-          <ul className={pages.list}>
-            {search.data?.hits.map((project) => (
-              <li key={`${project.provider}-${project.id}`} className={pages.row}>
-                {project.iconUrl === undefined ? null : (
-                  <img
-                    className={pages.rowArt}
-                    src={project.iconUrl}
-                    alt=""
-                    width={40}
-                    height={40}
-                  />
-                )}
-                <div className={pages.rowMain}>
-                  <span className={pages.rowTitle}>{project.name}</span>
-                  <span className={pages.rowMeta}>{project.summary}</span>
-                  <span className={pages.rowMeta}>
-                    {project.author} ·{' '}
-                    {t('content.downloads', { total: numberFormat.format(project.downloads) })}
-                  </span>
-                </div>
-                <Badge tone="neutral">{t(CONTENT_KIND_KEYS[project.kind])}</Badge>
-                <Button
-                  size="sm"
-                  variant="primary"
-                  icon="downloads"
-                  disabled={installContent.isPending}
-                  onClick={() => {
-                    install(project.id);
-                  }}
-                >
-                  {t('content.install')}
-                </Button>
-              </li>
-            ))}
-          </ul>
-
           {error === null ? null : (
             <p className={pages.errorText} role="alert">
               {error}
             </p>
           )}
-        </div>
-      </Card>
 
-      <Card
-        title={
-          target === undefined
-            ? t('content.installedTitle')
-            : t('content.installedTitleFor', { name: target.name })
-        }
-        description={t('content.installedBody')}
-        icon="package"
-      >
-        {instanceId === '' ? (
-          <EmptyState
-            icon="instances"
-            title={t('content.installedPickTitle')}
-            description={t('content.installedPickBody')}
-          />
-        ) : (
-          <InstalledContentGroups
-            items={installed.data ?? []}
-            removeLabel={t('content.remove')}
-            disabled={removeContent.isPending}
-            onRemove={remove}
-          />
-        )}
+          {search.data === undefined || search.data.hits.length === 0 ? null : (
+            <ul className={pages.results}>
+              {search.data.hits.map((project) => (
+                <li key={`${project.provider}-${project.id}`} className={pages.result}>
+                  <div className={pages.resultHead}>
+                    {project.iconUrl === undefined || failedIcons.has(project.id) ? (
+                      <span className={pages.resultGlyph} aria-hidden="true">
+                        <Icon name={CONTENT_KIND_ICONS[project.kind]} size={20} />
+                      </span>
+                    ) : (
+                      <img
+                        className={pages.resultArt}
+                        src={project.iconUrl}
+                        alt=""
+                        width={44}
+                        height={44}
+                        onError={() => {
+                          setFailedIcons((previous) => new Set(previous).add(project.id));
+                        }}
+                      />
+                    )}
+                    <div className={pages.resultMain}>
+                      <span className={pages.resultName} title={project.name}>
+                        {project.name}
+                      </span>
+                      <span className={pages.resultMeta}>{project.author}</span>
+                    </div>
+                  </div>
+                  <p className={pages.resultSummary}>{project.summary}</p>
+                  <div className={pages.resultFoot}>
+                    <span className={pages.resultMeta}>
+                      {t('content.downloads', { total: numberFormat.format(project.downloads) })}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      icon="downloads"
+                      disabled={installContent.isPending}
+                      onClick={() => {
+                        install(project.id);
+                      }}
+                    >
+                      {t('content.install')}
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </Card>
     </div>
   );

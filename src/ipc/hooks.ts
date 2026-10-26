@@ -50,6 +50,16 @@ export const queryKeys = {
   search: (args: SearchContentArgs) => ['core', 'search', args] as const,
   contentVersions: (args: ContentVersionsArgs) => ['core', 'contentVersions', args] as const,
   installed: (instanceId: string) => ['core', 'installed', instanceId] as const,
+  instanceFiles: (instanceId: string, dir: string) =>
+    ['core', 'instanceFiles', instanceId, dir] as const,
+  instanceLogs: (instanceId: string) => ['core', 'instanceLogs', instanceId] as const,
+  instanceLogTail: (instanceId: string, path: string) =>
+    ['core', 'instanceLogTail', instanceId, path] as const,
+  instanceWorlds: (instanceId: string) => ['core', 'instanceWorlds', instanceId] as const,
+  instanceSchematics: (instanceId: string) => ['core', 'instanceSchematics', instanceId] as const,
+  /** Scopes for invalidation: every listing of one instance, whatever its folder. */
+  instanceFilesScope: (instanceId: string) => ['core', 'instanceFiles', instanceId] as const,
+  instanceLogTailScope: (instanceId: string) => ['core', 'instanceLogTail', instanceId] as const,
   tasks: ['core', 'tasks'] as const,
 };
 
@@ -411,6 +421,100 @@ export function useImportInstance() {
   return useMutation({
     mutationFn: (json: string) => core.importInstance(json),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.instances }),
+  });
+}
+
+/**
+ * One directory inside an instance. `dir` is relative to the instance game directory
+ * and only read while the panel is open, because a directory listing is pure disk I/O.
+ */
+export function useInstanceFiles(instanceId: string | undefined, dir: string, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.instanceFiles(instanceId ?? '', dir),
+    queryFn: () => core.instanceFiles(instanceId ?? '', dir),
+    enabled: enabled && instanceId !== undefined && instanceId.length > 0,
+    staleTime: INSTANCE_POLL_INTERVAL_MS,
+    retry: 1,
+  });
+}
+
+/** The launcher logs and crash reports an instance has written. */
+export function useInstanceLogs(instanceId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.instanceLogs(instanceId ?? ''),
+    queryFn: () => core.instanceLogs(instanceId ?? ''),
+    enabled: enabled && instanceId !== undefined && instanceId.length > 0,
+    refetchInterval: enabled ? LOG_POLL_INTERVAL_MS : false,
+    retry: 1,
+  });
+}
+
+/** The end of one log file. Pass `undefined` to close the reader. */
+export function useInstanceLogTail(instanceId: string | undefined, path: string | undefined) {
+  return useQuery({
+    queryKey: queryKeys.instanceLogTail(instanceId ?? '', path ?? ''),
+    queryFn: () => core.instanceLogTail(instanceId ?? '', path ?? ''),
+    enabled:
+      instanceId !== undefined && instanceId.length > 0 && path !== undefined && path.length > 0,
+    staleTime: LOG_POLL_INTERVAL_MS,
+    retry: 1,
+  });
+}
+
+/** The saved worlds of one instance, with the size the core could measure. */
+export function useInstanceWorlds(instanceId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.instanceWorlds(instanceId ?? ''),
+    queryFn: () => core.instanceWorlds(instanceId ?? ''),
+    enabled: enabled && instanceId !== undefined && instanceId.length > 0,
+    staleTime: INSTANCE_POLL_INTERVAL_MS,
+    retry: 1,
+  });
+}
+
+/** Schematic files found below `schematics/`. */
+export function useInstanceSchematics(instanceId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.instanceSchematics(instanceId ?? ''),
+    queryFn: () => core.instanceSchematics(instanceId ?? ''),
+    enabled: enabled && instanceId !== undefined && instanceId.length > 0,
+    staleTime: INSTANCE_POLL_INTERVAL_MS,
+    retry: 1,
+  });
+}
+
+/**
+ * Deletes one entry inside an instance. Every listing that could contain it is
+ * re-read, because the core walks the directory rather than tracking entries.
+ */
+export function useDeleteInstanceEntry() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (values: { instanceId: string; path: string }) =>
+      core.deleteInstanceEntry(values.instanceId, values.path),
+    onSuccess: (_result, values) => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.instanceFilesScope(values.instanceId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.instanceLogTailScope(values.instanceId),
+      });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.instanceLogs(values.instanceId) });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.instanceWorlds(values.instanceId) });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.instanceSchematics(values.instanceId),
+      });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.installed(values.instanceId) });
+    },
+  });
+}
+
+/** Asks the desktop file manager to show one entry. */
+export function useRevealInstanceEntry() {
+  return useMutation({
+    mutationFn: (values: { instanceId: string; path: string }) =>
+      core.revealInstanceEntry(values.instanceId, values.path),
   });
 }
 

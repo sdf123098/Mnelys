@@ -32,6 +32,11 @@ Mnelys uses a stable, opaque, content-first desktop surface. Windows Mica, Acryl
 
 - Navigation rail: 220 px standard, 64 px icon-only compact rail below 1200 px. Each rail link keeps an accessible name and a tooltip in compact mode.
 - Primary pages: Start, Instances, Downloads, Content (the resource hub), Multiplayer, Settings. Accounts and the task center are reached from the top bar; the developer section appears only in developer mode.
+- The Instances page is one master list beside one launch pane: the list only selects, the pane offers a single primary action (install, launch, or stop) plus the instance settings dialog, which groups the remaining work under General, Content, Files, Logs, Schematics, Worlds, and Export and delete. `/instances/:id` is the selection, not a second page.
+- Inside Content the segmented control browses one resource type at a time, while the search box matches every installed item whatever the tab says; results stay grouped by type. Nothing in the dialog re-queries a provider for local filtering.
+- Files, Logs, Schematics and Worlds each list one directory of the instance folder, and every row offers the same three verbs: open in place, show in the desktop file manager, delete. A delete confirms inside the row rather than in a second modal, and folder confirmations say that the contents go too. Paths are jailed to the instance root: an absolute path, a drive letter or `..` is rejected lexically before either side is canonicalized and compared.
+- Downloads carries the background task queue and nothing else. Managed runtimes live in Settings, the Mojang version manifest in the developer section, and installed files are managed from the instance they belong to.
+- Content results are a card grid on the shared 18 rem minimum track: cover art or the type glyph, name, author, clamped summary, download count, and the install action. A hub search never shows another instance's installed files.
 - Top bar: one visual page title, theme control, task-center control, account entry.
 - Status bar: persistent core/runtime health with a non-color indicator.
 - Task center: modal drawer from the right, with a focus trap, Escape to close, and focus restored to the opener.

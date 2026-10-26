@@ -9,6 +9,8 @@ interface DialogProps {
   readonly description?: string | undefined;
   readonly closeLabel: string;
   readonly onClose: () => void;
+  /** `wide` gives category panes room for a sidebar plus a form. */
+  readonly size?: 'narrow' | 'wide';
   readonly children?: ReactNode;
   readonly footer?: ReactNode;
 }
@@ -26,6 +28,7 @@ export function Dialog({
   description,
   closeLabel,
   onClose,
+  size = 'narrow',
   children,
   footer,
 }: DialogProps) {
@@ -49,7 +52,7 @@ export function Dialog({
   return (
     <dialog
       ref={dialogRef}
-      className={styles.dialog}
+      className={size === 'wide' ? `${styles.dialog} ${styles.wide}` : styles.dialog}
       aria-labelledby={titleId}
       aria-describedby={description === undefined ? undefined : descriptionId}
       onCancel={(event) => {

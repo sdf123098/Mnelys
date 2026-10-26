@@ -6,7 +6,6 @@ import { AccountsRoute } from '@/routes/AccountsRoute';
 import { ContentRoute } from '@/routes/ContentRoute';
 import { DeveloperRoute } from '@/routes/DeveloperRoute';
 import { DownloadsRoute } from '@/routes/DownloadsRoute';
-import { InstanceDetailRoute } from '@/routes/InstanceDetailRoute';
 import { InstancesRoute } from '@/routes/InstancesRoute';
 import { MultiplayerRoute } from '@/routes/MultiplayerRoute';
 import { SettingsRoute } from '@/routes/SettingsRoute';
@@ -27,7 +26,8 @@ export const routes: RouteObject[] = [
       { index: true, element: <Navigate to="/start" replace /> },
       { path: 'start', element: <StartRoute /> },
       { path: 'instances', element: <InstancesRoute /> },
-      { path: 'instances/:id', element: <InstanceDetailRoute /> },
+      // The same workspace, opened on one instance. The path segment is the selection.
+      { path: 'instances/:id', element: <InstancesRoute /> },
       { path: 'downloads', element: <DownloadsRoute /> },
       { path: 'content', element: <ContentRoute /> },
       { path: 'multiplayer', element: <MultiplayerRoute /> },

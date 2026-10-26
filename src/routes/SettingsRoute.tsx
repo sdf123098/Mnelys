@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/Badge';
 import { AccentPicker } from '@/components/ui/AccentPicker';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SegmentedControl, type SegmentOption } from '@/components/ui/SegmentedControl';
 import { Switch } from '@/components/ui/Switch';
@@ -13,6 +14,8 @@ import { LANGUAGE_LABELS, matchLanguage, SUPPORTED_LANGUAGES } from '@/i18n/reso
 import type { MirrorKind, MirrorPreference } from '@/ipc/commands';
 import {
   useCoreVersion,
+  useInstallJava,
+  useJavaRuntimes,
   useProbeMirrors,
   useRuntimeInfo,
   useSettings,
@@ -22,6 +25,9 @@ import { describeError } from '@/ipc/messages';
 import { usePreferences, type ThemePreference } from '@/state/preferences-store';
 
 import pages from './pages.module.css';
+
+/** Majors the core can provision as verified managed runtimes. */
+const JAVA_MAJORS: readonly number[] = [8, 17, 21];
 
 const MIRROR_KEYS = {
   auto: 'settings.mirrorAuto',
@@ -41,6 +47,8 @@ export function SettingsRoute() {
   const settings = useSettings();
   const updateSettings = useUpdateSettings();
   const probeMirrors = useProbeMirrors();
+  const java = useJavaRuntimes();
+  const installJava = useInstallJava();
 
   const theme = usePreferences((state) => state.theme);
   const setTheme = usePreferences((state) => state.setTheme);
@@ -251,6 +259,60 @@ export function SettingsRoute() {
               {settingsError}
             </p>
           )}
+        </div>
+      </Card>
+
+      <Card
+        title={t('settings.javaTitle')}
+        description={t('settings.javaBody')}
+        icon="java"
+        badge={
+          <Badge tone="neutral">
+            {t('settings.javaDetected', { count: java.data?.length ?? 0 })}
+          </Badge>
+        }
+      >
+        <div className={pages.settingBlock}>
+          <div className={pages.inlineForm}>
+            {JAVA_MAJORS.map((major) => (
+              <Button
+                key={major}
+                size="sm"
+                variant="secondary"
+                icon="downloads"
+                disabled={installJava.isPending}
+                onClick={() => {
+                  installJava.mutate(major);
+                }}
+              >
+                Java {major}
+              </Button>
+            ))}
+          </div>
+          <p className={pages.caption}>{t('settings.javaInstallHint')}</p>
+          {java.isError ? <p className={pages.errorText}>{t('settings.javaFailed')}</p> : null}
+          {java.data !== undefined && java.data.length === 0 ? (
+            <p className={pages.muted}>{t('settings.javaEmpty')}</p>
+          ) : null}
+          <ul className={pages.list}>
+            {java.data?.map((runtime) => (
+              <li key={runtime.path} className={pages.row}>
+                <span className={pages.rowMeta} aria-hidden="true">
+                  <Icon name="java" size={18} />
+                </span>
+                <div className={pages.rowMain}>
+                  <span className={pages.rowTitle}>
+                    Java {runtime.major} · {runtime.version}
+                  </span>
+                  <span className={pages.rowMeta}>{runtime.path}</span>
+                </div>
+                <span className={pages.rowMeta}>{runtime.vendor}</span>
+                <Badge tone={runtime.source === 'managed' ? 'accent' : 'neutral'}>
+                  {t(`settings.javaSource.${runtime.source}`)}
+                </Badge>
+              </li>
+            ))}
+          </ul>
         </div>
       </Card>
 

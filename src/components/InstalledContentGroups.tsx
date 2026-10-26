@@ -1,20 +1,12 @@
 import { useTranslation } from 'react-i18next';
 
-import { CONTENT_KIND_KEYS, CONTENT_KIND_ORDER } from '@/app/wire-labels';
+import { CONTENT_KIND_ICONS, CONTENT_KIND_KEYS, CONTENT_KIND_ORDER } from '@/app/wire-labels';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Icon, type IconName } from '@/components/ui/Icon';
-import type { ContentKind, InstalledContent } from '@/ipc/commands';
+import { Icon } from '@/components/ui/Icon';
+import type { InstalledContent } from '@/ipc/commands';
 
 import styles from './InstalledContentGroups.module.css';
-
-const KIND_ICONS: Readonly<Record<ContentKind, IconName>> = {
-  mod: 'package',
-  resourcepack: 'layers',
-  shader: 'sparkles',
-  world: 'globe',
-  datapack: 'database',
-};
 
 interface InstalledContentGroupsProps {
   readonly items: readonly InstalledContent[];
@@ -56,7 +48,7 @@ export function InstalledContentGroups({
         return (
           <section key={kind} className={styles.group}>
             <h3 className={styles.groupTitle}>
-              <Icon name={KIND_ICONS[kind]} size={16} />
+              <Icon name={CONTENT_KIND_ICONS[kind]} size={16} />
               {t(CONTENT_KIND_KEYS[kind])}
               <span className={styles.groupCount}>{group.length}</span>
             </h3>

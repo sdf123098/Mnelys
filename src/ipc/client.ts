@@ -148,6 +148,32 @@ export const core = {
   importInstance: (json: string): Promise<CommandResult<'import_instance'>> =>
     call('import_instance', { args: { json } }),
 
+  instanceFiles: (
+    instanceId: string,
+    dir?: string,
+  ): Promise<CommandResult<'list_instance_files'>> =>
+    call('list_instance_files', dir === undefined ? { instanceId } : { instanceId, dir }),
+  instanceLogs: (instanceId: string): Promise<CommandResult<'list_instance_logs'>> =>
+    call('list_instance_logs', { instanceId }),
+  instanceLogTail: (
+    instanceId: string,
+    path: string,
+  ): Promise<CommandResult<'read_instance_log'>> => call('read_instance_log', { instanceId, path }),
+  instanceWorlds: (instanceId: string): Promise<CommandResult<'list_instance_worlds'>> =>
+    call('list_instance_worlds', { instanceId }),
+  instanceSchematics: (instanceId: string): Promise<CommandResult<'list_instance_schematics'>> =>
+    call('list_instance_schematics', { instanceId }),
+  deleteInstanceEntry: (
+    instanceId: string,
+    path: string,
+  ): Promise<CommandResult<'delete_instance_entry'>> =>
+    call('delete_instance_entry', { instanceId, path }),
+  revealInstanceEntry: (
+    instanceId: string,
+    path: string,
+  ): Promise<CommandResult<'reveal_instance_entry'>> =>
+    call('reveal_instance_entry', { instanceId, path }),
+
   tasks: (): Promise<CommandResult<'list_tasks'>> => call('list_tasks', {}),
   cancelTask: (id: string): Promise<CommandResult<'cancel_task'>> => call('cancel_task', { id }),
 } as const;

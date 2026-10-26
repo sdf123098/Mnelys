@@ -16,6 +16,10 @@
   animation: mnelys-dialog-in var(--mnelys-duration-normal) var(--mnelys-easing-emphasis);
 }
 
+.wide {
+  width: min(46rem, calc(100vw - 2 * var(--mnelys-space-5)));
+}
+
 .dialog::backdrop {
   background-color: var(--mnelys-color-scrim);
 }

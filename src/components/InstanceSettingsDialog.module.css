@@ -1,0 +1,154 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(8rem, 10rem) minmax(0, 1fr);
+  gap: var(--mnelys-space-5);
+  align-items: start;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* The dialog heading already names the surface, so the radio group label stays virtual. */
+.legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-2);
+  padding: var(--mnelys-space-2) var(--mnelys-space-3);
+  border: 1px solid transparent;
+  border-radius: var(--mnelys-radius-md);
+  color: var(--mnelys-color-text);
+  font-size: var(--mnelys-font-size-sm);
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: var(--mnelys-color-surface-hover);
+}
+
+.optionActive,
+.optionActive:hover {
+  border-color: var(--mnelys-color-accent);
+  background-color: var(--mnelys-color-accent-soft);
+  font-weight: var(--mnelys-font-weight-semibold);
+}
+
+.radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.option:focus-within {
+  outline: 2px solid var(--mnelys-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-3);
+  min-width: 0;
+}
+
+.log {
+  max-height: 20rem;
+  overflow: auto;
+}
+
+/* Filesystem panes: worlds, schematics, log files and the directory browser. */
+
+.entries {
+  max-height: 22rem;
+  overflow: auto;
+  padding-right: var(--mnelys-space-1);
+}
+
+/* Three labelled actions do not fit beside a file name, so they drop to their own line
+   instead of crushing it. `pages.rowMain` also declares `flex`, and its stylesheet is
+   bundled after this one, so overriding it takes two classes rather than one. */
+.row {
+  flex-wrap: wrap;
+}
+
+.row .rowMain {
+  flex: 1 1 12rem;
+}
+
+.rowIcon {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: none;
+  border-radius: var(--mnelys-radius-sm);
+  background-color: var(--mnelys-color-surface-sunken);
+  color: var(--mnelys-color-accent);
+}
+
+.path {
+  overflow: hidden;
+  color: var(--mnelys-color-text);
+  font-family: var(--mnelys-font-mono);
+  font-size: var(--mnelys-font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-2);
+  padding-top: var(--mnelys-space-3);
+  border-top: 1px solid var(--mnelys-color-border);
+}
+
+.section:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.sectionTitle {
+  color: var(--mnelys-color-text);
+  font-size: var(--mnelys-font-size-sm);
+  font-weight: var(--mnelys-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.subList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mnelys-space-2);
+}
+
+.subTitle {
+  color: var(--mnelys-color-text-muted);
+  font-size: var(--mnelys-font-size-xs);
+  font-weight: var(--mnelys-font-weight-semibold);
+  text-transform: uppercase;
+}
+
+.tailHead {
+  display: flex;
+  align-items: center;
+  gap: var(--mnelys-space-3);
+}
+
+.tailHead .sectionTitle {
+  flex: 1;
+}

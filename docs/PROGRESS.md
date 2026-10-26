@@ -1,6 +1,6 @@
 # Mnelys 项目进度
 
-- 最后更新：2026-10-26
+- 最后更新：2026-10-27
 - 当前阶段：M1–M6 核心能力已落地（账户、实例、下载安装、加载器、内容平台与启动管线）；桌面运行时、三平台打包证据与签名仍未关闭
 - 状态：可构建、可测试；桌面交互验证与发布产物以 GitHub Actions 为权威路径
 
@@ -19,7 +19,7 @@
 | 前端构建与路由 | Vite + `createHashRouter`（hash 路由，三平台 WebView 一致）                                                           |
 | 前端状态与样式 | TanStack Query + Zustand；CSS Modules 与语义 Token                                                                    |
 | Rust 分层      | Cargo workspace：domain / application / infrastructure / presentation；`src-tauri` 为组合根                           |
-| 命令契约       | v3，39 条命令；`src-tauri/tests/contract.rs` 校验前后端命令集、错误码与版本                                           |
+| 命令契约       | v4，46 条命令；`src-tauri/tests/contract.rs` 校验前后端命令集、错误码与版本                                           |
 | 持续集成       | GitHub Actions：前端检查、三平台 Rust 矩阵、三平台桌面打包（手动或标签触发）                                          |
 | 本地化         | 10 套目录：`en` / `zh-Hans` / `zh-Hant` / `ja` / `ko` / `fr` / `de` / `es` / `pt-BR` / `ru`；键集必须与 `en` 完全一致 |
 | 主题           | 浅色 / 深色 / 跟随系统；默认强调色为品牌粉 `#C2185B`，支持预设与自定义十六进制色                                      |
@@ -143,6 +143,34 @@
 - 浏览器接线验证：注入 mock 核心（`@tauri-apps/api/mocks` 的 `mockIPC`）后走完开始、实例、实例详情、资源站、下载、账户、设置七个界面，确认 39 个命令的返回结构都能被界面消费；任务中心显示三种任务状态，资源站搜索 → 安装 → 分组列表链路可用。
 - 该次改动自身的远端验证：[CI run 40265413181](https://github.com/sdf123098/Mnelys/actions/runs/40265413181)（提交 `3b169fe`）与 [CI run 40269430485](https://github.com/sdf123098/Mnelys/actions/runs/40269430485)（提交 `771a62e`）前端检查加三平台 Rust 作业全部成功。
 - 产物已在 HEAD 上重打：[Desktop packages run 40269539520](https://github.com/sdf123098/Mnelys/actions/runs/40269539520)（提交 `771a62e`）三平台作业全绿，Windows 工件 zip 6 796 357 B，其中 `Mnelys_0.1.0_x64-setup.exe` 3 140 080 B（SHA-256 `84DB3980…CE0BE9`）、便携 `mnelys.exe` 6 827 008 B。两者只下载并确认是 PE，仍未安装、未启动，冷启动与真机运行时行为依旧空缺。
+
+## 2026-10-26 界面收拢：下载队列、实例工作区与资源站网格
+
+- 下载页只剩后台任务队列（`src/routes/DownloadsRoute.tsx`）：进行中与最近完成两组，同一套 `TaskList` 与取消入口。原先塞在该页的三块内容各归其位——Java 运行时的检测与安装移入设置页新卡片 `settings.java*`，Mojang 版本清单移入开发者分区 `developer.manifest*`，"内容来源"卡片删除（提供方选择已在资源站里）。
+- 实例页改为 HMCL 式的主从工作区（`src/routes/InstancesRoute.tsx`）：左侧列表只做选择，行内一个状态徽标；右侧固定一个主动作按钮（未安装→安装，运行中→停止，否则→启动游戏），旁边只有"实例设置"。重命名、Java 覆盖、导出、删除、已安装内容与日志全部收进分类对话框 `src/components/InstanceSettingsDialog.tsx`（常规 / 内容 / 游戏日志 / 导出与删除）。`src/routes/InstanceDetailRoute.tsx` 删除，`/instances/:id` 保留为"选中项"路径段，深链照旧可用。
+- 资源站去掉"已安装内容"块，重排为搜索优先：类型分段控件 → 搜索框 → 提供方 / 版本 / 加载器 / 目标实例工具条，结果是与 18 rem 最小轨道对齐的卡片网格（封面或类型图标、名称、作者、三行摘要、按语言分组的下载数、安装按钮）。`?instance=<id>` 会预选目标实例并锁定版本与加载器，卡片区只留一条回到实例的链接。
+- 10 套语言目录同步迁移、删除与新增键：迁移 20 键（`downloads.java*`→`settings.java*`、`downloads.versions*`→`developer.manifest*`、`downloads.versionType.*`→`version.type.*`、`content.installedTitle`→`content.installedLink`），删除 50 个失效键（含 `instances.planned*`、`instances.sessionState`、`content.installed*`、`common.m1/m2/m6/m8`、`instances.logs`），新写 11 键 × 10 语言（`instances.launchAs` / `created` / `exportBody` / `exportFailed` / `contentIntro` / `contentBrowse` / `settingsCategory.*`）；`instances.launch` 与 `content.description` 的文案同步改写。`src/i18n/catalogs.test.ts` 的键集奇偶校验通过。
+- 新增 `src/routes/core-backed-routes.test.tsx`：用 `mockIPC` 注入核心返回后渲染实例工作区、下载、设置、开发者与资源站五个界面，断言实例行选择、运行中只有"停止"、实例设置对话框切到"内容"后链接指向 `/content?instance=demo`、资源站搜出 Sodium 卡片并按 `Install into` 选中目标实例。
+- 浏览器实走一遍（临时注入 mock 核心，验证后已撤销脚手架）：实例工作区（选中行 + 单一"停止" + 实例设置对话框四个分类）、下载队列、设置页 Java 运行时卡片、开发者分区版本清单、资源站搜索 → 三张结果卡片均按预期渲染；据此补上结果封面加载失败时的类型图标回落（`ContentRoute` 的 `onError`）。
+- 本轮本地验证：`tsc --noEmit` 零错、`eslint .` 零告警、`prettier --check .` 全绿、`vitest run` 9 个文件 42 个用例全部通过（原 38 个 + 新增 4 个）；`vite build` 产物 JS 710.03 kB（gzip 218.73 kB）、CSS 45.18 kB（gzip 7.14 kB）。删除了仅服务于本轮迁移的一次性脚本目录 `scripts/`。
+- 仍待远端确认：以上界面改动尚未推送到 GitHub Actions；三平台 Rust 作业与前端检查需在新提交上重跑。
+
+## 2026-10-27 实例设置面板：五个内容型面板与跨种类搜索
+
+- 实例设置对话框的导航重排为七项：常规 / 内容 / 文件 / 日志 / 投影 / 世界存档 / 导出与删除（`src/components/InstanceSettingsDialog.tsx` 的 `CATEGORIES`）。上一轮的"游戏日志"归入"日志"面板，不再有单文件日志视图。
+- 内容面板补上缺失已久的分类与搜索：类型分段控件（全部 / Mod / 资源包 / 光影 / 世界 / 数据包）+ 本地搜索框。**搜索跨全部类型**，标签只在没有关键词时限定浏览范围；搜索覆盖了当前标签时显示一行说明。结果仍按类型分组（`InstalledContentGroups`），全程不再请求提供方。
+- 文件面板（`InstanceFilesPanel`）：`list_instance_files` 浏览实例 game 目录，行内给大小与修改时间，支持进入子目录、返回上级、层级截断提示。
+- 日志面板（`InstanceLogsPanel`）：`launch_logs` 的实时输出 + `list_instance_logs` 列出的 `crash-reports/` 与 `logs/`（两个各自具名的 landmark 子列表）+ `read_instance_log` 只读文件末尾并标注"只读到文件尾部"。
+- 投影与世界面板：`list_instance_schematics` 扫 `schematics/` 下 `.litem` / `.schem` / `.schematic`（含子目录）；`list_instance_worlds` 报 `saves/` 中每个存档的体积，遍历有上限，超限的规模标注为不完整。
+- 删除与定位：`delete_instance_entry` / `reveal_instance_entry` 共用一个行组件 `InstanceEntryList`；二次确认写在行内而不是叠第二层模态，目录的确认文案单列。路径以实例根为沙箱：先按词法拒绝绝对路径 / 盘符 / `..`，再对根与候选项 `canonicalize` 后要求前缀匹配；交给系统文件管理器的是未 canonical 的原路径。桌面打开器由 `crates/mnelys-infrastructure/src/reveal.rs` 封装（Windows `explorer`、macOS `open -R`、Linux `xdg-open`）。
+- 命令契约 v3 → v4：新增 7 条命令，共 46 条；`src/ipc/commands.ts` 与 `crates/mnelys-presentation/src/commands/mod.rs` 同步，`src-tauri/tests/contract.rs` 从前端源码抓取命令名与版本做校验。
+- 前端公共件：新增 `src/app/format.ts`（`formatBytes` 用二进制单位；`formatDateTime(locale, ms)` 跟随界面语言、不含秒——秒是文件列表里的噪声，去掉它才让"大小 · 时间"待在一行）。`CONTENT_KIND_ICONS` 从两个界面各自的私有映射收进 `src/app/wire-labels.ts`，与 `CONTENT_KIND_KEYS` 同处。
+- 版式：46rem 宽的对白框里三个文字按钮加长文件名会挤掉时间行，故"在文件夹中显示"改为带 tooltip 的图标按钮（德语 / 俄语标签更长），`.row .rowMain` 用双类选择器压过 `pages.rowMain` 的 `flex`（后者的样式表在打包顺序里靠后）。实测行高 67px、时间行单行。
+- 10 套语言目录：界面收拢与本轮实例面板合计新增 68 键、删除 68 键，扁平化后每套仍是 408 键，`src/i18n/catalogs.test.ts` 奇偶校验通过。
+- 新增与改写用例：`src/routes/core-backed-routes.test.tsx` 覆盖"标签浏览限定类型 / 关键词跨类型命中并给出说明 / 世界体积与目录确认文案 / 崩溃报告 landmark → 读取尾部 → 截断提示 / 文件面板进入目录 / 投影子目录体积"。
+- 本轮本地验证：`tsc --noEmit` 零错、`eslint .` 零告警、`prettier --check .` 全绿、`vitest run` 9 个文件 43 个用例全部通过；`vite build` 产物 JS 742.04 kB（gzip 226.07 kB）、CSS 46.50 kB（gzip 7.32 kB），仍只有 >500 kB 分块提示。
+- 界面实走：临时注入 mock 核心后用浏览器逐面板确认（导航顺序、内容标签与跨种类搜索、世界 1.0 GiB、日志两个子列表、文件层级返回、投影子目录），确认后端上脚手架（`preview.html`、`src/dev/`）已删除。
+- 仍待远端确认：Rust 侧的 workspace / files / reveal 代码在本机无法编译（缺 MSVC 链接器），契约 v4 与 46 条命令的编译、`contract.rs` 校验与三平台打包必须在推送后由 GitHub Actions 给出结论。
 
 ## 已完成
 

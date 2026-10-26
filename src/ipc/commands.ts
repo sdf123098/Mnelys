@@ -10,7 +10,7 @@
  * here match the ones the Rust side registers.
  */
 
-export const CONTRACT_VERSION = 3;
+export const CONTRACT_VERSION = 4;
 
 /** Result of `core_version` — the start-up handshake that keeps both halves in step. */
 export interface CoreVersion {
@@ -248,6 +248,52 @@ export interface ExportedInstance {
   readonly json: string;
 }
 
+/**
+ * One file or directory below an instance game directory. `path` is slash separated
+ * and relative to that directory, which is what the file commands accept back.
+ */
+export interface WorkspaceEntry {
+  readonly name: string;
+  readonly path: string;
+  readonly isDir: boolean;
+  /** Always zero for a directory; measuring one is a separate walk. */
+  readonly sizeBytes: number;
+  readonly modifiedMs: number | null;
+}
+
+/** Result of `list_instance_files`. */
+export interface FileListing {
+  /** The listed directory; empty for the instance root. */
+  readonly path: string;
+  readonly entries: readonly WorkspaceEntry[];
+  /** True when the directory holds more entries than a listing returns. */
+  readonly truncated: boolean;
+}
+
+/** Result of `list_instance_logs`. */
+export interface LogListing {
+  readonly logs: readonly WorkspaceEntry[];
+  readonly crashReports: readonly WorkspaceEntry[];
+}
+
+/** Result of `read_instance_log`: the end of one log file. */
+export interface LogTail {
+  readonly path: string;
+  readonly text: string;
+  /** True when the file is longer than the window the core read. */
+  readonly truncated: boolean;
+}
+
+/** Result item of `list_instance_worlds`. */
+export interface WorldEntry {
+  readonly name: string;
+  readonly path: string;
+  readonly sizeBytes: number;
+  /** False when the walk stopped early, which makes the size a lower bound. */
+  readonly sizeComplete: boolean;
+  readonly modifiedMs: number | null;
+}
+
 /** One background task snapshot. */
 export interface TaskSnapshot {
   readonly id: string;
@@ -384,6 +430,29 @@ export interface CommandContract {
   export_instance: { args: { readonly instanceId: string }; result: ExportedInstance };
   import_instance: { args: { readonly args: { readonly json: string } }; result: InstanceSummary };
 
+  list_instance_files: {
+    args: { readonly instanceId: string; readonly dir?: string };
+    result: FileListing;
+  };
+  list_instance_logs: { args: { readonly instanceId: string }; result: LogListing };
+  read_instance_log: {
+    args: { readonly instanceId: string; readonly path: string };
+    result: LogTail;
+  };
+  list_instance_worlds: { args: { readonly instanceId: string }; result: WorldEntry[] };
+  list_instance_schematics: {
+    args: { readonly instanceId: string };
+    result: WorkspaceEntry[];
+  };
+  delete_instance_entry: {
+    args: { readonly instanceId: string; readonly path: string };
+    result: null;
+  };
+  reveal_instance_entry: {
+    args: { readonly instanceId: string; readonly path: string };
+    result: null;
+  };
+
   list_tasks: { args: Record<string, never>; result: TaskSnapshot[] };
   cancel_task: { args: { readonly id: string }; result: boolean };
 }
@@ -431,6 +500,13 @@ export const COMMAND_NAMES = [
   'remove_content',
   'export_instance',
   'import_instance',
+  'list_instance_files',
+  'list_instance_logs',
+  'read_instance_log',
+  'list_instance_worlds',
+  'list_instance_schematics',
+  'delete_instance_entry',
+  'reveal_instance_entry',
   'list_tasks',
   'cancel_task',
 ] as const satisfies readonly CommandName[];

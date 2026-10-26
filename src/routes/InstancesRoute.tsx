@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { LOADER_KEYS, LOADER_ORDER } from '@/app/wire-labels';
 import { Badge } from '@/components/ui/Badge';
@@ -9,14 +9,14 @@ import { Card } from '@/components/ui/Card';
 import { Dialog } from '@/components/ui/Dialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Icon } from '@/components/ui/Icon';
+import { InstanceSettingsDialog } from '@/components/InstanceSettingsDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
-import type { LoaderKind } from '@/ipc/commands';
+import type { InstanceSummary, LaunchSession, LoaderKind } from '@/ipc/commands';
 import { describeError } from '@/ipc/messages';
 import {
   useAccounts,
   useCreateInstance,
   useDeleteInstance,
-  useExportInstance,
   useImportInstance,
   useInstallInstance,
   useInstances,
@@ -39,25 +39,61 @@ function slugify(value: string): string {
     .replace(/-+$/, '');
 }
 
+/** Recently launched first, then most recently created — the order a player scans for. */
+function byRecency(left: InstanceSummary, right: InstanceSummary): number {
+  const launched = (right.lastLaunchedMs ?? 0) - (left.lastLaunchedMs ?? 0);
+  return launched === 0 ? right.createdAtMs - left.createdAtMs : launched;
+}
+
 export function InstancesRoute() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+
   const instances = useInstances();
   const sessions = useLaunchSessions();
   const accounts = useAccounts();
   const installInstance = useInstallInstance();
-  const deleteInstance = useDeleteInstance();
   const launchInstance = useLaunchInstance();
   const stopInstance = useStopInstance();
-  const exportInstance = useExportInstance();
+  const deleteInstance = useDeleteInstance();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
+  const rows = useMemo(() => [...(instances.data ?? [])].sort(byRecency), [instances.data]);
+  const selected = rows.find((row) => row.id === id);
   const selectedAccount = accounts.data?.find((account) => account.selected);
-  const deleteTarget = instances.data?.find((instance) => instance.id === deleteId);
+  const deleteTarget = rows.find((row) => row.id === deleteId);
+
+  const allSessions = sessions.data ?? [];
+  const runningSession =
+    selected === undefined
+      ? undefined
+      : allSessions.find(
+          (session) => session.instanceId === selected.id && session.state === 'running',
+        );
+  const latestSession = allSessions
+    .filter((session) => session.instanceId === selected?.id)
+    .reduce<LaunchSession | undefined>(
+      (newest, session) =>
+        newest === undefined || session.startedAtMs > newest.startedAtMs ? session : newest,
+      undefined,
+    );
+
+  // A stale or missing path segment never leaves the pane blank.
+  useEffect(() => {
+    if (selected === undefined && rows.length > 0) {
+      const first = rows[0];
+      if (first !== undefined) {
+        void navigate(`/instances/${encodeURIComponent(first.id)}`, { replace: true });
+      }
+    }
+  }, [selected, rows, navigate]);
 
   function fail(error: unknown): Promise<boolean> {
     setActionError(describeError(error, t));
@@ -129,7 +165,13 @@ export function InstancesRoute() {
         </p>
       )}
 
-      {instances.data !== undefined && instances.data.length === 0 ? (
+      {instances.isPending && rows.length === 0 ? (
+        <p className={pages.muted} role="status">
+          <Icon name="loading" size={16} /> {t('instances.loading')}
+        </p>
+      ) : null}
+
+      {rows.length === 0 && !instances.isPending ? (
         <EmptyState
           icon="instances"
           title={t('instances.emptyTitle')}
@@ -148,132 +190,175 @@ export function InstancesRoute() {
         />
       ) : null}
 
-      {selectedAccount === undefined && (instances.data?.length ?? 0) > 0 ? (
-        <div className={pages.notice}>
-          <Icon name="info" size={16} />
-          <p>
-            {t('instances.noAccount')}{' '}
-            <ButtonLink to="/accounts" variant="ghost" size="sm" iconRight="arrowRight">
-              {t('instances.addAccount')}
-            </ButtonLink>
-          </p>
-        </div>
-      ) : null}
-
-      <ul className={pages.list}>
-        {instances.data?.map((instance) => {
-          const session = sessions.data?.find(
-            (candidate) => candidate.instanceId === instance.id && candidate.state === 'running',
-          );
-          return (
-            <li key={instance.id} className={pages.row}>
-              <span className={pages.rowMeta} aria-hidden="true">
-                <Icon name={instance.loader === 'vanilla' ? 'game' : 'layers'} size={20} />
-              </span>
-              <div className={pages.rowMain}>
-                <span className={pages.rowTitle}>{instance.name}</span>
-                <span className={pages.rowMeta}>
-                  {instance.gameVersion} · {t(LOADER_KEYS[instance.loader])}
-                  {instance.loaderVersion === undefined ? '' : ` ${instance.loaderVersion}`} ·{' '}
-                  {instance.versionId}
-                </span>
-              </div>
-              {session === undefined ? null : (
-                <Badge tone="success" icon="play">
-                  {t('instances.running')}
-                </Badge>
-              )}
-              <Badge tone={instance.installed ? 'success' : 'warning'}>
-                {instance.installed ? t('instances.installed') : t('instances.notInstalled')}
-              </Badge>
-              <div className={pages.rowActions}>
-                {instance.installed ? (
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    icon="play"
-                    disabled={session !== undefined || launchInstance.isPending}
-                    title={
-                      selectedAccount === undefined
-                        ? t('instances.needsAccount')
-                        : session === undefined
-                          ? undefined
-                          : t('instances.alreadyRunning')
-                    }
-                    onClick={() => {
-                      void run(launchInstance.mutateAsync({ id: instance.id }));
-                    }}
-                  >
-                    {t('instances.launch')}
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    icon="downloads"
-                    disabled={installInstance.isPending}
-                    onClick={() => {
-                      void run(installInstance.mutateAsync(instance.id)).then((ok) => {
-                        if (ok) {
-                          setNotice(t('instances.installQueued'));
-                        }
-                      });
-                    }}
-                  >
-                    {t('instances.install')}
-                  </Button>
-                )}
-                {session === undefined ? null : (
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    icon="close"
-                    disabled={stopInstance.isPending}
-                    onClick={() => {
-                      void run(stopInstance.mutateAsync(session.id));
-                    }}
-                  >
-                    {t('instances.stop')}
-                  </Button>
-                )}
-                <ButtonLink
-                  to={`/instances/${encodeURIComponent(instance.id)}`}
-                  size="sm"
-                  variant="secondary"
-                  icon="settings"
-                >
-                  {t('instances.manage')}
-                </ButtonLink>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  icon="package"
-                  disabled={exportInstance.isPending}
-                  onClick={() => {
-                    void run(exportInstance.mutateAsync(instance.id)).then((ok) => {
-                      if (ok) {
-                        setNotice(t('instances.exported', { id: instance.id }));
+      {rows.length === 0 ? null : (
+        <div className={pages.workspace}>
+          <Card>
+            <ul className={pages.picker}>
+              {rows.map((instance) => {
+                const isRunning = allSessions.some(
+                  (session) => session.instanceId === instance.id && session.state === 'running',
+                );
+                return (
+                  <li key={instance.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void navigate(`/instances/${encodeURIComponent(instance.id)}`);
+                      }}
+                      className={
+                        instance.id === selected?.id
+                          ? `${pages.pickerItem} ${pages.pickerItemActive}`
+                          : pages.pickerItem
                       }
-                    });
-                  }}
-                >
-                  {t('instances.export')}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  icon="trash"
-                  onClick={() => {
-                    setDeleteId(instance.id);
-                  }}
-                >
-                  {t('instances.delete')}
-                </Button>
+                    >
+                      <span className={pages.pickerGlyph} aria-hidden="true">
+                        <Icon name={instance.loader === 'vanilla' ? 'game' : 'layers'} size={18} />
+                      </span>
+                      <span className={pages.pickerMain}>
+                        <span className={pages.pickerName}>{instance.name}</span>
+                        <span className={pages.pickerMeta}>
+                          {instance.gameVersion} · {t(LOADER_KEYS[instance.loader])}
+                        </span>
+                      </span>
+                      {isRunning ? (
+                        <Badge tone="success" icon="play">
+                          {t('instances.running')}
+                        </Badge>
+                      ) : instance.installed ? null : (
+                        <Badge tone="warning">{t('instances.notInstalled')}</Badge>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+
+          {selected === undefined ? null : (
+            <Card>
+              <div className={pages.detail}>
+                <header className={pages.detailHead}>
+                  <span className={pages.detailGlyph} aria-hidden="true">
+                    <Icon
+                      name={selected.loader === 'vanilla' ? 'game' : 'layers'}
+                      size={26}
+                      strokeWidth={1.5}
+                    />
+                  </span>
+                  <div className={pages.detailHeading}>
+                    <h2 className={pages.detailTitle}>{selected.name}</h2>
+                    <p className={pages.detailMeta}>
+                      {selected.gameVersion} · {t(LOADER_KEYS[selected.loader])}
+                      {selected.loaderVersion === undefined ? '' : ` ${selected.loaderVersion}`}
+                    </p>
+                  </div>
+                  {runningSession === undefined ? null : (
+                    <Badge tone="success" icon="play">
+                      {t('instances.running')}
+                    </Badge>
+                  )}
+                </header>
+
+                <div className={pages.detailActions}>
+                  {!selected.installed ? (
+                    <Button
+                      className={pages.launchButton}
+                      variant="primary"
+                      icon="downloads"
+                      disabled={installInstance.isPending}
+                      onClick={() => {
+                        void run(installInstance.mutateAsync(selected.id)).then((ok) => {
+                          if (ok) {
+                            setNotice(t('instances.installQueued'));
+                          }
+                        });
+                      }}
+                    >
+                      {t('instances.install')}
+                    </Button>
+                  ) : runningSession !== undefined ? (
+                    <Button
+                      className={pages.launchButton}
+                      variant="danger"
+                      icon="close"
+                      disabled={stopInstance.isPending}
+                      onClick={() => {
+                        void run(stopInstance.mutateAsync(runningSession.id));
+                      }}
+                    >
+                      {t('instances.stop')}
+                    </Button>
+                  ) : (
+                    <Button
+                      className={pages.launchButton}
+                      variant="primary"
+                      icon="play"
+                      disabled={launchInstance.isPending || selectedAccount === undefined}
+                      title={
+                        selectedAccount === undefined ? t('instances.needsAccount') : undefined
+                      }
+                      onClick={() => {
+                        void run(launchInstance.mutateAsync({ id: selected.id }));
+                      }}
+                    >
+                      {t('instances.launch')}
+                    </Button>
+                  )}
+                  <Button
+                    variant="secondary"
+                    icon="settings"
+                    onClick={() => {
+                      setSettingsOpen(true);
+                    }}
+                  >
+                    {t('instances.settingsTitle')}
+                  </Button>
+                </div>
+
+                {selected.installed && selectedAccount === undefined ? (
+                  <p className={pages.caption}>
+                    {t('instances.noAccount')}{' '}
+                    <ButtonLink to="/accounts" variant="ghost" size="sm" iconRight="arrowRight">
+                      {t('instances.addAccount')}
+                    </ButtonLink>
+                  </p>
+                ) : selected.installed ? (
+                  <p className={pages.caption}>
+                    {t('instances.launchAs', { name: selectedAccount?.name ?? '' })}
+                  </p>
+                ) : null}
+
+                <dl className={pages.detailFacts}>
+                  <dt>{t('instances.lastLaunched')}</dt>
+                  <dd>
+                    {selected.lastLaunchedMs === undefined
+                      ? t('instances.never')
+                      : new Date(selected.lastLaunchedMs).toLocaleString()}
+                  </dd>
+                  <dt>{t('instances.directory')}</dt>
+                  <dd>{selected.directory}</dd>
+                </dl>
               </div>
-            </li>
-          );
-        })}
-      </ul>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {selected === undefined ? null : (
+        <InstanceSettingsDialog
+          key={selected.id}
+          instance={selected}
+          sessionId={latestSession?.id}
+          open={settingsOpen}
+          onClose={() => {
+            setSettingsOpen(false);
+          }}
+          onRequestDelete={() => {
+            setSettingsOpen(false);
+            setDeleteId(selected.id);
+          }}
+        />
+      )}
 
       <CreateInstanceDialog
         open={createOpen}
@@ -311,6 +396,7 @@ export function InstancesRoute() {
               size="sm"
               variant="danger"
               icon="trash"
+              disabled={deleteInstance.isPending}
               onClick={() => {
                 if (deleteTarget === undefined) {
                   return;
@@ -318,6 +404,7 @@ export function InstancesRoute() {
                 void run(deleteInstance.mutateAsync(deleteTarget.id)).then((ok) => {
                   if (ok) {
                     setDeleteId(null);
+                    void navigate('/instances', { replace: true });
                   }
                 });
               }}
@@ -584,12 +671,12 @@ function ImportInstanceDialog({ open, onClose }: ImportInstanceDialogProps) {
   const importInstance = useImportInstance();
   const [json, setJson] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   function close(): void {
     setJson('');
     setError(null);
-    setNotice(null);
+    setFeedback(null);
     importInstance.reset();
     onClose();
   }
@@ -613,11 +700,11 @@ function ImportInstanceDialog({ open, onClose }: ImportInstanceDialogProps) {
             disabled={json.trim().length === 0 || importInstance.isPending}
             onClick={() => {
               setError(null);
-              setNotice(null);
+              setFeedback(null);
               importInstance
                 .mutateAsync(json)
                 .then((summary) => {
-                  setNotice(t('instances.imported', { name: summary.name }));
+                  setFeedback(t('instances.imported', { name: summary.name }));
                   setJson('');
                 })
                 .catch((cause: unknown) => {
@@ -671,9 +758,9 @@ function ImportInstanceDialog({ open, onClose }: ImportInstanceDialogProps) {
             {error}
           </p>
         )}
-        {notice === null ? null : (
+        {feedback === null ? null : (
           <p className={pages.successText} role="status">
-            {notice}
+            {feedback}
           </p>
         )}
       </div>
