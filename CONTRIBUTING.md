@@ -22,12 +22,14 @@ If a contribution intentionally incorporates third-party code, stop before submi
 - The frontend is React 19 with TypeScript in strict mode, built by Vite. Keep components typed; do not introduce `any` to silence the compiler.
 - `invoke` and any other `@tauri-apps/api` import may only appear inside `src/ipc/`. Everything else consumes the typed wrappers from there, which return `CoreError`-shaped failures rather than raw rejections.
 - Server state belongs in TanStack Query; transient cross-page state belongs in Zustand. Components do not cache backend data in `useState`.
-- Any user-visible string must go through i18next. `zh-Hans`, `en`, and `ja` catalogs must have identical key sets; `src/i18n/catalogs.test.ts` fails the build otherwise.
+- Any user-visible string must go through i18next. Every catalog in `src/i18n/locales/` must declare exactly the `en` key set; `src/i18n/catalogs.test.ts` fails the build otherwise. Adding a language is adding one JSON file.
+- The product name is single-language per catalog (`忆涟`, `憶漣`, or `Mnelys`). Do not add a bilingual pair; the catalog test rejects a second name.
+- Read colours from semantic tokens. A new hard-coded colour is a review blocker; the accent is derived from one token set in `src/state/theme.ts`.
 - Routing uses `createHashRouter`. Do not switch to browser history routing: packaged builds run under a custom protocol where unknown paths are not rewritten to `index.html` on every platform.
 
 ## Local checks
 
-Run these before opening a pull request. On Windows the Rust checks need the MSVC toolchain: `x86_64-pc-windows-gnu` compiles and passes `clippy`, but its test binaries fail to load with `0xC0000139` because Rust's GNU target is msvcrt-based while MSYS2's UCRT64 toolchain is UCRT-based.
+Run these before opening a pull request. On Windows the Rust checks need the MSVC toolchain for the full workspace: `x86_64-pc-windows-gnu` compiles, passes `clippy`, and runs the domain, application, and infrastructure tests, but the presentation and `src-tauri` test binaries depend on WinRT API sets that the local GNU environment cannot load.
 
 ```bash
 pnpm format:check
@@ -35,9 +37,9 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build                     # required before any cargo command, so src-tauri can find dist/
-cargo fmt --manifest-path src-tauri/Cargo.toml --check
-cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings
-cargo test --manifest-path src-tauri/Cargo.toml
+cargo fmt --all --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
 ```
 
 Warnings are errors in CI. `src-tauri/tests/contract.rs` reads the TypeScript command and error definitions directly; if you change `src/ipc/commands.ts` or `src/ipc/errors.ts`, update the Rust side in the same commit or that test will fail.

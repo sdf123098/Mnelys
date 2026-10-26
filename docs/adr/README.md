@@ -19,3 +19,4 @@ Do not rewrite an accepted decision to change its outcome. Add a new ADR that su
 - [0004 — macOS release targets Apple Silicon only](0004-macos-arm64-only.md)
 - [0005 — Runtime and UI baseline: Tauri v2](0005-runtime-and-ui-baseline-tauri.md)
 - [0006 — Frontend framework and application stack: React and TypeScript](0006-frontend-framework-and-application-stack.md)
+- [0007 — Accent colour and localization policy](0007-accent-color-and-localization-policy.md)

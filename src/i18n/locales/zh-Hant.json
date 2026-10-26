@@ -1,0 +1,475 @@
+{
+  "app": {
+    "name": "憶漣",
+    "tagline": "面向玩家與模組開發者的 AI 原生 Minecraft 啟動器與開發工作區",
+    "stage": "M1–M6 核心"
+  },
+  "window": {
+    "minimize": "最小化",
+    "maximize": "最大化",
+    "restore": "還原",
+    "close": "關閉"
+  },
+  "nav": {
+    "label": "主導覽",
+    "start": "開始",
+    "instances": "實例",
+    "downloads": "下載",
+    "multiplayer": "多人遊戲",
+    "developer": "開發",
+    "accounts": "帳戶",
+    "settings": "設定"
+  },
+  "topbar": {
+    "theme": "外觀：{{theme}}",
+    "tasks": "任務中心",
+    "signedOut": "未登入"
+  },
+  "status": {
+    "checking": "正在檢查 Mnelys 核心…",
+    "coreConnected": "核心已連線",
+    "coreUnavailable": "核心無法使用",
+    "coreUnavailableHint": "目前沒有連接 Rust 核心。使用 pnpm dev 單獨預覽介面時，這是預期情況。",
+    "contract": "契約 v{{version}}"
+  },
+  "theme": {
+    "label": "外觀",
+    "description": "跟隨系統，或為本次安裝強制使用淺色、深色介面。",
+    "system": "跟隨系統",
+    "light": "淺色",
+    "dark": "深色"
+  },
+  "common": {
+    "skipToContent": "跳到主要內容",
+    "comingSoon": "計劃中",
+    "availableIn": "將於 {{milestone}} 提供",
+    "disabledHint": "此功能尚未實作。",
+    "open": "開啟",
+    "m1": "M1 外殼",
+    "m2": "M2 垂直切片",
+    "m3": "M3 帳戶",
+    "m6": "M6 內容平台",
+    "m7": "M7 多人遊戲",
+    "m8": "M8 開發者工作區",
+    "cancel": "取消",
+    "save": "儲存"
+  },
+  "start": {
+    "heading": "開始",
+    "description": "先準備帳戶與實例，然後啟動遊戲。",
+    "welcomeTitle": "還沒有可以啟動的實例",
+    "welcomeBody": "建立實例並下載遊戲，然後用已登入的帳戶啟動。",
+    "openInstances": "前往實例",
+    "launch": "啟動遊戲",
+    "launchDisabled": "安裝第一個實例後即可使用",
+    "cards": {
+      "account": {
+        "title": "帳戶",
+        "body": "Microsoft、離線與 Yggdrasil 身分都在帳戶頁面統一管理。",
+        "value": "未登入"
+      },
+      "instances": {
+        "title": "實例",
+        "body": "實例用於隔離模組、世界與 Java 設定。",
+        "value": "0 個實例",
+        "valueCount": "共 {{count}} 個"
+      },
+      "downloads": {
+        "title": "下載",
+        "body": "版本中繼資料、Java 與內容下載會在這裡排隊。",
+        "value": "閒置",
+        "active": "{{count}} 個進行中"
+      }
+    },
+    "nextHeading": "後續切片",
+    "nextBody": "目前外殼是 M1 交付物，下一個里程碑會讓 Vanilla 路徑真正可用。",
+    "steps": {
+      "metadata": {
+        "title": "版本中繼資料與 Java",
+        "body": "解析 Mojang 中繼資料，選擇相符的執行環境並校驗每個檔案。"
+      },
+      "instance": {
+        "title": "原子化建立實例",
+        "body": "先寫入暫存區，校驗全部產物，只有整體成功才提交。"
+      },
+      "launch": {
+        "title": "啟動到遊戲主選單",
+        "body": "建構參數陣列，即時轉送日誌並分類結束原因。"
+      }
+    },
+    "readyTitle": "{{name}} 已可啟動",
+    "readyBody": "Minecraft {{version}}（{{loader}}）已安裝。所選帳戶將在標題畫面登入。",
+    "launchNeedsAccount": "啟動前請先登入帳戶。",
+    "launchAccount": "將以 {{name}} 啟動。",
+    "runningTitle": "正在執行",
+    "runningMeta": "程序 {{pid}} · {{version}}",
+    "instancesTitle": "最近的實例",
+    "instancesBody": "你最近啟動過的實例。"
+  },
+  "instances": {
+    "heading": "實例",
+    "description": "每個實例擁有獨立的遊戲目錄、模組、世界、Java 選擇與日誌。",
+    "create": "新增實例",
+    "emptyTitle": "還沒有實例",
+    "emptyBody": "建立實例、安裝檔案，然後在同一個地方啟動 Minecraft。",
+    "plannedTitle": "實例將如何運作",
+    "plannedBody": "建立、複製、匯入、匯出與修復共用同一份安裝計畫。",
+    "plannedNotice": "只有檔案全部校驗並原子提交後，實例才會出現在清單中；失敗的安裝不會留下半成品。",
+    "loadError": "無法載入實例",
+    "noAccount": "尚未登入帳戶，遊戲無法啟動。",
+    "addAccount": "新增帳戶",
+    "running": "執行中",
+    "installed": "已安裝",
+    "notInstalled": "未安裝",
+    "launch": "啟動",
+    "install": "安裝",
+    "stop": "停止",
+    "manage": "管理",
+    "export": "匯出",
+    "exported": "已將 {{id}}.json 匯出到 Mnelys 資料目錄。",
+    "delete": "刪除",
+    "deleteTitle": "刪除此實例？",
+    "deleteBody": "將刪除「{{name}}」及其整個目錄（包括模組與世界），且無法復原。",
+    "createTitle": "新增實例",
+    "createBody": "選擇遊戲版本與可選的載入器。安裝會作為背景任務執行。",
+    "creating": "建立中…",
+    "name": "名稱",
+    "id": "目錄 ID",
+    "idHint": "小寫字母、數字與連字號，用作目錄名稱。",
+    "gameVersion": "遊戲版本",
+    "includeSnapshots": "顯示快照",
+    "loader": "載入器",
+    "loaderVersion": "載入器版本",
+    "chooseLoaderVersion": "選擇載入器版本",
+    "experimental": "實驗性",
+    "loaderVersionsFailed": "無法載入載入器版本。",
+    "versionsFailed": "無法載入版本清單，請檢查網路連線。",
+    "importTitle": "匯入實例",
+    "importBody": "貼上 Mnelys 實例清單，或選擇從其他安裝匯出的檔案。",
+    "importFile": "清單檔案",
+    "importJson": "清單 JSON",
+    "imported": "已匯入「{{name}}」。",
+    "detailTitle": "實例",
+    "back": "所有實例",
+    "notFound": "此實例已不存在。",
+    "loading": "正在載入實例…",
+    "overview": "概覽",
+    "versionId": "可執行版本",
+    "directory": "遊戲目錄",
+    "lastLaunched": "上次啟動",
+    "never": "從未",
+    "settingsTitle": "實例設定",
+    "javaPath": "Java 路徑",
+    "javaAuto": "自動：使用此版本對應的託管執行環境",
+    "saved": "已儲存。",
+    "logs": "遊戲日誌",
+    "logsBody": "最近一次啟動的程序輸出，由核心保存在記憶體中。",
+    "sessionState": {
+      "running": "執行中",
+      "exited": "已結束",
+      "failed": "失敗",
+      "stopped": "已停止"
+    },
+    "contentTitle": "內容",
+    "contentBody": "搜尋 Modrinth 或 CurseForge 並安裝到此實例。必要相依項目由核心解析。",
+    "contentInstalled": "已安裝 {{count}} 項",
+    "contentProvider": "來源",
+    "contentKind": "類型",
+    "contentSearch": "搜尋",
+    "contentSearchAction": "搜尋",
+    "contentNoProviders": "未設定內容來源。Modrinth 永遠可用；CurseForge 需要 API 金鑰。",
+    "contentSearchFailed": "搜尋失敗。",
+    "contentSearching": "搜尋中…",
+    "contentNoResults": "沒有符合此查詢的結果。",
+    "contentDownloads": "{{count}} 次下載",
+    "contentInstall": "安裝",
+    "contentRemove": "移除",
+    "installedTitle": "已安裝內容",
+    "installedEmptyTitle": "尚未安裝內容",
+    "installedEmptyBody": "從內容平台安裝的模組、整合包與光影會顯示在這裡。",
+    "noLogs": "本次工作階段尚未啟動。",
+    "logsFailed": "無法讀取遊戲日誌。",
+    "logsEmpty": "尚無輸出。",
+    "alreadyRunning": "此實例已在執行。",
+    "needsAccount": "請先登入帳戶，遊戲需要身分。",
+    "installQueued": "安裝已加入佇列，可在任務中心查看。",
+    "import": "匯入"
+  },
+  "downloads": {
+    "heading": "下載",
+    "description": "中繼資料、Java 執行環境、載入器與內容共用一條下載佇列。",
+    "emptyTitle": "目前沒有下載",
+    "emptyBody": "佇列為空。來自實例的安裝任務會在執行時顯示在這裡。",
+    "providersHeading": "內容來源",
+    "providersBody": "Modrinth 永遠可用；設定 API 金鑰後會顯示 CurseForge。",
+    "providers": {
+      "mojang": {
+        "title": "Mojang 中繼資料",
+        "body": "版本清單、函式庫與資源檔案。"
+      },
+      "java": {
+        "title": "託管 Java",
+        "body": "與遊戲版本相符且經過校驗的執行環境。"
+      },
+      "content": {
+        "title": "Modrinth",
+        "body": "透過具型別的 Provider 接入模組、整合包、資源包與光影。"
+      }
+    },
+    "queueTitle": "下載佇列",
+    "queueBody": "由核心擁有的背景任務：中繼資料、Java、安裝與內容。",
+    "activeTasks": "{{count}} 個進行中",
+    "recentTitle": "最近完成",
+    "javaTitle": "Java 執行環境",
+    "javaBody": "Mnelys 會選擇與遊戲版本相符的託管執行環境，或使用你已有的版本。",
+    "javaDetected": "偵測到 {{count}} 個",
+    "javaInstallHint": "安裝主要版本會在背景下載經過校驗的託管執行環境。",
+    "javaFailed": "無法列出 Java 執行環境。",
+    "javaEmpty": "尚未偵測到 Java 執行環境。請在上方安裝託管版本。",
+    "javaSource": {
+      "managed": "託管",
+      "system": "系統"
+    },
+    "versionsTitle": "Minecraft 版本",
+    "versionsBody": "安裝器解析所用的 Mojang 版本清單。鏡像不會改變信任雜湊。",
+    "versionsCount": "{{count}} 個版本",
+    "versionsFilter": "篩選版本",
+    "versionsLoading": "正在載入版本清單…",
+    "versionsFailed": "無法載入版本清單。",
+    "noReleaseTime": "未知發行日期",
+    "versionType": {
+      "release": "正式版",
+      "snapshot": "快照",
+      "old_beta": "舊 Beta",
+      "old_alpha": "舊 Alpha"
+    },
+    "versionsEmpty": "沒有符合篩選條件的版本。",
+    "providersLoading": "正在檢查來源…",
+    "providersAction": "瀏覽實例",
+    "providersNote": "內容安裝以實例為單位追蹤，移除模組不會影響其他實例。",
+    "contentPlatforms": "內容平台"
+  },
+  "multiplayer": {
+    "heading": "多人遊戲",
+    "description": "Terracotta 房間讓你與朋友一起遊玩，無需開放公用連接埠。",
+    "createRoom": "建立房間",
+    "emptyTitle": "多人遊戲尚未接入",
+    "emptyBody": "此頁面保留給房間建立、成員、轉送狀態與診斷功能。",
+    "safetyHeading": "安全性基線",
+    "safetyBody": "本機管理端點僅會監聽回送位址，使用短效權杖，且不會自動開放公用連接埠。"
+  },
+  "accounts": {
+    "heading": "帳戶",
+    "description": "Microsoft、離線與外部 Yggdrasil 身分共用同一套帳戶模型。",
+    "add": "新增帳戶",
+    "signedOut": "尚未登入帳戶",
+    "signedOutBody": "憑證永遠不會進入 WebView。核心會將更新權杖保存在平台金鑰環中。",
+    "types": {
+      "microsoft": {
+        "title": "Microsoft",
+        "body": "透過系統瀏覽器與 PKCE 進行官方登入。"
+      },
+      "offline": {
+        "title": "離線",
+        "body": "清楚標示的本機身分，適合測試與區域網路遊玩。"
+      },
+      "yggdrasil": {
+        "title": "外部 Yggdrasil",
+        "body": "自訂驗證，並提供明確的信任提示。"
+      }
+    },
+    "selected": "已選用",
+    "select": "使用帳戶",
+    "refresh": "重新整理",
+    "remove": "移除",
+    "removeTitle": "移除此帳戶？",
+    "removeBody": "此帳戶儲存的憑證會從系統金鑰環刪除，磁碟上的玩家資料不受影響。",
+    "loadError": "無法載入帳戶",
+    "kind": {
+      "microsoft": "Microsoft",
+      "offline": "離線",
+      "yggdrasil": "Yggdrasil"
+    },
+    "method": {
+      "microsoft": "Microsoft 登入",
+      "offline": "離線名稱",
+      "yggdrasil": "Yggdrasil 伺服器"
+    },
+    "addTitle": "新增帳戶",
+    "addDescription": "選擇此身分的登入方式。權杖保留在核心中，永遠不會進入視窗。",
+    "addOffline": "新增離線帳戶",
+    "addYggdrasil": "登入 Yggdrasil",
+    "username": "使用者名稱",
+    "authUrl": "驗證伺服器",
+    "password": "密碼",
+    "offlineHint": "離線名稱是本機身分。線上模式伺服器不會接受。",
+    "yggdrasilHint": "密碼會直接送往驗證伺服器；金鑰環中只會保存權杖。",
+    "microsoftBody": "登入會在瀏覽器中使用 Microsoft 裝置代碼流程。Mnelys 不會要求你輸入密碼。",
+    "microsoftStart": "開始 Microsoft 登入",
+    "microsoftWaiting": "等待核准…",
+    "microsoftApproved": "我已核准登入",
+    "microsoftCode": "請在 Microsoft 頁面輸入此代碼："
+  },
+  "developer": {
+    "heading": "開發",
+    "description": "將 Gradle 專案綁定到實例，在同一個工作區建置、部署與除錯。",
+    "gateTitle": "開發者模式已關閉",
+    "gateBody": "開啟後會顯示開發工具。核心維持相同的命令邊界；此模式只改變可見介面。",
+    "gateAction": "啟用開發者模式",
+    "disableAction": "關閉開發者模式",
+    "enabledTitle": "開發者模式已開啟",
+    "toolsTitle": "開發工具",
+    "enabledBody": "這些功能安排在啟動器核心穩定之後，從 M8 開發者工作區開始。",
+    "tools": {
+      "build": {
+        "title": "Gradle 建置",
+        "body": "執行專案 Wrapper 並找出建置產物。"
+      },
+      "debug": {
+        "title": "除錯執行",
+        "body": "部署到綁定的實例並附加 JDWP。"
+      },
+      "daemon": {
+        "title": "開發者常駐程式",
+        "body": "僅限回送位址的橋接器，供 CLI 與 IDE 用戶端使用。"
+      }
+    },
+    "tasksTitle": "背景任務",
+    "tasksBody": "核心目前正在執行的所有工作，可隨時取消。",
+    "tasksCount": "{{count}} 個任務"
+  },
+  "settings": {
+    "heading": "設定",
+    "description": "外觀、語言、下載、開發工具與建置資訊。",
+    "appearance": "外觀",
+    "appearanceDescription": "視窗在所有平台上都保持不透明，不使用 Mica、Acrylic 或 Vibrancy。",
+    "accent": "強調色",
+    "accentDescription": "用於主要動作、選取與焦點。預設為 Mnelys 粉紅色。",
+    "accentPresets": "強調色預設",
+    "accentBrand": "Mnelys 粉紅",
+    "accentPink": "洋紅",
+    "accentRed": "紅色",
+    "accentOrange": "橘色",
+    "accentAmber": "琥珀色",
+    "accentGreen": "綠色",
+    "accentTeal": "藍綠色",
+    "accentBlue": "藍色",
+    "accentIndigo": "靛藍色",
+    "accentViolet": "紫羅蘭色",
+    "accentCustom": "自訂強調色",
+    "accentHex": "強調色十六進位值",
+    "accentInvalid": "請輸入 #RRGGBB 或 #RGB 格式的顏色。",
+    "accentReset": "重設為 Mnelys 粉紅",
+    "accentAdjusted": "已調整亮度，確保文字在此主題中保持可讀。",
+    "language": "語言",
+    "languageDescription": "立即生效，並保留於本次安裝。",
+    "developer": "開發者模式",
+    "developerDescription": "在導覽中顯示「開發」區段。不會授予額外的核心權限。",
+    "about": "關於此版本",
+    "aboutDescription": "Mnelys 可安裝 Vanilla、Fabric、Quilt、Legacy Fabric、Forge 與 NeoForge，支援 Microsoft、離線或 Yggdrasil 帳戶登入，並可從 Modrinth 與 CurseForge 安裝內容。",
+    "platform": "平台",
+    "webview": "Web 檢視",
+    "coreVersion": "核心版本",
+    "contract": "契約",
+    "icons": "介面圖示",
+    "iconsDescription": "所有介面圖示皆來自 Lucide（ISC）。應用程式圖示仍為 Mnelys 原創圖稿。",
+    "core": "核心",
+    "coreDescription": "核心儲存資料的位置，以及連線 Mojang 的方式。",
+    "mirror": "下載鏡像",
+    "mirrorDescription": "目前路線：{{active}}。鏡像只改變傳輸方式；每個檔案仍會比對原始雜湊。",
+    "mirrorAuto": "自動",
+    "mirrorDirect": "直連",
+    "mirrorBmclapi": "BMCLAPI",
+    "memory": "預設記憶體",
+    "memoryHint": "新啟動的堆積記憶體（MB）。0 表示由核心決定。允許值：0 或 512–65536。",
+    "memoryInvalid": "請輸入 0 或 512 到 65536 之間的值。",
+    "memorySave": "儲存記憶體設定",
+    "memorySaved": "已儲存。",
+    "probe": "鏡像健康狀態",
+    "probeAction": "偵測鏡像",
+    "probeRunning": "偵測中…",
+    "probeLatency": "{{ms}} 毫秒",
+    "probeReachable": "可連線",
+    "probeUnreachable": "無法連線",
+    "root": "資料目錄",
+    "rootDescription": "實例、快取與設定都存放在這裡。",
+    "loadFailed": "無法載入核心設定。"
+  },
+  "tasks": {
+    "title": "任務中心",
+    "description": "長時間執行的工作與本次工作階段的核心日誌。",
+    "emptyTitle": "沒有任務",
+    "emptyBody": "長時間執行的工作會由 Rust 核心回報階段、速度、取消與重試狀態。",
+    "footer": "任務中心會與 M2 垂直切片連接。",
+    "close": "關閉任務中心",
+    "tabs": {
+      "label": "任務中心區段",
+      "tasks": "任務",
+      "logs": "日誌"
+    },
+    "logs": {
+      "loading": "正在讀取核心日誌…",
+      "emptyTitle": "沒有日誌項目",
+      "emptyBody": "本次工作階段尚未記錄任何內容。應用程式執行時，新項目會顯示在這裡。",
+      "errorTitle": "日誌無法使用",
+      "errorBody": "核心未傳回日誌緩衝區。外殼其餘功能仍可正常運作。",
+      "count": "項目：{{count}}",
+      "clear": "清除日誌",
+      "clearError": "核心未清除日誌，請再試一次。",
+      "confirmTitle": "清除所有日誌項目？",
+      "confirmBody": "這會移除本次工作階段記憶體日誌中的所有項目，且無法復原。",
+      "confirmAction": "清除日誌",
+      "confirmCancel": "取消",
+      "level": {
+        "trace": "追蹤",
+        "debug": "除錯",
+        "info": "資訊",
+        "warn": "警告",
+        "error": "錯誤"
+      }
+    },
+    "loading": "正在讀取任務…",
+    "count": "任務：{{count}}",
+    "state": {
+      "queued": "已排入佇列",
+      "running": "執行中",
+      "succeeded": "已成功",
+      "failed": "失敗",
+      "cancelled": "已取消"
+    },
+    "stateMessage": "任務狀態為{{state}}。",
+    "cancel": "取消任務"
+  },
+  "error": {
+    "title": "發生錯誤",
+    "retry": "重試",
+    "coreUnavailable": "無法連線到 Mnelys 核心。通常表示桌面外殼沒有執行 Rust 後端。",
+    "coreNotImplemented": "核心尚未實作此功能。",
+    "coreInvalidRequest": "核心判定此要求無效。",
+    "coreIo": "檔案操作失敗。",
+    "coreNetwork": "網路操作失敗。",
+    "coreUnauthorized": "此要求未獲授權。",
+    "coreConflict": "此要求與現有狀態衝突。",
+    "coreInternal": "核心回報內部錯誤。",
+    "unknown": "發生未知錯誤。"
+  },
+  "loader": {
+    "vanilla": "Vanilla",
+    "fabric": "Fabric",
+    "quilt": "Quilt",
+    "legacyFabric": "Legacy Fabric",
+    "forge": "Forge",
+    "neoforge": "NeoForge"
+  },
+  "contentKind": {
+    "mod": "模組",
+    "resourcepack": "資源包",
+    "shader": "光影",
+    "world": "世界",
+    "datapack": "資料包"
+  },
+  "contentProvider": {
+    "modrinth": "Modrinth",
+    "curseforge": "CurseForge"
+  }
+}

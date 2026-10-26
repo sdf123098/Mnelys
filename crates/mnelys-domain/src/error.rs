@@ -102,6 +102,26 @@ impl CoreError {
     }
 
     #[must_use]
+    pub fn io(message: impl Into<String>) -> Self {
+        Self::new(CoreErrorCode::Io, message)
+    }
+
+    #[must_use]
+    pub fn network(message: impl Into<String>) -> Self {
+        Self::new(CoreErrorCode::Network, message)
+    }
+
+    #[must_use]
+    pub fn unauthorized(message: impl Into<String>) -> Self {
+        Self::new(CoreErrorCode::Unauthorized, message)
+    }
+
+    #[must_use]
+    pub fn conflict(message: impl Into<String>) -> Self {
+        Self::new(CoreErrorCode::Conflict, message)
+    }
+
+    #[must_use]
     pub fn internal(message: impl Into<String>) -> Self {
         Self::new(CoreErrorCode::Internal, message)
     }

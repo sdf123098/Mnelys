@@ -1,0 +1,475 @@
+{
+  "app": {
+    "name": "Mnelys",
+    "tagline": "Lanzador de Minecraft y espacio de desarrollo nativo de IA para jugadores y modders",
+    "stage": "Núcleo M1–M6"
+  },
+  "window": {
+    "minimize": "Minimizar",
+    "maximize": "Maximizar",
+    "restore": "Restaurar",
+    "close": "Cerrar"
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "start": "Inicio",
+    "instances": "Instancias",
+    "downloads": "Descargas",
+    "multiplayer": "Multijugador",
+    "developer": "Desarrollador",
+    "accounts": "Cuentas",
+    "settings": "Ajustes"
+  },
+  "topbar": {
+    "theme": "Apariencia: {{theme}}",
+    "tasks": "Centro de tareas",
+    "signedOut": "Sin sesión"
+  },
+  "status": {
+    "checking": "Comprobando el núcleo de Mnelys…",
+    "coreConnected": "Núcleo conectado",
+    "coreUnavailable": "Núcleo no disponible",
+    "coreUnavailableHint": "No hay un núcleo Rust adjunto. Es lo esperado en la vista previa de pnpm dev solo en el navegador.",
+    "contract": "contrato v{{version}}"
+  },
+  "theme": {
+    "label": "Apariencia",
+    "description": "Sigue al sistema o fuerza una interfaz clara u oscura para esta instalación.",
+    "system": "Sistema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "common": {
+    "skipToContent": "Saltar al contenido",
+    "comingSoon": "Próximamente",
+    "availableIn": "Disponible en {{milestone}}",
+    "disabledHint": "Esta función aún no está implementada.",
+    "open": "Abrir",
+    "m1": "Interfaz M1",
+    "m2": "Corte vertical M2",
+    "m3": "Cuentas M3",
+    "m6": "Contenido M6",
+    "m7": "Multijugador M7",
+    "m8": "Espacio de desarrollo M8",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  },
+  "start": {
+    "heading": "Inicio",
+    "description": "Prepara una cuenta y una instancia, y luego inicia el juego.",
+    "welcomeTitle": "No hay ninguna instancia lista para iniciar",
+    "welcomeBody": "Crea una instancia para descargar el juego y luego inícialo con una cuenta con sesión iniciada.",
+    "openInstances": "Ir a instancias",
+    "launch": "Iniciar juego",
+    "launchDisabled": "Disponible tras instalar la primera instancia",
+    "cards": {
+      "account": {
+        "title": "Cuenta",
+        "body": "Las identidades de Microsoft, sin conexión y Yggdrasil se gestionan en Cuentas.",
+        "value": "Sin sesión"
+      },
+      "instances": {
+        "title": "Instancias",
+        "body": "Las instancias aíslan mods, mundos y ajustes de Java.",
+        "value": "0 instaladas",
+        "valueCount": "{{count}} en total"
+      },
+      "downloads": {
+        "title": "Descargas",
+        "body": "Las descargas de metadatos, Java y contenido se pondrán en cola aquí.",
+        "value": "Inactivo",
+        "active": "{{count}} activas"
+      }
+    },
+    "nextHeading": "Qué viene después",
+    "nextBody": "Esta interfaz es el entregable de M1. El siguiente hito hace real la ruta Vanilla.",
+    "steps": {
+      "metadata": {
+        "title": "Metadatos de versión y Java",
+        "body": "Resuelve los metadatos de Mojang, elige un entorno compatible y verifica cada archivo."
+      },
+      "instance": {
+        "title": "Creación atómica de la instancia",
+        "body": "Prepara la instancia, verifica todos los artefactos y confirma solo cuando todo haya funcionado."
+      },
+      "launch": {
+        "title": "Iniciar hasta el menú principal",
+        "body": "Construye los argumentos, transmite los registros y clasifica la salida."
+      }
+    },
+    "readyTitle": "{{name}} está listo para iniciar",
+    "readyBody": "Minecraft {{version}} en {{loader}} está instalado. La cuenta seleccionada inicia sesión en la pantalla de título.",
+    "launchNeedsAccount": "Inicia sesión en una cuenta antes de jugar.",
+    "launchAccount": "Iniciando como {{name}}.",
+    "runningTitle": "En ejecución",
+    "runningMeta": "Proceso {{pid}} · {{version}}",
+    "instancesTitle": "Instancias recientes",
+    "instancesBody": "Las instancias que iniciaste más recientemente."
+  },
+  "instances": {
+    "heading": "Instancias",
+    "description": "Cada instancia tiene su propio directorio de juego, mods, mundos, selección de Java y registros.",
+    "create": "Nueva instancia",
+    "emptyTitle": "Aún no hay instancias",
+    "emptyBody": "Crea una instancia, instala sus archivos e inicia Minecraft desde un solo lugar.",
+    "plannedTitle": "Cómo funcionarán las instancias",
+    "plannedBody": "Crear, copiar, importar, exportar y reparar comparten un mismo plan de instalación.",
+    "plannedNotice": "Una instancia solo aparece después de verificar y confirmar sus archivos de forma atómica, así que una instalación fallida nunca deja una entrada a medio usar.",
+    "loadError": "No se pudieron cargar las instancias",
+    "noAccount": "No hay ninguna cuenta con sesión iniciada, así que el juego no puede arrancar.",
+    "addAccount": "Añadir cuenta",
+    "running": "En ejecución",
+    "installed": "Instalada",
+    "notInstalled": "No instalada",
+    "launch": "Iniciar",
+    "install": "Instalar",
+    "stop": "Detener",
+    "manage": "Gestionar",
+    "export": "Exportar",
+    "exported": "Se exportó {{id}}.json a la carpeta de datos de Mnelys.",
+    "delete": "Eliminar",
+    "deleteTitle": "¿Eliminar esta instancia?",
+    "deleteBody": "Se eliminarán «{{name}}» y todo su directorio, incluidos mods y mundos. No se puede deshacer.",
+    "createTitle": "Nueva instancia",
+    "createBody": "Elige una versión del juego y un cargador opcional. La instalación se ejecuta como tarea en segundo plano.",
+    "creating": "Creando…",
+    "name": "Nombre",
+    "id": "ID de carpeta",
+    "idHint": "Letras minúsculas, dígitos y guiones. Se usa como nombre del directorio.",
+    "gameVersion": "Versión del juego",
+    "includeSnapshots": "Mostrar snapshots",
+    "loader": "Cargador",
+    "loaderVersion": "Versión del cargador",
+    "chooseLoaderVersion": "Elige una versión del cargador",
+    "experimental": "experimental",
+    "loaderVersionsFailed": "No se pudieron cargar las versiones del cargador.",
+    "versionsFailed": "No se pudo cargar el manifiesto de versiones. Comprueba tu conexión.",
+    "importTitle": "Importar una instancia",
+    "importBody": "Pega un manifiesto de instancia de Mnelys o elige un archivo exportado desde otra instalación.",
+    "importFile": "Archivo de manifiesto",
+    "importJson": "JSON del manifiesto",
+    "imported": "Se importó «{{name}}».",
+    "detailTitle": "Instancia",
+    "back": "Todas las instancias",
+    "notFound": "Esta instancia ya no existe.",
+    "loading": "Cargando la instancia…",
+    "overview": "Resumen",
+    "versionId": "Versión ejecutable",
+    "directory": "Directorio del juego",
+    "lastLaunched": "Último inicio",
+    "never": "Nunca",
+    "settingsTitle": "Ajustes de la instancia",
+    "javaPath": "Ruta de Java",
+    "javaAuto": "Automático: usar el entorno gestionado para esta versión",
+    "saved": "Guardado.",
+    "logs": "Registro del juego",
+    "logsBody": "La salida del proceso del último inicio, conservada en memoria por el núcleo.",
+    "sessionState": {
+      "running": "En ejecución",
+      "exited": "Finalizado",
+      "failed": "Fallido",
+      "stopped": "Detenido"
+    },
+    "contentTitle": "Contenido",
+    "contentBody": "Busca en Modrinth o CurseForge e instala en esta instancia. El núcleo resuelve las dependencias necesarias.",
+    "contentInstalled": "{{count}} instalados",
+    "contentProvider": "Origen",
+    "contentKind": "Tipo",
+    "contentSearch": "Buscar",
+    "contentSearchAction": "Buscar",
+    "contentNoProviders": "No hay ningún proveedor de contenido configurado. Modrinth siempre está disponible; CurseForge necesita una clave de API.",
+    "contentSearchFailed": "La búsqueda falló.",
+    "contentSearching": "Buscando…",
+    "contentNoResults": "No hay resultados para esta búsqueda.",
+    "contentDownloads": "{{count}} descargas",
+    "contentInstall": "Instalar",
+    "contentRemove": "Quitar",
+    "installedTitle": "Contenido instalado",
+    "installedEmptyTitle": "Nada instalado",
+    "installedEmptyBody": "Los mods, paquetes y shaders instalados desde una plataforma de contenido aparecen aquí.",
+    "noLogs": "No hay ningún inicio en esta sesión.",
+    "logsFailed": "No se pudo leer el registro del juego.",
+    "logsEmpty": "Aún no hay salida.",
+    "alreadyRunning": "Esta instancia ya se está ejecutando.",
+    "needsAccount": "Inicia sesión primero para que el juego tenga una identidad.",
+    "installQueued": "Instalación en cola. Síguela en el centro de tareas.",
+    "import": "Importar"
+  },
+  "downloads": {
+    "heading": "Descargas",
+    "description": "Una sola cola para metadatos, entornos de Java, cargadores y contenido.",
+    "emptyTitle": "No se está descargando nada",
+    "emptyBody": "La cola está vacía. Las instalaciones iniciadas desde una instancia aparecen aquí mientras se ejecutan.",
+    "providersHeading": "Fuentes de contenido",
+    "providersBody": "Modrinth siempre está disponible. CurseForge aparece cuando se configura una clave de API.",
+    "providers": {
+      "mojang": {
+        "title": "Metadatos de Mojang",
+        "body": "Manifiestos de versiones, bibliotecas y recursos."
+      },
+      "java": {
+        "title": "Java gestionado",
+        "body": "Entornos verificados y adaptados a la versión del juego seleccionada."
+      },
+      "content": {
+        "title": "Modrinth",
+        "body": "Mods, paquetes, paquetes de recursos y shaders mediante un proveedor tipado."
+      }
+    },
+    "queueTitle": "Cola de descargas",
+    "queueBody": "Tareas en segundo plano del núcleo: metadatos, Java, instalaciones y contenido.",
+    "activeTasks": "{{count}} activas",
+    "recentTitle": "Completadas recientemente",
+    "javaTitle": "Entornos de Java",
+    "javaBody": "Mnelys selecciona un entorno gestionado compatible con la versión del juego o usa uno que ya tengas.",
+    "javaDetected": "{{count}} detectados",
+    "javaInstallHint": "Instalar una versión principal descarga en segundo plano un entorno gestionado y verificado.",
+    "javaFailed": "No se pudieron listar los entornos de Java.",
+    "javaEmpty": "Aún no se detectó ningún entorno de Java. Instala uno gestionado arriba.",
+    "javaSource": {
+      "managed": "Gestionado",
+      "system": "Sistema"
+    },
+    "versionsTitle": "Versiones de Minecraft",
+    "versionsBody": "El manifiesto de Mojang con el que trabaja el instalador. Los espejos nunca cambian el hash de confianza.",
+    "versionsCount": "{{count}} versiones",
+    "versionsFilter": "Filtrar versiones",
+    "versionsLoading": "Cargando el manifiesto…",
+    "versionsFailed": "No se pudo cargar el manifiesto de versiones.",
+    "noReleaseTime": "Fecha de publicación desconocida",
+    "versionType": {
+      "release": "Versión final",
+      "snapshot": "Snapshot",
+      "old_beta": "Beta antigua",
+      "old_alpha": "Alfa antigua"
+    },
+    "versionsEmpty": "Ninguna versión coincide con ese filtro.",
+    "providersLoading": "Comprobando proveedores…",
+    "providersAction": "Explorar instancias",
+    "providersNote": "Las instalaciones de contenido se siguen por instancia, así que quitar un mod nunca afecta a otra instancia.",
+    "contentPlatforms": "Plataformas de contenido"
+  },
+  "multiplayer": {
+    "heading": "Multijugador",
+    "description": "Salas de Terracotta para jugar con amigos sin abrir un puerto público.",
+    "createRoom": "Crear sala",
+    "emptyTitle": "El multijugador aún no está conectado",
+    "emptyBody": "Esta página está reservada para creación de salas, miembros, estado del relé y diagnóstico.",
+    "safetyHeading": "Base de seguridad",
+    "safetyBody": "El punto de gestión local solo escuchará en loopback, usará un token de corta duración y nunca abrirá un puerto público automáticamente."
+  },
+  "accounts": {
+    "heading": "Cuentas",
+    "description": "Las identidades de Microsoft, sin conexión y Yggdrasil externas comparten un mismo modelo de cuenta.",
+    "add": "Añadir cuenta",
+    "signedOut": "Ninguna cuenta con sesión iniciada",
+    "signedOutBody": "Las credenciales nunca entran en la webview. El núcleo guarda los tokens de actualización en el llavero del sistema.",
+    "types": {
+      "microsoft": {
+        "title": "Microsoft",
+        "body": "Inicio de sesión oficial mediante el navegador del sistema con PKCE."
+      },
+      "offline": {
+        "title": "Sin conexión",
+        "body": "Una identidad local claramente etiquetada para pruebas y juego en LAN."
+      },
+      "yggdrasil": {
+        "title": "Yggdrasil externo",
+        "body": "Autenticación personalizada con una solicitud de confianza explícita."
+      }
+    },
+    "selected": "Seleccionada",
+    "select": "Usar cuenta",
+    "refresh": "Actualizar",
+    "remove": "Eliminar",
+    "removeTitle": "¿Eliminar esta cuenta?",
+    "removeBody": "Las credenciales guardadas de esta cuenta se borran del llavero del sistema. Los datos de jugador en disco no se tocan.",
+    "loadError": "No se pudieron cargar las cuentas",
+    "kind": {
+      "microsoft": "Microsoft",
+      "offline": "Sin conexión",
+      "yggdrasil": "Yggdrasil"
+    },
+    "method": {
+      "microsoft": "Inicio con Microsoft",
+      "offline": "Nombre sin conexión",
+      "yggdrasil": "Servidor Yggdrasil"
+    },
+    "addTitle": "Añadir una cuenta",
+    "addDescription": "Elige cómo inicia sesión esta identidad. Los tokens se quedan en el núcleo y nunca llegan a la ventana.",
+    "addOffline": "Añadir cuenta sin conexión",
+    "addYggdrasil": "Iniciar sesión en Yggdrasil",
+    "username": "Nombre de usuario",
+    "authUrl": "Servidor de autenticación",
+    "password": "Contraseña",
+    "offlineHint": "Un nombre sin conexión es una identidad local. Los servidores en modo en línea no lo aceptarán.",
+    "yggdrasilHint": "La contraseña va directamente al servidor de autenticación; solo se guarda un token en el llavero.",
+    "microsoftBody": "El inicio de sesión usa el flujo de código de dispositivo de Microsoft en tu navegador. No se escribe ninguna contraseña en Mnelys.",
+    "microsoftStart": "Iniciar sesión con Microsoft",
+    "microsoftWaiting": "Esperando aprobación…",
+    "microsoftApproved": "He aprobado el inicio de sesión",
+    "microsoftCode": "Introduce este código en la página de Microsoft:"
+  },
+  "developer": {
+    "heading": "Desarrollador",
+    "description": "Vincula un proyecto Gradle a una instancia y compila, despliega y depura desde un mismo espacio.",
+    "gateTitle": "El modo desarrollador está desactivado",
+    "gateBody": "Actívalo para mostrar las herramientas de desarrollo. El núcleo mantiene la misma frontera de comandos; el modo solo cambia la superficie visible.",
+    "gateAction": "Activar modo desarrollador",
+    "disableAction": "Desactivar modo desarrollador",
+    "enabledTitle": "El modo desarrollador está activado",
+    "toolsTitle": "Herramientas de desarrollo",
+    "enabledBody": "Estas funciones están previstas tras estabilizar el núcleo del lanzador, empezando por el espacio de desarrollo M8.",
+    "tools": {
+      "build": {
+        "title": "Compilación Gradle",
+        "body": "Ejecuta el wrapper del proyecto y localiza el artefacto compilado."
+      },
+      "debug": {
+        "title": "Ejecución de depuración",
+        "body": "Despliega en la instancia vinculada y conecta JDWP."
+      },
+      "daemon": {
+        "title": "Demonio de desarrollo",
+        "body": "Un puente solo de loopback para clientes CLI e IDE."
+      }
+    },
+    "tasksTitle": "Tareas en segundo plano",
+    "tasksBody": "Todo lo que el núcleo está ejecutando ahora mismo, con cancelación.",
+    "tasksCount": "{{count}} tareas"
+  },
+  "settings": {
+    "heading": "Ajustes",
+    "description": "Apariencia, idioma, descargas, herramientas de desarrollo e información de compilación.",
+    "appearance": "Apariencia",
+    "appearanceDescription": "La ventana permanece opaca en todas las plataformas. Sin Mica, Acrylic ni vibrancy.",
+    "accent": "Color de acento",
+    "accentDescription": "Colorea las acciones principales, la selección y el foco. El valor predeterminado es el rosa de Mnelys.",
+    "accentPresets": "Acentos predefinidos",
+    "accentBrand": "Rosa Mnelys",
+    "accentPink": "Magenta",
+    "accentRed": "Rojo",
+    "accentOrange": "Naranja",
+    "accentAmber": "Ámbar",
+    "accentGreen": "Verde",
+    "accentTeal": "Turquesa",
+    "accentBlue": "Azul",
+    "accentIndigo": "Índigo",
+    "accentViolet": "Violeta",
+    "accentCustom": "Color de acento personalizado",
+    "accentHex": "Valor hexadecimal del acento",
+    "accentInvalid": "Introduce un color como #RRGGBB o #RGB.",
+    "accentReset": "Restablecer al rosa de Mnelys",
+    "accentAdjusted": "Se ajustó la luminosidad para que el texto siga siendo legible en este tema.",
+    "language": "Idioma",
+    "languageDescription": "Se aplica al instante y se conserva para esta instalación.",
+    "developer": "Modo desarrollador",
+    "developerDescription": "Muestra la sección Desarrollador en la navegación. No concede capacidades adicionales al núcleo.",
+    "about": "Acerca de esta compilación",
+    "aboutDescription": "Mnelys instala Vanilla, Fabric, Quilt, Legacy Fabric, Forge y NeoForge, inicia sesión con cuentas de Microsoft, sin conexión o Yggdrasil, e instala contenido desde Modrinth y CurseForge.",
+    "platform": "Plataforma",
+    "webview": "Vista web",
+    "coreVersion": "Versión del núcleo",
+    "contract": "Contrato",
+    "icons": "Iconos de la interfaz",
+    "iconsDescription": "Todos los iconos de la interfaz provienen de Lucide (ISC). El icono de la aplicación sigue siendo el artwork original de Mnelys.",
+    "core": "Núcleo",
+    "coreDescription": "Dónde guarda sus datos el núcleo y cómo llega a Mojang.",
+    "mirror": "Espejo de descargas",
+    "mirrorDescription": "Ruta activa: {{active}}. Los espejos solo cambian el transporte; cada archivo se sigue comprobando con el hash original.",
+    "mirrorAuto": "Automático",
+    "mirrorDirect": "Directo",
+    "mirrorBmclapi": "BMCLAPI",
+    "memory": "Memoria predeterminada",
+    "memoryHint": "Megabytes de heap para nuevos inicios. 0 deja que el núcleo decida. Permitido: 0 o 512–65536.",
+    "memoryInvalid": "Introduce 0 o un valor entre 512 y 65536.",
+    "memorySave": "Guardar memoria",
+    "memorySaved": "Guardado.",
+    "probe": "Estado de los espejos",
+    "probeAction": "Sondear espejos",
+    "probeRunning": "Sondeando…",
+    "probeLatency": "{{ms}} ms",
+    "probeReachable": "Accesible",
+    "probeUnreachable": "Inaccesible",
+    "root": "Carpeta de datos",
+    "rootDescription": "Aquí viven las instancias, cachés y ajustes.",
+    "loadFailed": "No se pudieron cargar los ajustes del núcleo."
+  },
+  "tasks": {
+    "title": "Centro de tareas",
+    "description": "Trabajo de larga duración y el registro del núcleo de esta sesión.",
+    "emptyTitle": "No hay tareas",
+    "emptyBody": "El trabajo de larga duración informará su fase, velocidad, cancelación y reintento desde el núcleo Rust.",
+    "footer": "El centro de tareas se conecta con el corte vertical M2.",
+    "close": "Cerrar el centro de tareas",
+    "tabs": {
+      "label": "Secciones del centro de tareas",
+      "tasks": "Tareas",
+      "logs": "Registros"
+    },
+    "logs": {
+      "loading": "Leyendo el registro del núcleo…",
+      "emptyTitle": "Sin entradas de registro",
+      "emptyBody": "Todavía no se ha registrado nada en esta sesión. Las nuevas entradas aparecen aquí mientras la aplicación se ejecuta.",
+      "errorTitle": "Registros no disponibles",
+      "errorBody": "El núcleo no devolvió su búfer de registro. El resto de la interfaz sigue funcionando.",
+      "count": "Entradas: {{count}}",
+      "clear": "Borrar registros",
+      "clearError": "El núcleo no borró el registro. Inténtalo de nuevo.",
+      "confirmTitle": "¿Borrar todas las entradas del registro?",
+      "confirmBody": "Esto elimina todas las entradas del registro en memoria de esta sesión. No se puede deshacer.",
+      "confirmAction": "Borrar registros",
+      "confirmCancel": "Cancelar",
+      "level": {
+        "trace": "Traza",
+        "debug": "Depuración",
+        "info": "Información",
+        "warn": "Aviso",
+        "error": "Error"
+      }
+    },
+    "loading": "Leyendo tareas…",
+    "count": "Tareas: {{count}}",
+    "state": {
+      "queued": "En cola",
+      "running": "En ejecución",
+      "succeeded": "Completada",
+      "failed": "Fallida",
+      "cancelled": "Cancelada"
+    },
+    "stateMessage": "Estado de la tarea: {{state}}.",
+    "cancel": "Cancelar tarea"
+  },
+  "error": {
+    "title": "Algo salió mal",
+    "retry": "Reintentar",
+    "coreUnavailable": "No se puede alcanzar el núcleo de Mnelys. Normalmente significa que la interfaz de escritorio no está ejecutando el backend Rust.",
+    "coreNotImplemented": "El núcleo aún no ha implementado esa capacidad.",
+    "coreInvalidRequest": "El núcleo rechazó la solicitud por no ser válida.",
+    "coreIo": "Falló una operación de archivo.",
+    "coreNetwork": "Falló una operación de red.",
+    "coreUnauthorized": "Esa solicitud no estaba autorizada.",
+    "coreConflict": "Esa solicitud entró en conflicto con el estado existente.",
+    "coreInternal": "El núcleo informó de un error interno.",
+    "unknown": "Se produjo un error desconocido."
+  },
+  "loader": {
+    "vanilla": "Vanilla",
+    "fabric": "Fabric",
+    "quilt": "Quilt",
+    "legacyFabric": "Legacy Fabric",
+    "forge": "Forge",
+    "neoforge": "NeoForge"
+  },
+  "contentKind": {
+    "mod": "Mods",
+    "resourcepack": "Paquetes de recursos",
+    "shader": "Shaders",
+    "world": "Mundos",
+    "datapack": "Paquetes de datos"
+  },
+  "contentProvider": {
+    "modrinth": "Modrinth",
+    "curseforge": "CurseForge"
+  }
+}

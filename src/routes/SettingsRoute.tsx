@@ -1,21 +1,46 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Badge } from '@/components/ui/Badge';
 import { AccentPicker } from '@/components/ui/AccentPicker';
+import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SegmentedControl, type SegmentOption } from '@/components/ui/SegmentedControl';
 import { Switch } from '@/components/ui/Switch';
 import { persistLanguage } from '@/i18n';
 import { LANGUAGE_LABELS, matchLanguage, SUPPORTED_LANGUAGES } from '@/i18n/resources';
-import { useCoreVersion, useRuntimeInfo } from '@/ipc/hooks';
+import type { MirrorKind, MirrorPreference } from '@/ipc/commands';
+import {
+  useCoreVersion,
+  useProbeMirrors,
+  useRuntimeInfo,
+  useSettings,
+  useUpdateSettings,
+} from '@/ipc/hooks';
+import { describeError } from '@/ipc/messages';
 import { usePreferences, type ThemePreference } from '@/state/preferences-store';
 
 import pages from './pages.module.css';
+
+const MIRROR_KEYS = {
+  auto: 'settings.mirrorAuto',
+  direct: 'settings.mirrorDirect',
+  bmclapi: 'settings.mirrorBmclapi',
+} as const satisfies Readonly<Record<MirrorPreference, string>>;
+
+const MIRROR_KIND_KEYS = {
+  direct: 'settings.mirrorDirect',
+  bmclapi: 'settings.mirrorBmclapi',
+} as const satisfies Readonly<Record<MirrorKind, string>>;
 
 export function SettingsRoute() {
   const { t, i18n } = useTranslation();
   const runtime = useRuntimeInfo();
   const version = useCoreVersion();
+  const settings = useSettings();
+  const updateSettings = useUpdateSettings();
+  const probeMirrors = useProbeMirrors();
 
   const theme = usePreferences((state) => state.theme);
   const setTheme = usePreferences((state) => state.setTheme);
@@ -24,15 +49,49 @@ export function SettingsRoute() {
 
   const currentLanguage = matchLanguage(i18n.resolvedLanguage ?? 'en');
 
+  const [memoryDraft, setMemoryDraft] = useState<string | null>(null);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
+  const [memorySaved, setMemorySaved] = useState(false);
+
+  const memory = memoryDraft ?? (settings.data === undefined ? '' : String(settings.data.memoryMb));
+
   const themeOptions: readonly SegmentOption<ThemePreference>[] = [
     { value: 'system', label: t('theme.system'), icon: 'monitor' },
     { value: 'light', label: t('theme.light'), icon: 'sun' },
     { value: 'dark', label: t('theme.dark'), icon: 'moon' },
   ];
 
+  const mirrorOptions: readonly SegmentOption<MirrorPreference>[] = [
+    { value: 'auto', label: t(MIRROR_KEYS.auto), icon: 'compass' },
+    { value: 'direct', label: t(MIRROR_KEYS.direct), icon: 'globe' },
+    { value: 'bmclapi', label: t(MIRROR_KEYS.bmclapi), icon: 'network' },
+  ];
+
+  const memoryValue = Number.parseInt(memory, 10);
+  const memoryValid =
+    !Number.isNaN(memoryValue) &&
+    (memoryValue === 0 || (memoryValue >= 512 && memoryValue <= 65536));
+
   async function changeLanguage(language: string): Promise<void> {
     persistLanguage(language);
     await i18n.changeLanguage(language);
+  }
+
+  function saveMemory(): void {
+    if (!memoryValid) {
+      return;
+    }
+    setSettingsError(null);
+    setMemorySaved(false);
+    updateSettings
+      .mutateAsync({ memoryMb: memoryValue })
+      .then(() => {
+        setMemoryDraft(null);
+        setMemorySaved(true);
+      })
+      .catch((cause: unknown) => {
+        setSettingsError(describeError(cause, t));
+      });
   }
 
   return (
@@ -70,6 +129,128 @@ export function SettingsRoute() {
               </option>
             ))}
           </select>
+        </div>
+      </Card>
+
+      <Card title={t('settings.core')} description={t('settings.coreDescription')} icon="database">
+        <div className={pages.settingBlock}>
+          <SegmentedControl
+            name="mirror"
+            label={t('settings.mirror')}
+            value={settings.data?.mirror ?? 'auto'}
+            options={mirrorOptions}
+            onChange={(value) => {
+              setSettingsError(null);
+              updateSettings.mutate(
+                { mirror: value },
+                {
+                  onError: (cause) => {
+                    setSettingsError(describeError(cause, t));
+                  },
+                },
+              );
+            }}
+          />
+          <p className={pages.caption}>
+            {t('settings.mirrorDescription', {
+              active:
+                settings.data === undefined ? '—' : t(MIRROR_KIND_KEYS[settings.data.activeMirror]),
+            })}
+          </p>
+
+          <div className={pages.field}>
+            <label className={pages.fieldLabel} htmlFor="memory-mb">
+              {t('settings.memory')}
+            </label>
+            <input
+              id="memory-mb"
+              className={pages.input}
+              type="number"
+              min={0}
+              max={65536}
+              step={256}
+              value={memory}
+              disabled={settings.isPending}
+              onChange={(event) => {
+                setMemoryDraft(event.target.value);
+                setMemorySaved(false);
+              }}
+            />
+            <span className={pages.muted}>{t('settings.memoryHint')}</span>
+            {memoryValid ? null : (
+              <span className={pages.errorText}>{t('settings.memoryInvalid')}</span>
+            )}
+          </div>
+          <div className={pages.inlineForm}>
+            <Button
+              size="sm"
+              variant="secondary"
+              icon="check"
+              disabled={!memoryValid || updateSettings.isPending}
+              onClick={saveMemory}
+            >
+              {t('settings.memorySave')}
+            </Button>
+            {memorySaved ? (
+              <span className={pages.successText}>{t('settings.memorySaved')}</span>
+            ) : null}
+          </div>
+
+          <div className={pages.field}>
+            <span className={pages.fieldLabel}>{t('settings.probe')}</span>
+            <div className={pages.inlineForm}>
+              <Button
+                size="sm"
+                variant="secondary"
+                icon="network"
+                disabled={probeMirrors.isPending}
+                onClick={() => {
+                  setSettingsError(null);
+                  probeMirrors.mutate();
+                }}
+              >
+                {probeMirrors.isPending ? t('settings.probeRunning') : t('settings.probeAction')}
+              </Button>
+            </div>
+            {probeMirrors.data === undefined ? null : (
+              <ul className={pages.list}>
+                {probeMirrors.data.map((result) => (
+                  <li key={result.mirror} className={pages.row}>
+                    <div className={pages.rowMain}>
+                      <span className={pages.rowTitle}>{t(MIRROR_KIND_KEYS[result.mirror])}</span>
+                      <span className={pages.rowMeta}>
+                        {result.latencyMs === undefined
+                          ? '—'
+                          : t('settings.probeLatency', { ms: result.latencyMs })}
+                      </span>
+                    </div>
+                    <Badge tone={result.reachable ? 'success' : 'danger'}>
+                      {result.reachable
+                        ? t('settings.probeReachable')
+                        : t('settings.probeUnreachable')}
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className={pages.field}>
+            <span className={pages.fieldLabel}>{t('settings.root')}</span>
+            <code className={pages.codeBox}>{settings.data?.root ?? '—'}</code>
+            <span className={pages.muted}>{t('settings.rootDescription')}</span>
+          </div>
+
+          {settings.isError ? (
+            <p className={pages.errorText} role="alert">
+              {t('settings.loadFailed')}
+            </p>
+          ) : null}
+          {settingsError === null ? null : (
+            <p className={pages.errorText} role="alert">
+              {settingsError}
+            </p>
+          )}
         </div>
       </Card>
 

@@ -2,7 +2,7 @@
   <img src="assets/branding/mnelys-icon-source.jpg" width="220" alt="Mnelys アイコン">
 </p>
 
-<h1 align="center">Mnelys · 忆涟</h1>
+<h1 align="center">Mnelys</h1>
 
 <p align="center">
   プレイヤーと Mod 開発者のための AI ネイティブ Minecraft: Java Edition ランチャー／開発ワークスペース
@@ -13,7 +13,7 @@
 </p>
 
 > [!IMPORTANT]
-> Mnelys は技術基盤を **Tauri v2 + React 19** へ切り替えました（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md) と [ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md) を参照）。現在の `main` には Rust コアの骨組みと React フロントエンドが入っており、**ローカルで起動できます**。ただし Minecraft のインストール／起動機能と 3 プラットフォームの配布物はまだありません。
+> Mnelys の技術基盤は **Tauri v2 + React 19** です（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md) と [ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md) を参照）。現在の `main` は M1–M6 のコア機能（アカウント、インスタンス、Java、メタデータとローダーの導入、コンテンツプラットフォーム、起動パイプライン）を実装しています。実機での起動確認、3 プラットフォームのパッケージ証跡、署名・公証はまだ完了していません。CI の成果物は**未署名のテストビルドであり、正式版ではありません**。
 
 ## 概要
 
@@ -36,20 +36,25 @@ Prism Launcher のソースコード、アセット、Git 履歴、内部デー�
 
 ## 現在の進捗
 
-現在は M1「デザインシステムとシェル」です。M0 のデスクトップ実行とパッケージング検証はまだ残っています。
+M1–M6 のコア機能は実装済みです。実機での証跡と配布物はまだ残っています。
 
 - [x] 独立リポジトリ、ライセンス、ADR、セキュリティ基準
-- [x] Tauri v2 のランタイム／UI 基準を確立（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
-- [x] .NET／Avalonia の実装を削除（実装自体は本リポジトリの Git 履歴に残っています）
-- [x] フロントエンドのフレームワークと技術スタックを決定（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）
-- [x] Rust コアの骨組み、コマンド境界、フロントエンドとの契約テスト
-- [x] デザイントークン、ライト／ダークテーマ、アクセシブルな基本コントロール
-- [x] シングルウィンドウシェル、レスポンシブナビゲーション、タスクセンター、設定、開発者モード
+- [x] Tauri v2 のランタイム／UI 基準（[ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md)）
+- [x] フロントエンドのフレームワークと技術スタック（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）
+- [x] デザインシステム、ライト／ダーク／システムテーマ、既定のピンクとカスタムアクセントカラー
+- [x] 自前描画のタイトルバー（macOS はネイティブの信号機を維持）、単一のローカライズ済み製品名
+- [x] シングルウィンドウシェル、レスポンシブナビゲーション、タスクセンター、ログパネル、設定、開発者モード
+- [x] 10 言語のカタログ：簡体字中国語、繁体字中国語、英語、日本語、韓国語、フランス語、ドイツ語、スペイン語、ブラジルポルトガル語、ロシア語
 - [x] インターフェースアイコンを Lucide（ISC）に統一（[ICONS.md](docs/ICONS.md)）
-- [x] コアログパネル、ネイティブ `<dialog>` の確認ダイアログ、Cargo workspace のレイヤー骨組み
+- [x] Rust Cargo workspace のレイヤー構成と v3 コマンド契約（39 コマンド）
+- [x] Vanilla の導入と起動：メタデータ、ハッシュ検証、ミラー切り替え、Java の検出と導入、引数の展開、プロセスとログ
+- [x] オフライン、Yggdrasil、Microsoft デバイスコードのアカウント。キーストア保存でトークンは IPC を越えない
+- [x] Fabric / Quilt / Legacy Fabric のメタデータローダー
+- [x] Forge / NeoForge インストーラーパイプライン
+- [x] Modrinth / CurseForge の検索、導入、削除、インスタンスマニフェストの入出力
 - [x] GitHub Actions：フロントエンド検査、3 プラットフォームの Rust マトリクス、デスクトップパッケージング
-- [ ] Tauri デスクトップ実行、DPI 検証、3 プラットフォームのパッケージ成果物の証跡
-- [ ] 最初の Vanilla 垂直スライス
+- [ ] 実機でメインメニューまでの起動、DPI、3 プラットフォームの視覚回帰
+- [ ] 3 プラットフォームの成果物サイズ、署名、公証の証跡
 
 旧 Avalonia 実装で得たパッケージングの証跡は [M0 パッケージング PoC レポート](docs/M0_PACKAGING_POC.md)にあります。これは履歴であり、**Tauri 基盤の証跡ではありません**。
 
@@ -69,6 +74,7 @@ Prism Launcher のソースコード、アセット、Git 履歴、内部デー�
 - **Rust** でコアを実装：アカウント、インスタンス、Java 管理、ダウンロード、キャッシュ、起動パイプライン、IPC。コアは Cargo workspace（domain / application / infrastructure / presentation）で、`src-tauri` は組み立て役に徹します
 - プラットフォーム WebView：Windows は WebView2、macOS は WKWebView、Linux は WebKitGTK
 - フロントエンドは **React 19 + TypeScript**（[ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)）。Vite でビルドし、`react-router` のハッシュルーティング、サーバー状態に TanStack Query、一時状態に Zustand、UI テキストに i18next、インターフェースアイコンに Lucide（ISC、[ICONS.md](docs/ICONS.md)）を使用
+- 言語カタログは `import.meta.glob` で自動検出します。言語の追加は JSON ファイル 1 つだけで、`src/i18n/catalogs.test.ts` が全カタログのキー集合を `en` と完全一致させます。アクセントカラーと命名規則は [ADR 0007](docs/adr/0007-accent-color-and-localization-policy.md) に記録しています
 - Rust ツールチェーンは `rust-toolchain.toml`、Node.js と pnpm は `package.json` で固定
 - ルートウィンドウは不透明を維持：Mica、Acrylic、macOS vibrancy、デスクトップサンプリングは禁止。グローバルスタイルの `backdrop-filter: none !important` が最終的な防波堤です
 - フロントエンドは明示的に宣言した Tauri コマンドを通じてのみネイティブ機能にアクセスし、`invoke` は `src/ipc/` 以外に書けません。ケイパビリティはウィンドウ単位で宣言・レビューします
@@ -84,7 +90,7 @@ Prism Launcher のソースコード、アセット、Git 履歴、内部デー�
 - プラットフォーム別のビルド依存：Windows は WebView2 ランタイムと MSVC ビルドツール（Visual Studio Build Tools の「C++ によるデスクトップ開発」ワークロード。`link.exe` を提供）、macOS は Xcode command line tools、Linux は WebKitGTK と `libayatana-appindicator` などの Tauri システムパッケージ
 - Git 2.40+
 
-> Windows では MSYS2/MinGW の GNU ツールチェーンを MSVC の代わりに使えません。`x86_64-pc-windows-gnu` はコンパイルと `cargo clippy` を通過しますが、テストバイナリは読み込み時に `0xC0000139`（`STATUS_ENTRYPOINT_NOT_FOUND`）で失敗します。Rust の GNU ターゲットは msvcrt ベース、MSYS2 の UCRT64 ツールチェーンは UCRT ベースだからです。
+> Windows では MSYS2/MinGW の GNU ツールチェーンを MSVC の代わりに使えません。`x86_64-pc-windows-gnu` はコンパイル、`cargo clippy`、domain / application / infrastructure のテストを通過しますが、`mnelys-presentation` と `src-tauri` のテストバイナリは WinRT API set に依存するためローカルの GNU 環境では読み込めません。完全なテストは CI の MSVC / Linux / macOS 実行を基準とします。
 
 ```powershell
 git clone https://github.com/sdf123098/Mnelys.git
@@ -111,7 +117,8 @@ pnpm tauri:dev                                     # デスクトップアプリ
 ## CI とパッケージング
 
 - [`CI`](.github/workflows/ci.yml) はフロントエンドのフォーマット、Lint、型チェック、テスト、ビルドに加え、Windows / macOS / Linux で `cargo fmt`、`cargo clippy -D warnings`、`cargo test` を実行します。
-- [`Desktop packages`](.github/workflows/desktop-package.yml) は手動実行または `v*` タグで NSIS インストーラー、macOS arm64 DMG、AppImage を生成してアップロードします。成果物は未署名のビルド証跡であり、署名と公証にはリポジトリ外の認証情報が必要です。
+- [`Desktop packages`](.github/workflows/desktop-package.yml) は手動実行または `v*` タグで NSIS インストーラー、macOS arm64 DMG、AppImage を生成してアップロードします。成果物は未署名で 14 日間保持され、ビルド証跡としてのみ提供されます。署名と公証にはリポジトリ外の認証情報が必要です。
+- **テスト成果物のダウンロード**：GitHub の Actions → `Desktop packages` → `Run workflow` を実行し、完了後にその実行の Artifacts から `mnelys-windows-x64-unsigned`、`mnelys-macos-arm64-unsigned`、または `mnelys-linux-x64-unsigned` を取得します。Windows の成果物には NSIS インストーラーとポータブル版 `mnelys.exe` が含まれます。
 - 通常の検証は CI を基準とし、ローカルのデスクトップビルドは成果物や対話的デバッグが必要な例外時だけ行います。
 
 > `src-tauri/` はコンパイル時にフロントエンド成果物の存在を検証します。`cargo check`、`cargo test`、`cargo clippy` を単体で実行する場合は、先に `pnpm build` を実行してください。`dist/` がないと `tauri::generate_context!` が失敗します。
@@ -148,7 +155,7 @@ Mnelys/
 │  ├─ app/                 アプリ構成：providers、router
 │  ├─ components/          再利用コンポーネント
 │  ├─ ipc/                 唯一の Tauri コマンド／エラー境界
-│  ├─ i18n/                zh-Hans / en / ja カタログ
+│  ├─ i18n/                10 言語のカタログ（自動検出）
 │  ├─ routes/              ページコンポーネント
 │  ├─ state/               ページをまたぐ一時状態
 │  ├─ styles/              トークンとグローバルスタイル

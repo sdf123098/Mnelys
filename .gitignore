@@ -5,6 +5,7 @@ coverage/
 
 # Rust / Cargo
 target/
+target-*/
 **/*.rs.bk
 
 # Node and frontend tooling

@@ -24,6 +24,18 @@ mnelys-presentation = { path = "crates/mnelys-presentation" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri = { version = "~2.12.0", features = [] }
+async-trait = "0.1"
+dirs = "6"
+flate2 = "1"
+keyring = "3"
+md-5 = "0.10"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "gzip"] }
+sha1 = "0.10"
+sha2 = "0.10"
+tar = "0.4"
+tokio = { version = "1", features = ["fs", "io-util", "macros", "process", "rt-multi-thread", "sync", "time"] }
+uuid = { version = "1", features = ["v4"] }
+zip = "2"
 
 [profile.release]
 codegen-units = 1

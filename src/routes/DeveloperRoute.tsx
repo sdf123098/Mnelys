@@ -4,7 +4,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { TaskList } from '@/components/TaskList';
+import { useCancelTask, useTasks } from '@/ipc/hooks';
 import { usePreferences } from '@/state/preferences-store';
+import { useUiStore } from '@/state/ui-store';
 
 import pages from './pages.module.css';
 
@@ -33,6 +36,9 @@ export function DeveloperRoute() {
   const { t } = useTranslation();
   const developerMode = usePreferences((state) => state.developerMode);
   const setDeveloperMode = usePreferences((state) => state.setDeveloperMode);
+  const openTaskCenter = useUiStore((state) => state.openTaskCenter);
+  const tasks = useTasks(developerMode);
+  const cancelTask = useCancelTask();
 
   return (
     <div className={pages.page}>
@@ -75,6 +81,34 @@ export function DeveloperRoute() {
               />
             ))}
           </div>
+
+          <Card
+            title={t('developer.tasksTitle')}
+            description={t('developer.tasksBody')}
+            icon="tasks"
+            badge={
+              <Badge tone="neutral">
+                {t('developer.tasksCount', { count: tasks.data?.length ?? 0 })}
+              </Badge>
+            }
+            actions={
+              <Button size="sm" variant="ghost" icon="terminal" onClick={openTaskCenter}>
+                {t('tasks.title')}
+              </Button>
+            }
+          >
+            {tasks.data !== undefined && tasks.data.length === 0 ? (
+              <p className={pages.muted}>{t('tasks.emptyTitle')}</p>
+            ) : (
+              <TaskList
+                tasks={tasks.data ?? []}
+                cancelling={cancelTask.isPending}
+                onCancel={(id) => {
+                  cancelTask.mutate(id);
+                }}
+              />
+            )}
+          </Card>
         </>
       ) : (
         <Card

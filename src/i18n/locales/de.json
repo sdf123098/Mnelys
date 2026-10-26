@@ -1,0 +1,475 @@
+{
+  "app": {
+    "name": "Mnelys",
+    "tagline": "KI-nativer Minecraft-Launcher und Entwicklungsarbeitsbereich für Spieler und Mod-Entwickler",
+    "stage": "M1–M6-Kern"
+  },
+  "window": {
+    "minimize": "Minimieren",
+    "maximize": "Maximieren",
+    "restore": "Wiederherstellen",
+    "close": "Schließen"
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "start": "Start",
+    "instances": "Instanzen",
+    "downloads": "Downloads",
+    "multiplayer": "Mehrspieler",
+    "developer": "Entwickler",
+    "accounts": "Konten",
+    "settings": "Einstellungen"
+  },
+  "topbar": {
+    "theme": "Darstellung: {{theme}}",
+    "tasks": "Aufgabencenter",
+    "signedOut": "Nicht angemeldet"
+  },
+  "status": {
+    "checking": "Mnelys-Kern wird geprüft…",
+    "coreConnected": "Kern verbunden",
+    "coreUnavailable": "Kern nicht verfügbar",
+    "coreUnavailableHint": "Es ist kein Rust-Kern angehängt. In der reinen pnpm-dev-Browservorschau ist das zu erwarten.",
+    "contract": "Vertrag v{{version}}"
+  },
+  "theme": {
+    "label": "Darstellung",
+    "description": "Dem System folgen oder für diese Installation eine helle bzw. dunkle Oberfläche erzwingen.",
+    "system": "System",
+    "light": "Hell",
+    "dark": "Dunkel"
+  },
+  "common": {
+    "skipToContent": "Zum Inhalt springen",
+    "comingSoon": "Geplant",
+    "availableIn": "Verfügbar in {{milestone}}",
+    "disabledHint": "Diese Funktion ist noch nicht implementiert.",
+    "open": "Öffnen",
+    "m1": "M1-Oberfläche",
+    "m2": "M2-Vertikalschnitt",
+    "m3": "M3-Konten",
+    "m6": "M6-Inhalte",
+    "m7": "M7-Mehrspieler",
+    "m8": "M8-Entwicklerarbeitsbereich",
+    "cancel": "Abbrechen",
+    "save": "Speichern"
+  },
+  "start": {
+    "heading": "Start",
+    "description": "Bereite ein Konto und eine Instanz vor und starte dann das Spiel.",
+    "welcomeTitle": "Keine startbereite Instanz",
+    "welcomeBody": "Erstelle eine Instanz, lade das Spiel herunter und starte es mit einem angemeldeten Konto.",
+    "openInstances": "Zu den Instanzen",
+    "launch": "Spiel starten",
+    "launchDisabled": "Verfügbar, sobald die erste Instanz installiert ist",
+    "cards": {
+      "account": {
+        "title": "Konto",
+        "body": "Microsoft-, Offline- und Yggdrasil-Identitäten werden unter Konten verwaltet.",
+        "value": "Nicht angemeldet"
+      },
+      "instances": {
+        "title": "Instanzen",
+        "body": "Instanzen trennen Mods, Welten und Java-Einstellungen voneinander.",
+        "value": "0 installiert",
+        "valueCount": "{{count}} insgesamt"
+      },
+      "downloads": {
+        "title": "Downloads",
+        "body": "Metadaten-, Java- und Inhaltsdownloads werden hier eingereiht.",
+        "value": "Leerlauf",
+        "active": "{{count}} aktiv"
+      }
+    },
+    "nextHeading": "Wie es weitergeht",
+    "nextBody": "Diese Oberfläche ist das M1-Ergebnis. Der nächste Meilenstein macht den Vanilla-Pfad real.",
+    "steps": {
+      "metadata": {
+        "title": "Versionsmetadaten und Java",
+        "body": "Mojang-Metadaten auflösen, passende Laufzeit wählen und jede Datei prüfen."
+      },
+      "instance": {
+        "title": "Atomare Instanzerstellung",
+        "body": "Die Instanz vorbereiten, alle Artefakte prüfen und erst bei vollständigem Erfolg übernehmen."
+      },
+      "launch": {
+        "title": "Bis zum Hauptmenü starten",
+        "body": "Argumente zusammenstellen, Protokolle streamen und den Exit klassifizieren."
+      }
+    },
+    "readyTitle": "{{name}} ist startbereit",
+    "readyBody": "Minecraft {{version}} auf {{loader}} ist installiert. Das ausgewählte Konto meldet sich am Titelbildschirm an.",
+    "launchNeedsAccount": "Melde dich vor dem Start bei einem Konto an.",
+    "launchAccount": "Start als {{name}}.",
+    "runningTitle": "Läuft gerade",
+    "runningMeta": "Prozess {{pid}} · {{version}}",
+    "instancesTitle": "Letzte Instanzen",
+    "instancesBody": "Die zuletzt gestarteten Instanzen."
+  },
+  "instances": {
+    "heading": "Instanzen",
+    "description": "Jede Instanz besitzt ihr eigenes Spielverzeichnis, ihre Mods, Welten, Java-Auswahl und Protokolle.",
+    "create": "Neue Instanz",
+    "emptyTitle": "Noch keine Instanzen",
+    "emptyBody": "Erstelle eine Instanz, installiere ihre Dateien und starte Minecraft an einem Ort.",
+    "plannedTitle": "So funktionieren Instanzen",
+    "plannedBody": "Erstellen, Kopieren, Importieren, Exportieren und Reparieren nutzen einen gemeinsamen Installationsplan.",
+    "plannedNotice": "Eine Instanz erscheint erst, nachdem ihre Dateien geprüft und atomar übernommen wurden; eine fehlgeschlagene Installation hinterlässt nie einen halb nutzbaren Eintrag.",
+    "loadError": "Instanzen konnten nicht geladen werden",
+    "noAccount": "Es ist kein Konto angemeldet, daher kann das Spiel nicht starten.",
+    "addAccount": "Konto hinzufügen",
+    "running": "Läuft",
+    "installed": "Installiert",
+    "notInstalled": "Nicht installiert",
+    "launch": "Starten",
+    "install": "Installieren",
+    "stop": "Beenden",
+    "manage": "Verwalten",
+    "export": "Exportieren",
+    "exported": "{{id}}.json wurde in den Mnelys-Datenordner exportiert.",
+    "delete": "Löschen",
+    "deleteTitle": "Diese Instanz löschen?",
+    "deleteBody": "„{{name}}“ und das gesamte Verzeichnis einschließlich Mods und Welten werden entfernt. Das kann nicht rückgängig gemacht werden.",
+    "createTitle": "Neue Instanz",
+    "createBody": "Wähle eine Spielversion und optional einen Loader. Die Installation läuft als Hintergrundaufgabe.",
+    "creating": "Wird erstellt…",
+    "name": "Name",
+    "id": "Ordner-ID",
+    "idHint": "Kleinbuchstaben, Ziffern und Bindestriche. Wird als Verzeichnisname verwendet.",
+    "gameVersion": "Spielversion",
+    "includeSnapshots": "Snapshots anzeigen",
+    "loader": "Loader",
+    "loaderVersion": "Loader-Version",
+    "chooseLoaderVersion": "Loader-Version wählen",
+    "experimental": "experimentell",
+    "loaderVersionsFailed": "Loader-Versionen konnten nicht geladen werden.",
+    "versionsFailed": "Das Versionsmanifest konnte nicht geladen werden. Prüfe deine Verbindung.",
+    "importTitle": "Instanz importieren",
+    "importBody": "Füge ein Mnelys-Instanzmanifest ein oder wähle eine Datei aus einer anderen Installation.",
+    "importFile": "Manifestdatei",
+    "importJson": "Manifest-JSON",
+    "imported": "„{{name}}“ wurde importiert.",
+    "detailTitle": "Instanz",
+    "back": "Alle Instanzen",
+    "notFound": "Diese Instanz existiert nicht mehr.",
+    "loading": "Instanz wird geladen…",
+    "overview": "Übersicht",
+    "versionId": "Ausführbare Version",
+    "directory": "Spielverzeichnis",
+    "lastLaunched": "Zuletzt gestartet",
+    "never": "Nie",
+    "settingsTitle": "Instanz-Einstellungen",
+    "javaPath": "Java-Pfad",
+    "javaAuto": "Automatisch: verwaltete Laufzeit für diese Version verwenden",
+    "saved": "Gespeichert.",
+    "logs": "Spielprotokoll",
+    "logsBody": "Die Prozessausgabe des letzten Starts, vom Kern im Speicher gehalten.",
+    "sessionState": {
+      "running": "Läuft",
+      "exited": "Beendet",
+      "failed": "Fehlgeschlagen",
+      "stopped": "Gestoppt"
+    },
+    "contentTitle": "Inhalte",
+    "contentBody": "Durchsuche Modrinth oder CurseForge und installiere in diese Instanz. Der Kern löst erforderliche Abhängigkeiten auf.",
+    "contentInstalled": "{{count}} installiert",
+    "contentProvider": "Quelle",
+    "contentKind": "Typ",
+    "contentSearch": "Suchen",
+    "contentSearchAction": "Suchen",
+    "contentNoProviders": "Kein Inhaltsanbieter konfiguriert. Modrinth ist immer verfügbar; CurseForge benötigt einen API-Schlüssel.",
+    "contentSearchFailed": "Die Suche ist fehlgeschlagen.",
+    "contentSearching": "Suche…",
+    "contentNoResults": "Keine Ergebnisse für diese Suche.",
+    "contentDownloads": "{{count}} Downloads",
+    "contentInstall": "Installieren",
+    "contentRemove": "Entfernen",
+    "installedTitle": "Installierte Inhalte",
+    "installedEmptyTitle": "Nichts installiert",
+    "installedEmptyBody": "Mods, Pakete und Shader, die von einer Inhaltsplattform installiert wurden, erscheinen hier.",
+    "noLogs": "In dieser Sitzung wurde nichts gestartet.",
+    "logsFailed": "Das Spielprotokoll konnte nicht gelesen werden.",
+    "logsEmpty": "Noch keine Ausgabe.",
+    "alreadyRunning": "Diese Instanz läuft bereits.",
+    "needsAccount": "Melde dich zuerst an, damit das Spiel eine Identität hat.",
+    "installQueued": "Installation eingereiht. Verfolge sie im Aufgabencenter.",
+    "import": "Importieren"
+  },
+  "downloads": {
+    "heading": "Downloads",
+    "description": "Eine Warteschlange für Metadaten, Java-Laufzeiten, Loader und Inhalte.",
+    "emptyTitle": "Es wird nichts heruntergeladen",
+    "emptyBody": "Die Warteschlange ist leer. Installationen aus einer Instanz erscheinen hier, während sie laufen.",
+    "providersHeading": "Inhaltsquellen",
+    "providersBody": "Modrinth ist immer verfügbar. CurseForge erscheint, wenn ein API-Schlüssel konfiguriert ist.",
+    "providers": {
+      "mojang": {
+        "title": "Mojang-Metadaten",
+        "body": "Versionsmanifeste, Bibliotheken und Assets."
+      },
+      "java": {
+        "title": "Verwaltetes Java",
+        "body": "Geprüfte Laufzeiten, passend zur gewählten Spielversion."
+      },
+      "content": {
+        "title": "Modrinth",
+        "body": "Mods, Pakete, Ressourcenpakete und Shader über einen typisierten Anbieter."
+      }
+    },
+    "queueTitle": "Download-Warteschlange",
+    "queueBody": "Hintergrundaufgaben des Kerns: Metadaten, Java, Installationen und Inhalte.",
+    "activeTasks": "{{count}} aktiv",
+    "recentTitle": "Zuletzt abgeschlossen",
+    "javaTitle": "Java-Laufzeiten",
+    "javaBody": "Mnelys wählt eine verwaltete Laufzeit passend zur Spielversion oder verwendet eine bereits vorhandene.",
+    "javaDetected": "{{count}} erkannt",
+    "javaInstallHint": "Die Installation einer Hauptversion lädt im Hintergrund eine geprüfte verwaltete Laufzeit herunter.",
+    "javaFailed": "Java-Laufzeiten konnten nicht aufgelistet werden.",
+    "javaEmpty": "Noch keine Java-Laufzeit erkannt. Installiere oben eine verwaltete Laufzeit.",
+    "javaSource": {
+      "managed": "Verwaltet",
+      "system": "System"
+    },
+    "versionsTitle": "Minecraft-Versionen",
+    "versionsBody": "Das Mojang-Manifest, gegen das der Installer auflöst. Mirrors ändern nie den Vertrauens-Hash.",
+    "versionsCount": "{{count}} Versionen",
+    "versionsFilter": "Versionen filtern",
+    "versionsLoading": "Manifest wird geladen…",
+    "versionsFailed": "Das Versionsmanifest konnte nicht geladen werden.",
+    "noReleaseTime": "Veröffentlichungsdatum unbekannt",
+    "versionType": {
+      "release": "Release",
+      "snapshot": "Snapshot",
+      "old_beta": "Alte Beta",
+      "old_alpha": "Alte Alpha"
+    },
+    "versionsEmpty": "Keine Version entspricht diesem Filter.",
+    "providersLoading": "Anbieter werden geprüft…",
+    "providersAction": "Instanzen durchsuchen",
+    "providersNote": "Inhaltsinstallationen werden pro Instanz verfolgt; das Entfernen eines Mods berührt keine andere Instanz.",
+    "contentPlatforms": "Inhaltsplattformen"
+  },
+  "multiplayer": {
+    "heading": "Mehrspieler",
+    "description": "Terracotta-Räume zum Spielen mit Freunden, ohne einen öffentlichen Port zu öffnen.",
+    "createRoom": "Raum erstellen",
+    "emptyTitle": "Mehrspieler ist noch nicht angebunden",
+    "emptyBody": "Diese Seite ist für Raumerstellung, Mitglieder, Relay-Status und Diagnose reserviert.",
+    "safetyHeading": "Sicherheitsgrundlage",
+    "safetyBody": "Der lokale Verwaltungsendpunkt lauscht nur auf Loopback, verwendet ein kurzlebiges Token und öffnet nie automatisch einen öffentlichen Port."
+  },
+  "accounts": {
+    "heading": "Konten",
+    "description": "Microsoft-, Offline- und externe Yggdrasil-Identitäten teilen ein Kontomodell.",
+    "add": "Konto hinzufügen",
+    "signedOut": "Kein Konto angemeldet",
+    "signedOutBody": "Anmeldedaten gelangen nie in die Webview. Der Kern bewahrt Refresh-Tokens im Plattform-Schlüsselbund auf.",
+    "types": {
+      "microsoft": {
+        "title": "Microsoft",
+        "body": "Offizielle Anmeldung über den Systembrowser mit PKCE."
+      },
+      "offline": {
+        "title": "Offline",
+        "body": "Eine klar gekennzeichnete lokale Identität für Tests und LAN-Spiele."
+      },
+      "yggdrasil": {
+        "title": "Externes Yggdrasil",
+        "body": "Benutzerdefinierte Authentifizierung mit ausdrücklicher Vertrauensabfrage."
+      }
+    },
+    "selected": "Ausgewählt",
+    "select": "Konto verwenden",
+    "refresh": "Aktualisieren",
+    "remove": "Entfernen",
+    "removeTitle": "Dieses Konto entfernen?",
+    "removeBody": "Die gespeicherten Anmeldedaten dieses Kontos werden aus dem Systemschlüsselbund gelöscht. Spielerdaten auf der Festplatte bleiben unberührt.",
+    "loadError": "Konten konnten nicht geladen werden",
+    "kind": {
+      "microsoft": "Microsoft",
+      "offline": "Offline",
+      "yggdrasil": "Yggdrasil"
+    },
+    "method": {
+      "microsoft": "Microsoft-Anmeldung",
+      "offline": "Offline-Name",
+      "yggdrasil": "Yggdrasil-Server"
+    },
+    "addTitle": "Konto hinzufügen",
+    "addDescription": "Wähle, wie sich diese Identität anmeldet. Tokens bleiben im Kern und erreichen nie das Fenster.",
+    "addOffline": "Offline-Konto hinzufügen",
+    "addYggdrasil": "Bei Yggdrasil anmelden",
+    "username": "Benutzername",
+    "authUrl": "Authentifizierungsserver",
+    "password": "Passwort",
+    "offlineHint": "Ein Offline-Name ist eine lokale Identität. Server im Online-Modus akzeptieren ihn nicht.",
+    "yggdrasilHint": "Das Passwort geht direkt an den Authentifizierungsserver; im Schlüsselbund wird nur ein Token gespeichert.",
+    "microsoftBody": "Die Anmeldung nutzt den Microsoft-Gerätecode-Ablauf im Browser. In Mnelys wird kein Passwort eingegeben.",
+    "microsoftStart": "Microsoft-Anmeldung starten",
+    "microsoftWaiting": "Warte auf Bestätigung…",
+    "microsoftApproved": "Ich habe die Anmeldung bestätigt",
+    "microsoftCode": "Gib diesen Code auf der Microsoft-Seite ein:"
+  },
+  "developer": {
+    "heading": "Entwickler",
+    "description": "Binde ein Gradle-Projekt an eine Instanz und baue, deploye und debugge aus einem Arbeitsbereich.",
+    "gateTitle": "Der Entwicklermodus ist aus",
+    "gateBody": "Aktiviere ihn, um Entwicklerwerkzeuge einzublenden. Der Kern behält dieselbe Befehlsgrenze; der Modus ändert nur die sichtbare Oberfläche.",
+    "gateAction": "Entwicklermodus aktivieren",
+    "disableAction": "Entwicklermodus deaktivieren",
+    "enabledTitle": "Der Entwicklermodus ist an",
+    "toolsTitle": "Entwicklerwerkzeuge",
+    "enabledBody": "Diese Funktionen sind nach der Stabilisierung des Launcher-Kerns geplant, beginnend mit dem M8-Entwicklerarbeitsbereich.",
+    "tools": {
+      "build": {
+        "title": "Gradle-Build",
+        "body": "Führe den Projekt-Wrapper aus und finde das gebaute Artefakt."
+      },
+      "debug": {
+        "title": "Debug-Lauf",
+        "body": "In die gebundene Instanz deployen und JDWP anhängen."
+      },
+      "daemon": {
+        "title": "Entwickler-Daemon",
+        "body": "Eine Loopback-Brücke für CLI- und IDE-Clients."
+      }
+    },
+    "tasksTitle": "Hintergrundaufgaben",
+    "tasksBody": "Alles, was der Kern gerade ausführt, mit Abbruch.",
+    "tasksCount": "{{count}} Aufgaben"
+  },
+  "settings": {
+    "heading": "Einstellungen",
+    "description": "Darstellung, Sprache, Downloads, Entwicklerwerkzeuge und Build-Informationen.",
+    "appearance": "Darstellung",
+    "appearanceDescription": "Das Fenster bleibt auf allen Plattformen undurchsichtig. Kein Mica, Acrylic oder Vibrancy.",
+    "accent": "Akzentfarbe",
+    "accentDescription": "Färbt Hauptaktionen, Auswahl und Fokus. Standard ist das Mnelys-Pink.",
+    "accentPresets": "Akzentfarben",
+    "accentBrand": "Mnelys-Pink",
+    "accentPink": "Magenta",
+    "accentRed": "Rot",
+    "accentOrange": "Orange",
+    "accentAmber": "Bernstein",
+    "accentGreen": "Grün",
+    "accentTeal": "Türkis",
+    "accentBlue": "Blau",
+    "accentIndigo": "Indigo",
+    "accentViolet": "Violett",
+    "accentCustom": "Benutzerdefinierte Akzentfarbe",
+    "accentHex": "Hex-Wert der Akzentfarbe",
+    "accentInvalid": "Gib eine Farbe als #RRGGBB oder #RGB ein.",
+    "accentReset": "Auf Mnelys-Pink zurücksetzen",
+    "accentAdjusted": "Die Helligkeit wurde angepasst, damit Text in diesem Theme lesbar bleibt.",
+    "language": "Sprache",
+    "languageDescription": "Gilt sofort und bleibt für diese Installation erhalten.",
+    "developer": "Entwicklermodus",
+    "developerDescription": "Zeigt den Bereich Entwickler in der Navigation. Gewährt keine zusätzlichen Kernrechte.",
+    "about": "Über diesen Build",
+    "aboutDescription": "Mnelys installiert Vanilla, Fabric, Quilt, Legacy Fabric, Forge und NeoForge, meldet sich mit Microsoft-, Offline- oder Yggdrasil-Konten an und installiert Inhalte von Modrinth und CurseForge.",
+    "platform": "Plattform",
+    "webview": "Webansicht",
+    "coreVersion": "Kernversion",
+    "contract": "Vertrag",
+    "icons": "Schnittstellensymbole",
+    "iconsDescription": "Alle Schnittstellensymbole stammen von Lucide (ISC). Das Anwendungssymbol bleibt das originale Mnelys-Artwork.",
+    "core": "Kern",
+    "coreDescription": "Wo der Kern seine Daten speichert und wie er Mojang erreicht.",
+    "mirror": "Download-Mirror",
+    "mirrorDescription": "Aktive Route: {{active}}. Mirrors ändern nur den Transport; jede Datei wird weiterhin gegen den Original-Hash geprüft.",
+    "mirrorAuto": "Automatisch",
+    "mirrorDirect": "Direkt",
+    "mirrorBmclapi": "BMCLAPI",
+    "memory": "Standardspeicher",
+    "memoryHint": "Heap in Megabyte für neue Starts. 0 lässt den Kern entscheiden. Erlaubt: 0 oder 512–65536.",
+    "memoryInvalid": "Gib 0 oder einen Wert zwischen 512 und 65536 ein.",
+    "memorySave": "Speicher speichern",
+    "memorySaved": "Gespeichert.",
+    "probe": "Mirror-Zustand",
+    "probeAction": "Mirrors prüfen",
+    "probeRunning": "Prüfe…",
+    "probeLatency": "{{ms}} ms",
+    "probeReachable": "Erreichbar",
+    "probeUnreachable": "Nicht erreichbar",
+    "root": "Datenordner",
+    "rootDescription": "Instanzen, Caches und Einstellungen liegen hier.",
+    "loadFailed": "Kerneinstellungen konnten nicht geladen werden."
+  },
+  "tasks": {
+    "title": "Aufgabencenter",
+    "description": "Lang laufende Arbeit und das Kernprotokoll dieser Sitzung.",
+    "emptyTitle": "Keine Aufgaben",
+    "emptyBody": "Lang laufende Arbeit meldet Phase, Geschwindigkeit, Abbruch und Wiederholungsstatus vom Rust-Kern.",
+    "footer": "Das Aufgabencenter verbindet sich mit dem M2-Vertikalschnitt.",
+    "close": "Aufgabencenter schließen",
+    "tabs": {
+      "label": "Bereiche des Aufgabencenters",
+      "tasks": "Aufgaben",
+      "logs": "Protokolle"
+    },
+    "logs": {
+      "loading": "Kernprotokoll wird gelesen…",
+      "emptyTitle": "Keine Protokolleinträge",
+      "emptyBody": "In dieser Sitzung wurde noch nichts aufgezeichnet. Neue Einträge erscheinen hier, während die App läuft.",
+      "errorTitle": "Protokolle nicht verfügbar",
+      "errorBody": "Der Kern hat seinen Protokollpuffer nicht zurückgegeben. Der Rest der Oberfläche funktioniert weiter.",
+      "count": "Einträge: {{count}}",
+      "clear": "Protokolle löschen",
+      "clearError": "Der Kern hat das Protokoll nicht gelöscht. Versuche es erneut.",
+      "confirmTitle": "Alle Protokolleinträge löschen?",
+      "confirmBody": "Dies entfernt jeden Eintrag aus dem In-Memory-Protokoll dieser Sitzung. Es kann nicht rückgängig gemacht werden.",
+      "confirmAction": "Protokolle löschen",
+      "confirmCancel": "Abbrechen",
+      "level": {
+        "trace": "Trace",
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warnung",
+        "error": "Fehler"
+      }
+    },
+    "loading": "Aufgaben werden gelesen…",
+    "count": "Aufgaben: {{count}}",
+    "state": {
+      "queued": "Eingereiht",
+      "running": "Läuft",
+      "succeeded": "Erfolgreich",
+      "failed": "Fehlgeschlagen",
+      "cancelled": "Abgebrochen"
+    },
+    "stateMessage": "Aufgabenstatus: {{state}}.",
+    "cancel": "Aufgabe abbrechen"
+  },
+  "error": {
+    "title": "Etwas ist schiefgelaufen",
+    "retry": "Wiederholen",
+    "coreUnavailable": "Der Mnelys-Kern ist nicht erreichbar. Das bedeutet meist, dass die Desktop-Oberfläche das Rust-Backend nicht ausführt.",
+    "coreNotImplemented": "Der Kern hat diese Funktion noch nicht implementiert.",
+    "coreInvalidRequest": "Der Kern hat die Anfrage als ungültig abgelehnt.",
+    "coreIo": "Ein Dateivorgang ist fehlgeschlagen.",
+    "coreNetwork": "Ein Netzwerkvorgang ist fehlgeschlagen.",
+    "coreUnauthorized": "Diese Anfrage war nicht autorisiert.",
+    "coreConflict": "Diese Anfrage stand im Konflikt mit dem vorhandenen Zustand.",
+    "coreInternal": "Der Kern hat einen internen Fehler gemeldet.",
+    "unknown": "Ein unbekannter Fehler ist aufgetreten."
+  },
+  "loader": {
+    "vanilla": "Vanilla",
+    "fabric": "Fabric",
+    "quilt": "Quilt",
+    "legacyFabric": "Legacy Fabric",
+    "forge": "Forge",
+    "neoforge": "NeoForge"
+  },
+  "contentKind": {
+    "mod": "Mods",
+    "resourcepack": "Ressourcenpakete",
+    "shader": "Shader",
+    "world": "Welten",
+    "datapack": "Datenpakete"
+  },
+  "contentProvider": {
+    "modrinth": "Modrinth",
+    "curseforge": "CurseForge"
+  }
+}

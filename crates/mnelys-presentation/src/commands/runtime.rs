@@ -4,16 +4,8 @@ use mnelys_application::LogLevel;
 use serde::Serialize;
 use tauri::State;
 
+use crate::commands::CONTRACT_VERSION;
 use crate::CoreState;
-
-/// Version of the command contract.
-///
-/// Bump this whenever a request or response shape changes. `src/ipc/commands.ts` mirrors
-/// the value, and `tests/contract.rs` fails when the two disagree (ADR 0006).
-pub const CONTRACT_VERSION: u32 = 2;
-
-/// Every command name this core exposes, in the order the frontend declares them.
-pub const COMMAND_NAMES: [&str; 4] = ["core_version", "runtime_info", "app_logs", "clear_app_logs"];
 
 /// Which engine is rendering the frontend.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -114,6 +106,7 @@ const fn webview_family() -> WebviewFamily {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::commands::COMMAND_NAMES;
 
     #[test]
     fn the_core_reports_its_own_version() {
@@ -124,11 +117,13 @@ mod tests {
     }
 
     #[test]
-    fn the_command_list_matches_the_generated_handler() {
-        assert_eq!(
-            COMMAND_NAMES,
-            ["core_version", "runtime_info", "app_logs", "clear_app_logs"]
-        );
+    fn the_command_list_has_no_duplicates() {
+        let mut names = COMMAND_NAMES.to_vec();
+        names.sort_unstable();
+        let count = names.len();
+        names.dedup();
+        assert_eq!(names.len(), count);
+        assert_eq!(count, crate::commands::COMMAND_NAMES.len());
     }
 
     #[test]

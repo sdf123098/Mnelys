@@ -1,29 +1,32 @@
 # Mnelys 项目进度
 
 - 最后更新：2026-10-26
-- 当前里程碑：M1 — Design System 与 Shell（M0 验证项仍未全部关闭）
-- 状态：进行中（核心日志、分层骨架与 CI 工作流已落地，等待首次远端运行证据）
+- 当前阶段：M1–M6 核心能力已落地（账户、实例、下载安装、加载器、内容平台与启动管线）；桌面运行时、三平台打包证据与签名仍未关闭
+- 状态：可构建、可测试；桌面交互验证与发布产物以 GitHub Actions 为权威路径
 
 ## 当前快照
 
-| 项目           | 当前值                                                                                      |
-| -------------- | ------------------------------------------------------------------------------------------- |
-| 产品名         | Mnelys                                                                                      |
-| 中文名         | 忆涟                                                                                        |
-| 应用 ID        | `io.mnelys.launcher`                                                                        |
-| 许可证         | MIT                                                                                         |
-| 默认分支       | `main`                                                                                      |
-| 桌面壳与运行时 | Tauri 2.x                                                                                   |
-| 核心语言       | Rust（stable，`rust-toolchain.toml` 固定）                                                  |
-| 前端框架       | React 19 + TypeScript（[ADR 0006](adr/0006-frontend-framework-and-application-stack.md)）   |
-| 前端构建与路由 | Vite + `createHashRouter`（hash 路由，三平台 WebView 一致）                                 |
-| 前端状态与样式 | TanStack Query + Zustand；CSS Modules 与语义 Token                                          |
-| Rust 分层      | Cargo workspace：domain / application / infrastructure / presentation；`src-tauri` 为组合根 |
-| 持续集成       | GitHub Actions：前端检查、三平台 Rust 矩阵、三平台桌面打包（手动或标签触发）                |
-| 本地化         | i18next，`zh-Hans` / `en` / `ja` 目录键集必须完全一致                                       |
-| 界面图标       | Lucide（ISC），经单一注册表封装（[ICONS.md](ICONS.md)）                                     |
-| 平台 WebView   | WebView2 / WKWebView / WebKitGTK                                                            |
-| 窗口材质       | 不透明，无 Mica、Acrylic、vibrancy                                                          |
+| 项目           | 当前值                                                                                                                |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 产品名         | Mnelys                                                                                                                |
+| 中文名         | 忆涟                                                                                                                  |
+| 应用 ID        | `io.mnelys.launcher`                                                                                                  |
+| 许可证         | MIT                                                                                                                   |
+| 默认分支       | `main`                                                                                                                |
+| 桌面壳与运行时 | Tauri 2.x                                                                                                             |
+| 核心语言       | Rust（stable，`rust-toolchain.toml` 固定）                                                                            |
+| 前端框架       | React 19 + TypeScript（[ADR 0006](adr/0006-frontend-framework-and-application-stack.md)）                             |
+| 前端构建与路由 | Vite + `createHashRouter`（hash 路由，三平台 WebView 一致）                                                           |
+| 前端状态与样式 | TanStack Query + Zustand；CSS Modules 与语义 Token                                                                    |
+| Rust 分层      | Cargo workspace：domain / application / infrastructure / presentation；`src-tauri` 为组合根                           |
+| 命令契约       | v3，39 条命令；`src-tauri/tests/contract.rs` 校验前后端命令集、错误码与版本                                           |
+| 持续集成       | GitHub Actions：前端检查、三平台 Rust 矩阵、三平台桌面打包（手动或标签触发）                                          |
+| 本地化         | 10 套目录：`en` / `zh-Hans` / `zh-Hant` / `ja` / `ko` / `fr` / `de` / `es` / `pt-BR` / `ru`；键集必须与 `en` 完全一致 |
+| 主题           | 浅色 / 深色 / 跟随系统；默认强调色为品牌粉 `#C2185B`，支持预设与自定义十六进制色                                      |
+| 标题栏         | 自绘标题栏；macOS 保留原生交通灯并以 overlay 方式留位                                                                 |
+| 界面图标       | Lucide（ISC），经单一注册表封装（[ICONS.md](ICONS.md)）                                                               |
+| 平台 WebView   | WebView2 / WKWebView / WebKitGTK                                                                                      |
+| 窗口材质       | 不透明，无 Mica、Acrylic、vibrancy                                                                                    |
 
 远端仓库：<https://github.com/sdf123098/Mnelys>
 
@@ -78,6 +81,54 @@
 - 新增 `.github/workflows/ci.yml`（前端检查 + Windows / macOS / Linux Rust 矩阵）与 `.github/workflows/desktop-package.yml`（NSIS、macOS arm64 DMG、AppImage；手动触发或 `v*` 标签）。
 - 本地验证：`cargo fmt --all --check`、前端 `format:check`、`lint`、`typecheck`、`test`（8 个测试文件、20 个用例）与 `build` 通过。Rust 编译、三平台测试与打包证据等待 CI 首次运行；本机 crates.io 索引不可达，无法在本地补跑 `cargo check`。
 
+## 2026-10-26 M1 收尾：品牌粉、自定义强调色与标题栏
+
+- 强调色引擎：默认品牌粉 `#C2185B`；设置页提供 9 个预设色与自定义十六进制色。自定义色由一份纯函数展开为强调色、悬停色、柔和背景、焦点环与前景色五组 token；若对比度不足 WCAG AA，仅按最小幅度调整明度，色相与饱和度保持不变，并在界面说明"已调整"。选择在首屏渲染前应用并持久化。
+- 自绘标题栏替换原生顶栏：Windows / Linux 绘制最小化、最大化 / 还原与关闭按钮，macOS 保留原生交通灯并以 overlay 方式为其留位；支持拖拽区域与双击最大化，窗口标题随界面语言同步。
+- 产品名改为单一语言：简中"忆涟"、繁中"憶漣"、其余（含日语）"Mnelys"，不再出现"忆涟 · Mnelys"这类混排。
+- 语言目录从 3 套扩展到 10 套：在原有 `zh-Hans` / `en` / `ja` 基础上新增 `zh-Hant`、`ko`、`fr`、`de`、`es`、`pt-BR`、`ru`。目录由 `import.meta.glob` 自动发现，新增语言只需放入一个 JSON 文件；`src/i18n/catalogs.test.ts` 校验每套目录与 `en` 的键集完全一致，并禁止产品名包含第二个名称。
+- 语言选择器按核心语言优先、其余按代码排序；每项显示本地名称（endonym），并预留 RTL 基础语言集合。决策记录见 [ADR 0007](adr/0007-accent-color-and-localization-policy.md)。
+
+## 2026-10-26 M2：Vanilla 垂直切片
+
+- 设置与数据根：`MNELYS_HOME` 可覆盖数据根，否则使用平台数据目录；镜像偏好 `direct` / `bmclapi` / `auto`，`probe_mirrors` 返回可达性与延迟；内存上限持久化。
+- 元数据与下载：从 Mojang 版本清单与版本 JSON 解析客户端、库、资源索引、日志配置与参数模板；BMCLAPI 仅改写传输地址，SHA-1 始终按上游值校验，镜像失败后最后一次直连源站；支持旧版虚拟资源解包与 natives 提取。
+- Java：发现 `JAVA_HOME`、托管目录、各平台常见安装根与 `PATH`，逐个探测主版本与厂商；缺失时可从 Adoptium API 安装 Temurin，校验哈希并以任务形式报告进度。
+- 实例：创建、读取、更新、删除；可覆盖 Java 路径；记录最后启动时间。导出与导入为 JSON 清单（上限 2 MiB），不是完整实例归档。
+- 启动：按规则与特性渲染 JVM / 游戏参数，组装 classpath、`java.library.path`、资源索引与日志配置；离线账户 UUID 采用与 Java 一致的 MD5 v3 算法；进程输出按会话保留并可通过 `launch_logs` 读取，`stop_instance` 请求停止。
+- 任务中心：安装、启动、Java、内容、导入导出等长操作统一为可取消任务，前端轮询不可变快照，不阻塞 UI 线程。
+
+## 2026-10-26 M3：账户与安全存储
+
+- 三类账户：离线、外置 Yggdrasil（认证 / 刷新 / 校验）、Microsoft 设备码 OAuth。
+- 凭据只写入平台密钥库（Windows Credential Manager、macOS Keychain、Linux Secret Service），账户文件不含 token；密钥库不可用时明确报错，不回退明文。
+- 刷新令牌只存在于核心内存与密钥库；访问令牌仅在构造启动计划时使用。`launch_instance` 只返回会话描述（PID、会话 ID），启动计划与访问令牌不跨越 IPC。
+- Microsoft 客户端 ID 由 `MNELYS_MS_CLIENT_ID` 提供；未配置时登录按钮返回可读错误，不内置任何凭据。
+
+## 2026-10-26 M4：Metadata 加载器
+
+- Fabric、Quilt 与 Legacy Fabric 通过各自的 meta API 查询加载器版本，`list_loaders` 返回版本、游戏版本、加载器与稳定标记。
+- 版本解析合并加载器 profile 与 Vanilla 文档，保留参数、库与主类；不运行安装器。
+
+## 2026-10-26 M5：Installer 加载器
+
+- Forge 与 NeoForge 走安装器路径：先安装 Vanilla 基础文件，再下载安装器 JAR、读取 Maven 元数据与 install profile，用选定 Java 运行 processors，最后合并生成的版本文档。
+- 安装器与解压产物限制在实例与库目录内；解压使用 `enclosed_name` 与仅允许常规路径组件的校验，跳过越界条目。
+
+## 2026-10-26 M6：内容平台与源
+
+- 内容提供方：Modrinth v2 与 CurseForge v1。Modrinth 无需密钥；CurseForge 从 `MNELYS_CURSEFORGE_API_KEY` 读取密钥，未配置时明确提示而不是静默失败。
+- 能力：搜索、列出项目版本、安装到实例、列出已安装内容、移除；支持 mod、资源包、光影、世界与数据包五类，按类型放入实例对应目录。
+- 实例导出 / 导入清单包含版本、加载器与已安装内容引用，供另一台机器重建；不打包世界与用户文件。
+
+## 2026-10-26 本地验证结果
+
+- 前端：`pnpm format:check`、`pnpm lint`、`pnpm typecheck`、`pnpm test`、`pnpm build` 全部通过；8 个测试文件、38 个用例。
+- 前端构建产物：JS 710.12 kB（gzip 217.85 kB），CSS 38.34 kB（gzip 6.38 kB）；仅有 >500 kB 分块提示，未做代码分割。
+- Rust：`cargo fmt --all --check`、`cargo clippy --workspace --all-targets -- -D warnings` 通过，零告警。
+- 本机可执行的 Rust 测试 107 个（domain 34、application 20、infrastructure 53）全部通过。`mnelys-presentation`（4 个）与 `src-tauri` 契约测试（3 个）的测试二进制在本机 Windows GNU 环境无法加载——它们依赖 WinRT API set DLL，属环境限制而非代码失败；以 CI 的 MSVC / Linux / macOS 运行为权威证据。
+- 浏览器预览验证过强调色预设与自定义色、10 种语言切换、自绘标题栏布局与窄屏导航；真实 Tauri 窗口、DPI 与三平台打包仍待 CI 与桌面环境。
+
 ## 已完成
 
 ### 项目边界（仍然有效）
@@ -110,7 +161,7 @@
 - [ ] 在 Apple Silicon Mac 上完成签名、公证与 Gatekeeper 验证。
 - [x] 建立 CI 三平台构建、格式与打包检查（工作流已落地；首次远端证据待运行）。
 
-### Design System 与 Shell（M1，进行中）
+### Design System 与 Shell（M1）
 
 - [x] 语义 token、浅色 / 深色主题与系统跟随。
 - [x] 单窗口 Shell：导航、顶栏、状态栏、跳转链接与内容滚动复位。
@@ -118,14 +169,30 @@
 - [x] 任务中心抽屉：模态语义、焦点陷阱、Esc 关闭、焦点归还。
 - [x] 七个一级页面骨架与诚实的未实现状态。
 - [x] 普通 / 开发者模式持久化与导航显隐。
-- [x] 三语界面与语言切换持久化。
+- [x] 10 种语言界面与语言切换持久化。
 - [x] 界面图标统一为 Lucide（ISC）并经注册表封装。
-- [x] 前端格式、Lint、类型检查、构建与 20 个单元测试全部通过。
+- [x] 前端格式、Lint、类型检查、构建与 38 个单元测试全部通过。
 - [x] 日志面板（任务中心“日志”分区）与基于原生 `<dialog>` 的通用 `Dialog`。
 - [x] `crates/` 分层骨架：domain / application / infrastructure / presentation；`src-tauri` 负责组合。
+- [x] 默认品牌粉、强调色预设与自定义色；对比度不足时按最小幅度调整明度。
+- [x] 自绘标题栏；macOS 保留原生交通灯并留位。
+- [x] 产品名单一本地化，窗口标题随语言同步。
 - [ ] Tauri 桌面运行时的三平台冒烟与 125% / 150% / 200% DPI 检查。
 - [ ] 三平台桌面视觉回归（浏览器预览不能替代）。
 - [ ] 基于 tauri-driver 的 E2E 冒烟。
+
+### Minecraft 核心能力（M2–M6）
+
+- [x] M2 Vanilla 垂直切片：元数据、哈希校验下载、Java 发现与安装、实例 CRUD、启动与日志、停止。
+- [x] M2 镜像策略与探测；`MNELYS_HOME` 数据根覆盖。
+- [x] M3 离线 / Yggdrasil / Microsoft 设备码账户；密钥库存储；令牌不跨越 IPC。
+- [x] M4 Fabric / Quilt / Legacy Fabric 元数据加载器。
+- [x] M5 Forge / NeoForge 安装器管线与 processors。
+- [x] M6 Modrinth / CurseForge 搜索、版本、安装、移除与已安装列表。
+- [x] 实例 JSON 清单导出 / 导入。
+- [ ] 真实游戏启动到主菜单的三平台冒烟证据。
+- [ ] CurseForge 与 Microsoft 登录的端到端验证（需要仓库外 API key 与 Azure 客户端）。
+- [ ] 世界、光影与资源包在真实实例中的回归验证。
 
 ### 上一轮 Avalonia 基线（已弃用，仅作存档）
 
@@ -147,21 +214,28 @@
 
 - [x] 日志面板（任务中心“日志”分区）与基于原生 `<dialog>` 的通用 `Dialog`。
 - [x] 引入 `crates/` 分层骨架（domain / application / infrastructure / presentation；providers / platform 等能力出现后再拆）。
+- [x] 默认品牌粉、自定义强调色、10 套语言目录与单一本地化产品名。
+- [x] 自绘标题栏与 macOS 原生交通灯留位。
 - [ ] 在真实 Tauri 窗口中验证 100%～200% DPI、缩放与窗口装饰。
 - [ ] 三平台桌面运行的视觉回归，浏览器预览不能替代。
 - [ ] 基于 tauri-driver 的 E2E 冒烟。
 
-### 产品
+### M2–M6 的运行证据
 
-- [ ] 首个 Vanilla 垂直切片。
+- [x] M2–M6 代码、单元测试与前后端契约已落地。
+- [ ] 在真实桌面环境完成一次 Vanilla 与至少一种加载器实例的安装、启动到主菜单。
+- [ ] 验证离线、Yggdrasil 与 Microsoft 三类账户的实际登录与刷新。
+- [ ] 验证 Modrinth 与 CurseForge 的实际搜索与安装（CurseForge 需要 `MNELYS_CURSEFORGE_API_KEY`）。
+- [ ] 记录下载缓存命中、镜像回退与失败恢复的实测数据。
 
 ## 下一步
 
-1. 推送后运行 `CI` 与 `Desktop packages`，修复首次运行的平台差异，并把三平台测试结果、产物体积与运行链接记入本文档。
+1. 推送后运行 `CI` 与 `Desktop packages`，修复首次运行的平台差异，并把三平台测试结果、产物体积与下载链接记入本文档。
 2. 在具备图形桌面的 Windows / macOS / Linux 环境补做真实窗口的 100%～200% DPI、缩放、窗口装饰与视觉回归；CI 的无头打包不能替代这一步。
-3. 进入 M2 Vanilla 垂直切片：元数据、下载与校验、Java 发现、实例创建、启动到主菜单。
+3. 用真实账户与网络完成一次 Vanilla 和一种加载器实例的端到端启动，补齐 M2–M6 的运行证据。
+4. 根据实测结果决定首个 0.2 预发布范围；在此之前不发布中间版本。
 
-目标平台打包由 CI 产出，但启动冒烟、DPI 与 Apple 签名/公证仍需对应的真实桌面环境和仓库外凭据。
+目标平台打包由 CI 产出，但启动冒烟、DPI 与 Apple 签名/公证仍需对应的真实桌面环境和仓库外凭据。CI 产物是未签名的测试构建，不是正式版本。
 
 ## 更新规则
 

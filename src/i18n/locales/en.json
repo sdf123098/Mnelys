@@ -2,7 +2,7 @@
   "app": {
     "name": "Mnelys",
     "tagline": "AI-native Minecraft launcher and developer workspace",
-    "stage": "M1 shell"
+    "stage": "M1–M6 core"
   },
   "window": {
     "minimize": "Minimize",
@@ -50,31 +50,35 @@
     "m3": "M3 accounts",
     "m6": "M6 content",
     "m7": "M7 multiplayer",
-    "m8": "M8 developer workspace"
+    "m8": "M8 developer workspace",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "start": {
     "heading": "Start",
     "description": "Prepare an account and an instance, then launch the game.",
     "welcomeTitle": "No instance is ready to launch",
-    "welcomeBody": "The shell is in place. The first Vanilla slice will add metadata, Java discovery and the launch pipeline.",
+    "welcomeBody": "Create an instance to download the game, then launch it with a signed-in account.",
     "openInstances": "Go to instances",
     "launch": "Launch game",
     "launchDisabled": "Available after the first instance is installed",
     "cards": {
       "account": {
         "title": "Account",
-        "body": "No account is signed in yet.",
+        "body": "Microsoft, offline and Yggdrasil identities are managed under Accounts.",
         "value": "Not signed in"
       },
       "instances": {
         "title": "Instances",
         "body": "Instances keep mods, worlds and Java settings isolated.",
-        "value": "0 installed"
+        "value": "0 installed",
+        "valueCount": "{{count}} total"
       },
       "downloads": {
         "title": "Downloads",
         "body": "Metadata, Java and content downloads will be queued here.",
-        "value": "Idle"
+        "value": "Idle",
+        "active": "{{count}} active"
       }
     },
     "nextHeading": "What comes next",
@@ -92,25 +96,112 @@
         "title": "Launch to the main menu",
         "body": "Build the argument array, stream logs and classify the exit."
       }
-    }
+    },
+    "readyTitle": "Ready to launch {{name}}",
+    "readyBody": "Minecraft {{version}} on {{loader}} is installed. The selected account signs in at the title screen.",
+    "launchNeedsAccount": "Sign in to an account before launching.",
+    "launchAccount": "Launching as {{name}}.",
+    "runningTitle": "Running now",
+    "runningMeta": "Process {{pid}} · {{version}}",
+    "instancesTitle": "Recent instances",
+    "instancesBody": "The instances you launched most recently."
   },
   "instances": {
     "heading": "Instances",
     "description": "Each instance owns its game directory, mods, worlds, Java selection and logs.",
     "create": "New instance",
     "emptyTitle": "No instances yet",
-    "emptyBody": "Instance creation arrives with the first Vanilla slice. Until then this page is an honest empty state, not a mock list.",
+    "emptyBody": "Create an instance, install its files and launch Minecraft from one place.",
     "plannedTitle": "How instances will work",
     "plannedBody": "Create, copy, import, export and repair all share one install plan.",
-    "plannedNotice": "An instance becomes visible only after its files are verified and committed atomically, so a failed install never leaves a half-usable entry."
+    "plannedNotice": "An instance becomes visible only after its files are verified and committed atomically, so a failed install never leaves a half-usable entry.",
+    "loadError": "Instances could not be loaded",
+    "noAccount": "No account is signed in, so the game cannot start.",
+    "addAccount": "Add an account",
+    "running": "Running",
+    "installed": "Installed",
+    "notInstalled": "Not installed",
+    "launch": "Launch",
+    "install": "Install",
+    "stop": "Stop",
+    "manage": "Manage",
+    "export": "Export",
+    "exported": "Exported {{id}}.json to the Mnelys data folder.",
+    "delete": "Delete",
+    "deleteTitle": "Delete this instance?",
+    "deleteBody": "“{{name}}” and its whole directory, including mods and worlds, are removed. This cannot be undone.",
+    "createTitle": "New instance",
+    "createBody": "Pick a game version and an optional loader. Installation runs as a background task.",
+    "creating": "Creating…",
+    "name": "Name",
+    "id": "Folder id",
+    "idHint": "Lowercase letters, digits and dashes. Used as the directory name.",
+    "gameVersion": "Game version",
+    "includeSnapshots": "Show snapshots",
+    "loader": "Loader",
+    "loaderVersion": "Loader version",
+    "chooseLoaderVersion": "Choose a loader version",
+    "experimental": "experimental",
+    "loaderVersionsFailed": "Loader versions could not be loaded.",
+    "versionsFailed": "The version manifest could not be loaded. Check your connection.",
+    "importTitle": "Import an instance",
+    "importBody": "Paste a Mnelys instance manifest or choose a file exported from another installation.",
+    "importFile": "Manifest file",
+    "importJson": "Manifest JSON",
+    "imported": "Imported “{{name}}”.",
+    "detailTitle": "Instance",
+    "back": "All instances",
+    "notFound": "This instance no longer exists.",
+    "loading": "Loading the instance…",
+    "overview": "Overview",
+    "versionId": "Executable version",
+    "directory": "Game directory",
+    "lastLaunched": "Last launched",
+    "never": "Never",
+    "settingsTitle": "Instance settings",
+    "javaPath": "Java path",
+    "javaAuto": "Automatic: use the managed runtime for this version",
+    "saved": "Saved.",
+    "logs": "Game log",
+    "logsBody": "The process output of the most recent launch, kept in memory by the core.",
+    "sessionState": {
+      "running": "Running",
+      "exited": "Exited",
+      "failed": "Failed",
+      "stopped": "Stopped"
+    },
+    "contentTitle": "Content",
+    "contentBody": "Search Modrinth or CurseForge and install into this instance. The core resolves required dependencies.",
+    "contentInstalled": "{{count}} installed",
+    "contentProvider": "Source",
+    "contentKind": "Type",
+    "contentSearch": "Search",
+    "contentSearchAction": "Search",
+    "contentNoProviders": "No content provider is configured. Modrinth is always available; CurseForge needs an API key.",
+    "contentSearchFailed": "The search failed.",
+    "contentSearching": "Searching…",
+    "contentNoResults": "No results for this query.",
+    "contentDownloads": "{{count}} downloads",
+    "contentInstall": "Install",
+    "contentRemove": "Remove",
+    "installedTitle": "Installed content",
+    "installedEmptyTitle": "Nothing installed",
+    "installedEmptyBody": "Mods, packs and shaders installed from a content platform appear here.",
+    "noLogs": "No launch in this session.",
+    "logsFailed": "The game log could not be read.",
+    "logsEmpty": "No output yet.",
+    "alreadyRunning": "This instance is already running.",
+    "needsAccount": "Sign in first so the game has an identity.",
+    "installQueued": "Installation queued. Follow it in the task center.",
+    "import": "Import"
   },
   "downloads": {
     "heading": "Downloads",
     "description": "One queue for metadata, Java runtimes, loaders and content.",
     "emptyTitle": "Nothing is downloading",
-    "emptyBody": "The download service belongs to the core slice. It will support hashes, resumable transfers, mirror fallback and cancellation.",
-    "providersHeading": "Planned sources",
-    "providersBody": "Mirrors may change transport only; the trust hash always comes from the original source.",
+    "emptyBody": "Nothing is queued. Installs started from an instance appear here while they run.",
+    "providersHeading": "Content sources",
+    "providersBody": "Modrinth is always available. CurseForge appears when an API key is configured.",
     "providers": {
       "mojang": {
         "title": "Mojang metadata",
@@ -124,7 +215,39 @@
         "title": "Modrinth",
         "body": "Mods, packs, resource packs and shaders through a typed provider."
       }
-    }
+    },
+    "queueTitle": "Download queue",
+    "queueBody": "Background tasks owned by the core: metadata, Java, installs and content.",
+    "activeTasks": "{{count}} active",
+    "recentTitle": "Recently finished",
+    "javaTitle": "Java runtimes",
+    "javaBody": "Mnelys selects a managed runtime that matches the game version, or uses one you already have.",
+    "javaDetected": "{{count}} detected",
+    "javaInstallHint": "Installing a major downloads a verified managed runtime in the background.",
+    "javaFailed": "Java runtimes could not be listed.",
+    "javaEmpty": "No Java runtime was detected yet. Install a managed one above.",
+    "javaSource": {
+      "managed": "Managed",
+      "system": "System"
+    },
+    "versionsTitle": "Minecraft versions",
+    "versionsBody": "The Mojang manifest the installer resolves against. Mirrors never change the trust hash.",
+    "versionsCount": "{{count}} versions",
+    "versionsFilter": "Filter versions",
+    "versionsLoading": "Loading the manifest…",
+    "versionsFailed": "The version manifest could not be loaded.",
+    "noReleaseTime": "Unknown release date",
+    "versionType": {
+      "release": "Release",
+      "snapshot": "Snapshot",
+      "old_beta": "Old beta",
+      "old_alpha": "Old alpha"
+    },
+    "versionsEmpty": "No version matches that filter.",
+    "providersLoading": "Checking providers…",
+    "providersAction": "Browse instances",
+    "providersNote": "Content installs are tracked per instance, so removing a mod never touches another instance.",
+    "contentPlatforms": "Content platforms"
   },
   "multiplayer": {
     "heading": "Multiplayer",
@@ -154,7 +277,38 @@
         "title": "External Yggdrasil",
         "body": "Custom authentication with an explicit trust prompt."
       }
-    }
+    },
+    "selected": "Selected",
+    "select": "Use account",
+    "refresh": "Refresh",
+    "remove": "Remove",
+    "removeTitle": "Remove this account?",
+    "removeBody": "The stored credentials for this account are deleted from the system keyring. Player data on disk is not touched.",
+    "loadError": "Accounts could not be loaded",
+    "kind": {
+      "microsoft": "Microsoft",
+      "offline": "Offline",
+      "yggdrasil": "Yggdrasil"
+    },
+    "method": {
+      "microsoft": "Microsoft sign-in",
+      "offline": "Offline name",
+      "yggdrasil": "Yggdrasil server"
+    },
+    "addTitle": "Add an account",
+    "addDescription": "Choose how this identity signs in. Tokens stay in the core and never reach the window.",
+    "addOffline": "Add offline account",
+    "addYggdrasil": "Sign in to Yggdrasil",
+    "username": "Username",
+    "authUrl": "Authentication server",
+    "password": "Password",
+    "offlineHint": "An offline name is a local identity. Servers in online mode will not accept it.",
+    "yggdrasilHint": "The password goes straight to the authentication server; only a token is stored in the keyring.",
+    "microsoftBody": "Sign-in uses the Microsoft device-code flow in your browser. No password is typed into Mnelys.",
+    "microsoftStart": "Start Microsoft sign-in",
+    "microsoftWaiting": "Waiting for approval…",
+    "microsoftApproved": "I approved the sign-in",
+    "microsoftCode": "Enter this code on the Microsoft page:"
   },
   "developer": {
     "heading": "Developer",
@@ -179,11 +333,14 @@
         "title": "Developer daemon",
         "body": "A loopback-only bridge for CLI and IDE clients."
       }
-    }
+    },
+    "tasksTitle": "Background tasks",
+    "tasksBody": "Everything the core is running right now, with cancellation.",
+    "tasksCount": "{{count}} tasks"
   },
   "settings": {
     "heading": "Settings",
-    "description": "Appearance, language, developer tools and build facts.",
+    "description": "Appearance, language, downloads, developer tools and build facts.",
     "appearance": "Appearance",
     "appearanceDescription": "The window stays opaque on every platform. No Mica, Acrylic or vibrancy.",
     "accent": "Accent colour",
@@ -209,13 +366,34 @@
     "developer": "Developer mode",
     "developerDescription": "Shows the Developer section in the navigation. It does not grant additional core capabilities.",
     "about": "About this build",
-    "aboutDescription": "Mnelys is at the M1 shell stage: window, navigation, a typed core boundary, internationalization and the design system. It cannot install or launch Minecraft yet.",
+    "aboutDescription": "Mnelys installs Vanilla, Fabric, Quilt, Legacy Fabric, Forge and NeoForge, signs in with Microsoft, offline or Yggdrasil accounts, and installs content from Modrinth and CurseForge.",
     "platform": "Platform",
     "webview": "Web view",
     "coreVersion": "Core version",
     "contract": "Contract",
     "icons": "Interface icons",
-    "iconsDescription": "Every interface icon comes from Lucide (ISC). The application icon remains the Mnelys source artwork."
+    "iconsDescription": "Every interface icon comes from Lucide (ISC). The application icon remains the Mnelys source artwork.",
+    "core": "Core",
+    "coreDescription": "Where the core keeps its data and how it reaches Mojang.",
+    "mirror": "Download mirror",
+    "mirrorDescription": "Active route: {{active}}. Mirrors change transport only; every file is still checked against the original hash.",
+    "mirrorAuto": "Automatic",
+    "mirrorDirect": "Direct",
+    "mirrorBmclapi": "BMCLAPI",
+    "memory": "Default memory",
+    "memoryHint": "Megabytes of heap for new launches. 0 lets the core decide. Allowed: 0 or 512–65536.",
+    "memoryInvalid": "Enter 0 or a value between 512 and 65536.",
+    "memorySave": "Save memory",
+    "memorySaved": "Saved.",
+    "probe": "Mirror health",
+    "probeAction": "Probe mirrors",
+    "probeRunning": "Probing…",
+    "probeLatency": "{{ms}} ms",
+    "probeReachable": "Reachable",
+    "probeUnreachable": "Unreachable",
+    "root": "Data folder",
+    "rootDescription": "Instances, caches and settings live here.",
+    "loadFailed": "Core settings could not be loaded."
   },
   "tasks": {
     "title": "Task center",
@@ -249,7 +427,18 @@
         "warn": "Warn",
         "error": "Error"
       }
-    }
+    },
+    "loading": "Reading tasks…",
+    "count": "Tasks: {{count}}",
+    "state": {
+      "queued": "Queued",
+      "running": "Running",
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "stateMessage": "Task is {{state}}.",
+    "cancel": "Cancel task"
   },
   "error": {
     "title": "Something went wrong",
@@ -263,5 +452,24 @@
     "coreConflict": "That request conflicted with existing state.",
     "coreInternal": "The core reported an internal error.",
     "unknown": "An unknown error occurred."
+  },
+  "loader": {
+    "vanilla": "Vanilla",
+    "fabric": "Fabric",
+    "quilt": "Quilt",
+    "legacyFabric": "Legacy Fabric",
+    "forge": "Forge",
+    "neoforge": "NeoForge"
+  },
+  "contentKind": {
+    "mod": "Mods",
+    "resourcepack": "Resource packs",
+    "shader": "Shaders",
+    "world": "Worlds",
+    "datapack": "Data packs"
+  },
+  "contentProvider": {
+    "modrinth": "Modrinth",
+    "curseforge": "CurseForge"
   }
 }

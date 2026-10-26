@@ -7,8 +7,9 @@ import { Dialog } from '@/components/ui/Dialog';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import { SegmentedControl, type SegmentOption } from '@/components/ui/SegmentedControl';
+import { TaskList } from '@/components/TaskList';
 import type { AppLogEntry, LogLevel } from '@/ipc/commands';
-import { useAppLogs, useClearAppLogs } from '@/ipc/hooks';
+import { useAppLogs, useCancelTask, useClearAppLogs, useTasks } from '@/ipc/hooks';
 import { useUiStore } from '@/state/ui-store';
 
 import styles from './TaskCenterDrawer.module.css';
@@ -53,6 +54,8 @@ export function TaskCenterDrawer() {
 
   const logsQuery = useAppLogs(open && tab === 'logs');
   const clearLogs = useClearAppLogs();
+  const tasksQuery = useTasks(open && tab === 'tasks');
+  const cancelTask = useCancelTask();
 
   const titleId = useId();
   const descriptionId = useId();
@@ -201,13 +204,30 @@ export function TaskCenterDrawer() {
 
         <div className={tab === 'logs' ? `${styles.body} ${styles.bodyLogs}` : styles.body}>
           {tab === 'tasks' ? (
-            <div className={styles.empty}>
-              <span className={styles.emptyIcon} aria-hidden="true">
-                <Icon name="tasks" size={26} strokeWidth={1.5} />
-              </span>
-              <h3>{t('tasks.emptyTitle')}</h3>
-              <p>{t('tasks.emptyBody')}</p>
-            </div>
+            tasksQuery.data === undefined ? (
+              <p className={styles.logStatus} role="status">
+                <Icon name="loading" size={16} />
+                {t('tasks.loading')}
+              </p>
+            ) : tasksQuery.data.length === 0 ? (
+              <div className={styles.empty}>
+                <span className={styles.emptyIcon} aria-hidden="true">
+                  <Icon name="tasks" size={26} strokeWidth={1.5} />
+                </span>
+                <h3>{t('tasks.emptyTitle')}</h3>
+                <p>{t('tasks.emptyBody')}</p>
+              </div>
+            ) : (
+              <div className={styles.bodyLogs}>
+                <TaskList
+                  tasks={tasksQuery.data}
+                  cancelling={cancelTask.isPending}
+                  onCancel={(id) => {
+                    cancelTask.mutate(id);
+                  }}
+                />
+              </div>
+            )
           ) : (
             <LogsPanel
               pending={logsQuery.isPending}
@@ -223,8 +243,8 @@ export function TaskCenterDrawer() {
 
         <footer className={styles.footer}>
           {tab === 'tasks' ? (
-            <Badge tone="neutral" icon="info">
-              {t('tasks.footer')}
+            <Badge tone="neutral" icon="tasks">
+              {t('tasks.count', { count: tasksQuery.data?.length ?? 0 })}
             </Badge>
           ) : (
             <>

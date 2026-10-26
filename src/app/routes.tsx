@@ -5,6 +5,7 @@ import { AppShell } from '@/components/AppShell';
 import { AccountsRoute } from '@/routes/AccountsRoute';
 import { DeveloperRoute } from '@/routes/DeveloperRoute';
 import { DownloadsRoute } from '@/routes/DownloadsRoute';
+import { InstanceDetailRoute } from '@/routes/InstanceDetailRoute';
 import { InstancesRoute } from '@/routes/InstancesRoute';
 import { MultiplayerRoute } from '@/routes/MultiplayerRoute';
 import { SettingsRoute } from '@/routes/SettingsRoute';
@@ -25,6 +26,7 @@ export const routes: RouteObject[] = [
       { index: true, element: <Navigate to="/start" replace /> },
       { path: 'start', element: <StartRoute /> },
       { path: 'instances', element: <InstancesRoute /> },
+      { path: 'instances/:id', element: <InstanceDetailRoute /> },
       { path: 'downloads', element: <DownloadsRoute /> },
       { path: 'multiplayer', element: <MultiplayerRoute /> },
       { path: 'developer', element: <DeveloperRoute /> },

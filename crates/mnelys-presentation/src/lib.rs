@@ -9,4 +9,4 @@ mod state;
 
 pub use commands::{attach, COMMAND_NAMES, CONTRACT_VERSION};
 pub use mnelys_domain::{CoreError, CoreErrorCode, CoreResult};
-pub use state::CoreState;
+pub use state::{CoreServices, CoreState};

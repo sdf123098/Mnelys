@@ -2,7 +2,7 @@
   <img src="assets/branding/mnelys-icon-source.jpg" width="220" alt="Mnelys icon">
 </p>
 
-<h1 align="center">Mnelys · 忆涟</h1>
+<h1 align="center">Mnelys</h1>
 
 <p align="center">
   An AI-native Minecraft: Java Edition launcher and development workspace for players and mod developers
@@ -13,7 +13,7 @@
 </p>
 
 > [!IMPORTANT]
-> Mnelys has moved its technical baseline to **Tauri v2 + React 19** (see [ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md) and [ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)). `main` now contains both the Rust core skeleton and the React frontend project and **can be run locally**, but there is still no Minecraft installation or launch workflow and no three-platform artifact yet.
+> Mnelys uses **Tauri v2 + React 19** (see [ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md) and [ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)). `main` now implements the M1–M6 core: accounts, instances, Java, metadata and loader installation, content platforms, and the launch pipeline. Real-desktop launch smoke, three-platform packaging evidence, and signing/notarization are still open. CI artifacts are **unsigned test builds, not official releases**.
 
 ## About
 
@@ -36,20 +36,25 @@ These items describe the roadmap and are not all implemented today.
 
 ## Current status
 
-Mnelys is at M1, Design System and Shell. The M0 packaging and desktop runtime checks remain open:
+The M1–M6 core is implemented; real-desktop evidence and release artifacts are still open:
 
 - [x] Independent repository, license, ADRs, and security baseline
-- [x] Tauri v2 runtime and UI baseline established ([ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md))
-- [x] .NET/Avalonia implementation removed (it remains in this repository's Git history)
-- [x] Frontend framework and stack decided ([ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md))
-- [x] Rust core skeleton, command boundary, and cross-boundary contract tests
-- [x] Design tokens, light/dark themes, and accessible base controls
-- [x] Single-window shell, responsive navigation, task center, settings, and developer mode
+- [x] Tauri v2 runtime and UI baseline ([ADR 0005](docs/adr/0005-runtime-and-ui-baseline-tauri.md))
+- [x] Frontend framework and stack ([ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md))
+- [x] Design system, light/dark/system themes, default pink, and custom accent colours
+- [x] Drawn title bar with native macOS traffic lights; one localized product name
+- [x] Single-window shell, responsive navigation, task center, log panel, settings, and developer mode
+- [x] Ten catalogs: Simplified Chinese, Traditional Chinese, English, Japanese, Korean, French, German, Spanish, Brazilian Portuguese, Russian
 - [x] Interface icons consolidated on Lucide (ISC), see [ICONS.md](docs/ICONS.md)
-- [x] Core log panel, a native `<dialog>` confirmation, and the Cargo workspace layering skeleton
-- [x] GitHub Actions: frontend checks, a three-platform Rust matrix, and desktop packaging workflows
-- [ ] Tauri desktop runtime, DPI checks, and three-platform packaging evidence
-- [ ] First end-to-end Vanilla slice
+- [x] Rust Cargo workspace layering and a v3 command contract (39 commands)
+- [x] Vanilla install and launch: metadata, hash verification, mirror fallback, Java discovery and install, argument rendering, process and logs
+- [x] Offline, Yggdrasil, and Microsoft device-code accounts; keystore storage with tokens kept off IPC
+- [x] Fabric / Quilt / Legacy Fabric metadata loaders
+- [x] Forge / NeoForge installer pipeline
+- [x] Modrinth / CurseForge search, install, remove, and instance-manifest export/import
+- [x] GitHub Actions: frontend checks, a three-platform Rust matrix, and desktop packaging
+- [ ] Real-desktop launch to the main menu, DPI, and three-platform visual regression
+- [ ] Three-platform artifact sizes, signing, and notarization evidence
 
 The packaging evidence from the earlier Avalonia implementation is recorded in the [M0 packaging PoC report](docs/M0_PACKAGING_POC.md). It is a historical record and is **not** evidence for the Tauri baseline.
 
@@ -69,6 +74,7 @@ The packaging evidence from the earlier Avalonia implementation is recorded in t
 - **Rust** for the core: accounts, instances, Java management, downloads, cache, launch pipeline, and IPC. The core is a Cargo workspace (domain / application / infrastructure / presentation); `src-tauri` is only the composition root
 - Platform webviews: WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux
 - The frontend is **React 19 with TypeScript** ([ADR 0006](docs/adr/0006-frontend-framework-and-application-stack.md)), built by Vite, with hash routing through `react-router`, TanStack Query for server state, Zustand for transient state, i18next for UI text, and Lucide for interface icons (ISC, see [ICONS.md](docs/ICONS.md))
+- Catalogs are discovered with `import.meta.glob`: adding a language is adding one JSON file, and `src/i18n/catalogs.test.ts` requires every catalog to match the `en` key set exactly. Accent and naming rules are recorded in [ADR 0007](docs/adr/0007-accent-color-and-localization-policy.md)
 - The Rust toolchain is pinned in `rust-toolchain.toml`; Node.js and pnpm are pinned in `package.json`
 - The root window stays opaque: Mica, Acrylic, macOS vibrancy, and desktop sampling are prohibited; a global `backdrop-filter: none !important` rule is the fallback
 - The frontend reaches native capability only through explicitly declared Tauri commands, and `invoke` may only appear inside `src/ipc/`; capabilities are declared per window and reviewed
@@ -84,7 +90,7 @@ Prerequisites (since 2026-09-30):
 - Platform build dependencies: the WebView2 runtime and MSVC build tools on Windows (the "Desktop development with C++" workload of Visual Studio Build Tools, which provides `link.exe`); Xcode command line tools on macOS; WebKitGTK, `libayatana-appindicator`, and similar Tauri system packages on Linux
 - Git 2.40+
 
-> The MSYS2/MinGW GNU toolchain is not a substitute for MSVC on Windows. `x86_64-pc-windows-gnu` compiles and passes `cargo clippy`, but test binaries fail to load with `0xC0000139` (`STATUS_ENTRYPOINT_NOT_FOUND`): Rust's GNU target is msvcrt-based while MSYS2's UCRT64 toolchain is UCRT-based.
+> The MSYS2/MinGW GNU toolchain is not a substitute for MSVC on Windows. `x86_64-pc-windows-gnu` compiles, passes `cargo clippy`, and runs the domain, application, and infrastructure tests, but the `mnelys-presentation` and `src-tauri` test binaries depend on WinRT API sets and cannot load in the local GNU environment. CI on MSVC, Linux, and macOS is the authoritative full test run.
 
 ```powershell
 git clone https://github.com/sdf123098/Mnelys.git
@@ -111,7 +117,8 @@ Scripts in `package.json`:
 ## Continuous integration and packaging
 
 - [`CI`](.github/workflows/ci.yml) runs frontend format, lint, type-check, tests, and build, plus `cargo fmt`, `cargo clippy -D warnings`, and `cargo test` on Windows, macOS, and Linux.
-- [`Desktop packages`](.github/workflows/desktop-package.yml) runs on demand or on `v*` tags and uploads an NSIS installer, a macOS arm64 DMG, and an AppImage. The artifacts are unsigned build evidence; signing and notarization need credentials supplied outside the repository.
+- [`Desktop packages`](.github/workflows/desktop-package.yml) runs on demand or on `v*` tags and uploads an NSIS installer, a macOS arm64 DMG, and an AppImage. The artifacts are unsigned, retained for 14 days, and exist as build evidence; signing and notarization need credentials supplied outside the repository.
+- **Downloading test artifacts**: open the repository's Actions → `Desktop packages` → `Run workflow`, then download `mnelys-windows-x64-unsigned`, `mnelys-macos-arm64-unsigned`, or `mnelys-linux-x64-unsigned` from the run's Artifacts section. The Windows artifact contains the NSIS installer and the portable `mnelys.exe`.
 - CI is the normal verification path. Local desktop builds are reserved for cases that genuinely need an artifact or interactive debugging.
 
 > `src-tauri/` validates the frontend output at compile time. To run `cargo check`, `cargo test`, or `cargo clippy` on their own, you must run `pnpm build` first, or `tauri::generate_context!` fails because `dist/` is missing.
@@ -148,7 +155,7 @@ Mnelys/
 │  ├─ app/                 Application wiring: providers, router
 │  ├─ components/          Reusable components
 │  ├─ ipc/                 The only Tauri command and error boundary
-│  ├─ i18n/                zh-Hans / en / ja catalogs
+│  ├─ i18n/                Ten catalogs (auto-discovered)
 │  ├─ routes/              Page-level components
 │  ├─ state/               Cross-page transient state
 │  ├─ styles/              Tokens and global styles

@@ -41,7 +41,7 @@ describe('NavSidebar', () => {
     expect(screen.getByRole('link', { name: 'Multiplayer' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Settings' })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Developer' })).not.toBeInTheDocument();
-    expect(screen.getByText('M1 shell')).toBeInTheDocument();
+    expect(screen.getByText('M1–M6 core')).toBeInTheDocument();
   });
 
   it('reveals the developer section when developer mode is on', () => {
