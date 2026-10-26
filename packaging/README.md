@@ -18,6 +18,13 @@ Artifacts are **unsigned test builds**, not releases. They expire after 14 days 
 
 First recorded run: [`Desktop packages` run 40262368596](https://github.com/sdf123098/Mnelys/actions/runs/40262368596) — all three jobs green. Downloaded artifact zip sizes were 6,782,945 B (Windows x64), 6,696,204 B (macOS arm64) and 81,688,402 B (Linux x64). Nobody has installed or launched these yet; cold-start and runtime behaviour remain unverified.
 
+Latest run at HEAD: [`Desktop packages` run 40269539520](https://github.com/sdf123098/Mnelys/actions/runs/40269539520) on `771a62e` — all three jobs green. Artifact zip sizes: 6,796,357 B (Windows x64), 6,701,920 B (macOS arm64), 81,691,098 B (Linux x64). The Windows artifact was downloaded and inspected (both files carry an `MZ` header) but not installed or launched:
+
+| File                                     | Size (B)  | SHA-256                                                            |
+| ---------------------------------------- | --------- | ------------------------------------------------------------------ |
+| `bundle/nsis/Mnelys_0.1.0_x64-setup.exe` | 3,140,080 | `84DB3980D09AE53FDA05AC650F03612800DFFFD987A300DBBBB686F762CE0BE9` |
+| `mnelys.exe` (portable)                  | 6,827,008 | `05E954F0895AAFEE6A540C18D4D82699143A0817FB6E5B4406B3C22245F3A47D` |
+
 You do not need a local toolchain to obtain them. Open the run in the repository's Actions tab and download the artifact, or use the CLI:
 
 ```bash

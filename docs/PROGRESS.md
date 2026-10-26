@@ -141,7 +141,8 @@
 - 下载量按界面语言用 `Intl.NumberFormat` 分组显示，语言目录里 `{{count}}` 改为 `{{total}}` 以免与 i18next 复数解析冲突。
 - 10 套语言目录各新增 31 个键（`nav.content` 与 `content.*`），`src/i18n/catalogs.test.ts` 的键集奇偶校验通过；简体中文为"资源站"、日文为"コンテンツ"，切到日文时窗口标题仍是 `Mnelys`。
 - 浏览器接线验证：注入 mock 核心（`@tauri-apps/api/mocks` 的 `mockIPC`）后走完开始、实例、实例详情、资源站、下载、账户、设置七个界面，确认 39 个命令的返回结构都能被界面消费；任务中心显示三种任务状态，资源站搜索 → 安装 → 分组列表链路可用。
-- 该次改动自身的远端验证：[CI run 40265413181](https://github.com/sdf123098/Mnelys/actions/runs/40265413181)（提交 `3b169fe`）前端检查与三平台 Rust 作业全部成功，打包工作流未在此提交上重跑，产物证据仍以 `6633acc` 的 run 40262368596 为准。
+- 该次改动自身的远端验证：[CI run 40265413181](https://github.com/sdf123098/Mnelys/actions/runs/40265413181)（提交 `3b169fe`）与 [CI run 40269430485](https://github.com/sdf123098/Mnelys/actions/runs/40269430485)（提交 `771a62e`）前端检查加三平台 Rust 作业全部成功。
+- 产物已在 HEAD 上重打：[Desktop packages run 40269539520](https://github.com/sdf123098/Mnelys/actions/runs/40269539520)（提交 `771a62e`）三平台作业全绿，Windows 工件 zip 6 796 357 B，其中 `Mnelys_0.1.0_x64-setup.exe` 3 140 080 B（SHA-256 `84DB3980…CE0BE9`）、便携 `mnelys.exe` 6 827 008 B。两者只下载并确认是 PE，仍未安装、未启动，冷启动与真机运行时行为依旧空缺。
 
 ## 已完成
 
@@ -218,7 +219,7 @@
 ### Tauri 基线的 M0 收尾
 
 - [x] 由 GitHub Actions 三平台矩阵执行 `cargo test`（含 `src-tauri/tests/contract.rs`）；[CI run 40261698848](https://github.com/sdf123098/Mnelys/actions/runs/40261698848) 全绿。
-- [x] 由 `Desktop packages` 工作流产出 NSIS、macOS arm64 DMG 与 AppImage 并记录体积（[run 40262368596](https://github.com/sdf123098/Mnelys/actions/runs/40262368596)）；冷启动数据仍需真实桌面运行。
+- [x] 由 `Desktop packages` 工作流产出 NSIS、macOS arm64 DMG 与 AppImage 并记录体积（首跑 [run 40262368596](https://github.com/sdf123098/Mnelys/actions/runs/40262368596)，HEAD 重跑 [run 40269539520](https://github.com/sdf123098/Mnelys/actions/runs/40269539520)）；冷启动数据仍需真实桌面运行。
 - [ ] 建立三平台 WebView 兼容基线（WebView2 / WKWebView / WebKitGTK）与启动冒烟。
 - [ ] 在 Apple Silicon Mac 上完成 Developer ID 签名、公证、staple 与 Gatekeeper 验证；需要仓库外提供的 Apple 凭据。
 - [x] 建立 CI 三平台前端检查、Rust 格式 / Clippy / 测试与桌面打包工作流（`.github/workflows/`），并通过首次远端运行。
