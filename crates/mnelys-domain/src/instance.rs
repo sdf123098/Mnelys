@@ -150,7 +150,11 @@ impl InstanceSpec {
     }
 }
 
-fn validate_slug(value: &str) -> Result<(), CoreError> {
+/// Checks the id shape an instance directory name must have.
+///
+/// Anything that builds a path from an instance id runs this first, so a stored record
+/// cannot smuggle traversal into a directory name.
+pub fn validate_slug(value: &str) -> Result<(), CoreError> {
     let valid = !value.is_empty()
         && value.len() <= 48
         && value.chars().all(|character| {

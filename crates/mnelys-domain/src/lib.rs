@@ -24,7 +24,8 @@ pub use content::{
 pub use download::{DownloadItem, DownloadKind, DownloadPlan};
 pub use error::{CoreError, CoreErrorCode, CoreResult};
 pub use instance::{
-    offline_uuid, validate_offline_username, InstanceRecord, InstanceSpec, LoaderKind,
+    offline_uuid, validate_offline_username, validate_slug, InstanceRecord, InstanceSpec,
+    LoaderKind,
 };
 pub use java::{JavaRuntime, JavaSource};
 pub use launch::{

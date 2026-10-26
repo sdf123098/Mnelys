@@ -11,15 +11,16 @@ mod runtime;
 mod settings;
 mod tasks;
 mod versions;
+mod workspace;
 
 /// Version of the command contract.
 ///
 /// Bump this whenever a request or response shape changes. `src/ipc/commands.ts` mirrors
 /// the value, and `src-tauri/tests/contract.rs` fails when the two disagree (ADR 0006).
-pub const CONTRACT_VERSION: u32 = 3;
+pub const CONTRACT_VERSION: u32 = 4;
 
 /// Every command name this core exposes, in the order the frontend declares them.
-pub const COMMAND_NAMES: [&str; 39] = [
+pub const COMMAND_NAMES: [&str; 46] = [
     "core_version",
     "runtime_info",
     "app_logs",
@@ -57,6 +58,13 @@ pub const COMMAND_NAMES: [&str; 39] = [
     "remove_content",
     "export_instance",
     "import_instance",
+    "list_instance_files",
+    "list_instance_logs",
+    "read_instance_log",
+    "list_instance_worlds",
+    "list_instance_schematics",
+    "delete_instance_entry",
+    "reveal_instance_entry",
     "list_tasks",
     "cancel_task",
 ];
@@ -105,6 +113,13 @@ pub fn attach<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::Builder<R
         content::remove_content,
         content::export_instance,
         content::import_instance,
+        workspace::list_instance_files,
+        workspace::list_instance_logs,
+        workspace::read_instance_log,
+        workspace::list_instance_worlds,
+        workspace::list_instance_schematics,
+        workspace::delete_instance_entry,
+        workspace::reveal_instance_entry,
         tasks::list_tasks,
         tasks::cancel_task
     ])

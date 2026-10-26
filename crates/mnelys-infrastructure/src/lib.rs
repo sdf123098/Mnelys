@@ -16,6 +16,7 @@ pub mod loaders;
 pub mod memory_log;
 pub mod modrinth;
 pub mod process;
+pub mod reveal;
 pub mod secrets;
 pub mod settings;
 
@@ -32,5 +33,6 @@ pub use loaders::MetaLoaderProvider;
 pub use memory_log::{MemoryLogStore, DEFAULT_LOG_CAPACITY};
 pub use modrinth::ModrinthProvider;
 pub use process::TokioGameRunner;
+pub use reveal::DesktopRevealer;
 pub use secrets::KeyringSecretStore;
 pub use settings::JsonSettingsStore;

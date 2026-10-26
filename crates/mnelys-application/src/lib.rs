@@ -16,6 +16,7 @@ pub mod ports;
 pub mod settings;
 pub mod tasks;
 pub mod util;
+pub mod workspace;
 
 pub use accounts::{AccountService, MicrosoftConfig};
 pub use content::{
@@ -31,9 +32,12 @@ pub use mirrors::{MirrorKind, MirrorPolicy, MirrorPreference, MirrorProbe};
 pub use paths::GamePaths;
 pub use ports::{
     default_task_label, fetch_bytes, fetch_json, request_json, Clock, ContentProvider,
-    ContentSearchRequest, ContentVersionFilter, DirEntry, FileStore, GameRunner, HttpClient,
-    HttpMethod, HttpRequest, HttpResponse, JavaProvider, LoaderInstallContext, LoaderProvider,
-    NullReporter, SecretStore, SystemClock,
+    ContentSearchRequest, ContentVersionFilter, DirEntry, EntryRevealer, FileStore, GameRunner,
+    HttpClient, HttpMethod, HttpRequest, HttpResponse, JavaProvider, LoaderInstallContext,
+    LoaderProvider, NullReporter, SecretStore, SystemClock,
 };
 pub use settings::{AppSettings, SettingsStore};
 pub use tasks::{TaskHandle, TaskRegistry, TaskReporter};
+pub use workspace::{
+    FileListing, LogListing, LogTail, WorkspaceEntry, WorkspaceService, WorldEntry,
+};

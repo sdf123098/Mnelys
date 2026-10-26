@@ -144,14 +144,23 @@ pub async fn request_json<T: serde::de::DeserializeOwned>(
 #[async_trait]
 pub trait FileStore: Send + Sync {
     async fn read(&self, path: &Path) -> CoreResult<Vec<u8>>;
+    /// Reads at most `max_bytes` from the end of a file, so a log panel never loads a
+    /// whole `debug.log` into memory.
+    async fn read_tail(&self, path: &Path, max_bytes: u64) -> CoreResult<Vec<u8>>;
     async fn write_atomic(&self, path: &Path, data: &[u8]) -> CoreResult<()>;
     async fn exists(&self, path: &Path) -> bool;
+    /// Whether the path is an existing directory. Deleting needs the distinction
+    /// because a directory needs a recursive removal.
+    async fn is_directory(&self, path: &Path) -> bool;
     async fn remove(&self, path: &Path) -> CoreResult<()>;
     async fn remove_dir_all(&self, path: &Path) -> CoreResult<()>;
     async fn create_dir_all(&self, path: &Path) -> CoreResult<()>;
     async fn list(&self, path: &Path) -> CoreResult<Vec<DirEntry>>;
     async fn len(&self, path: &Path) -> Option<u64>;
     async fn copy(&self, from: &Path, to: &Path) -> CoreResult<()>;
+    /// Resolves symlinks. `None` when the path cannot be resolved, which lets the caller
+    /// decide whether a missing path is an error or an empty directory.
+    async fn canonicalize(&self, path: &Path) -> Option<PathBuf>;
     /// Extracts a zip archive, skipping entries whose names start with one of the
     /// excluded prefixes. Returns the number of files written.
     async fn extract_zip(
@@ -163,11 +172,24 @@ pub trait FileStore: Send + Sync {
 }
 
 /// One directory entry.
+///
+/// `modified_ms` is `None` when the platform cannot read the timestamp, so a listing
+/// never invents a date.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DirEntry {
     pub name: String,
     pub path: PathBuf,
     pub is_dir: bool,
+    pub size_bytes: u64,
+    pub modified_ms: Option<u64>,
+}
+
+/// Shows one existing path in the desktop's own file manager.
+///
+/// Implementations pass the path as a single argument and never go through a command
+/// interpreter, so a file name cannot become a command line.
+pub trait EntryRevealer: Send + Sync {
+    fn reveal(&self, path: &Path) -> CoreResult<()>;
 }
 
 /// The platform keystore. Secrets are keyed by account id and never logged.

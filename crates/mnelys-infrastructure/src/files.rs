@@ -5,12 +5,13 @@
 //! installed. Zip extraction runs on the blocking pool because the `zip` crate is
 //! synchronous.
 
-use std::io;
+use std::io::{self, SeekFrom};
 use std::path::{Component, Path, PathBuf};
 
 use async_trait::async_trait;
 use mnelys_application::ports::{DirEntry, FileStore};
 use mnelys_domain::{CoreError, CoreResult};
+use tokio::io::{AsyncReadExt, AsyncSeekExt};
 
 /// A [`FileStore`] rooted in the real filesystem.
 #[derive(Debug, Clone, Copy, Default)]
@@ -27,12 +28,43 @@ fn io_error(action: &str, path: &Path, error: &io::Error) -> CoreError {
     CoreError::io(format!("could not {action} {}", path.display())).with_details(error.to_string())
 }
 
+fn modified_ms(metadata: &std::fs::Metadata) -> Option<u64> {
+    metadata
+        .modified()
+        .ok()
+        .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|elapsed| u64::try_from(elapsed.as_millis()).unwrap_or(u64::MAX))
+}
+
 #[async_trait]
 impl FileStore for LocalFileStore {
     async fn read(&self, path: &Path) -> CoreResult<Vec<u8>> {
         tokio::fs::read(path)
             .await
             .map_err(|error| io_error("read", path, &error))
+    }
+
+    async fn read_tail(&self, path: &Path, max_bytes: u64) -> CoreResult<Vec<u8>> {
+        let mut file = tokio::fs::File::open(path)
+            .await
+            .map_err(|error| io_error("read", path, &error))?;
+        let metadata = file
+            .metadata()
+            .await
+            .map_err(|error| io_error("read", path, &error))?;
+        let size = metadata.len();
+        let skip = size.saturating_sub(max_bytes);
+        if skip > 0 {
+            file.seek(SeekFrom::Start(skip))
+                .await
+                .map_err(|error| io_error("read", path, &error))?;
+        }
+        let mut buffer =
+            Vec::with_capacity(usize::try_from((size - skip).min(1024 * 1024)).unwrap_or(0));
+        file.read_to_end(&mut buffer)
+            .await
+            .map_err(|error| io_error("read", path, &error))?;
+        Ok(buffer)
     }
 
     async fn write_atomic(&self, path: &Path, data: &[u8]) -> CoreResult<()> {
@@ -56,6 +88,13 @@ impl FileStore for LocalFileStore {
 
     async fn exists(&self, path: &Path) -> bool {
         tokio::fs::try_exists(path).await.unwrap_or(false)
+    }
+
+    async fn is_directory(&self, path: &Path) -> bool {
+        tokio::fs::metadata(path)
+            .await
+            .map(|metadata| metadata.is_dir())
+            .unwrap_or(false)
     }
 
     async fn remove(&self, path: &Path) -> CoreResult<()> {
@@ -93,15 +132,22 @@ impl FileStore for LocalFileStore {
             .map_err(|error| io_error("list", path, &error))?
         {
             let entry_path = entry.path();
-            let is_dir = entry
-                .file_type()
-                .await
-                .map(|kind| kind.is_dir())
-                .unwrap_or(false);
+            let metadata = entry.metadata().await.ok();
+            let is_dir = match &metadata {
+                Some(info) => info.is_dir(),
+                None => matches!(entry.file_type().await, Ok(kind) if kind.is_dir()),
+            };
+            let size_bytes = metadata
+                .as_ref()
+                .filter(|info| !info.is_dir())
+                .map_or(0, std::fs::Metadata::len);
+            let modified = metadata.as_ref().and_then(modified_ms);
             entries.push(DirEntry {
                 name: entry.file_name().to_string_lossy().into_owned(),
                 path: entry_path,
                 is_dir,
+                size_bytes,
+                modified_ms: modified,
             });
         }
         entries.sort_by(|left, right| left.name.cmp(&right.name));
@@ -126,6 +172,10 @@ impl FileStore for LocalFileStore {
             .await
             .map_err(|error| io_error("copy", from, &error))?;
         Ok(())
+    }
+
+    async fn canonicalize(&self, path: &Path) -> Option<PathBuf> {
+        tokio::fs::canonicalize(path).await.ok()
     }
 
     async fn extract_zip(

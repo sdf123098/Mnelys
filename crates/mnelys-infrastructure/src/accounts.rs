@@ -167,6 +167,19 @@ mod tests {
                 .ok_or_else(|| CoreError::io("missing"))
         }
 
+        async fn read_tail(&self, path: &Path, max_bytes: u64) -> CoreResult<Vec<u8>> {
+            let body = self
+                .files
+                .lock()
+                .expect("lock")
+                .get(path)
+                .cloned()
+                .ok_or_else(|| CoreError::io("missing"))?;
+            let window = usize::try_from(max_bytes).unwrap_or(usize::MAX);
+            let start = body.len().saturating_sub(window);
+            Ok(body[start..].to_vec())
+        }
+
         async fn write_atomic(&self, path: &Path, data: &[u8]) -> CoreResult<()> {
             self.files
                 .lock()
@@ -177,6 +190,10 @@ mod tests {
 
         async fn exists(&self, path: &Path) -> bool {
             self.files.lock().expect("lock").contains_key(path)
+        }
+
+        async fn is_directory(&self, _: &Path) -> bool {
+            false
         }
 
         async fn remove(&self, path: &Path) -> CoreResult<()> {
@@ -202,6 +219,10 @@ mod tests {
 
         async fn copy(&self, _: &Path, _: &Path) -> CoreResult<()> {
             Ok(())
+        }
+
+        async fn canonicalize(&self, path: &Path) -> Option<PathBuf> {
+            Some(path.to_path_buf())
         }
 
         async fn extract_zip(&self, _: &Path, _: &Path, _: &[String]) -> CoreResult<usize> {

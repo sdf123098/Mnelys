@@ -10,7 +10,7 @@ use mnelys_application::mirrors::MirrorPolicy;
 use mnelys_application::ports::{HttpClient, JavaProvider, LoaderProvider};
 use mnelys_application::{
     AccountService, ContentService, GamePaths, InstallService, InstanceService, LaunchService,
-    LogService, MetadataService, SettingsStore, TaskRegistry,
+    LogService, MetadataService, SettingsStore, TaskRegistry, WorkspaceService,
 };
 
 /// Everything the command surface can reach.
@@ -24,6 +24,7 @@ pub struct CoreServices {
     pub launch: Arc<LaunchService>,
     pub accounts: Arc<AccountService>,
     pub content: Arc<ContentService>,
+    pub workspace: Arc<WorkspaceService>,
     pub java: Arc<dyn JavaProvider>,
     pub loaders: Arc<dyn LoaderProvider>,
     pub mirrors: MirrorPolicy,
@@ -90,6 +91,11 @@ impl CoreState {
     #[must_use]
     pub fn content(&self) -> &Arc<ContentService> {
         &self.services.content
+    }
+
+    #[must_use]
+    pub fn workspace(&self) -> &Arc<WorkspaceService> {
+        &self.services.workspace
     }
 
     #[must_use]

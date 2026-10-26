@@ -9,18 +9,19 @@
 use std::sync::Arc;
 
 use mnelys_application::ports::{
-    FileStore, GameRunner, HttpClient, InstanceRepository, JavaProvider, LoaderProvider,
-    SecretStore,
+    EntryRevealer, FileStore, GameRunner, HttpClient, InstanceRepository, JavaProvider,
+    LoaderProvider, SecretStore,
 };
 use mnelys_application::{
     AccountService, AppSettings, ContentRegistry, ContentService, GamePaths, InstallService,
     InstanceService, LaunchService, LogLevel, LogService, MetadataService, MicrosoftConfig,
-    MirrorPolicy, SettingsStore, TaskRegistry,
+    MirrorPolicy, SettingsStore, TaskRegistry, WorkspaceService,
 };
 use mnelys_infrastructure::{
-    default_root, CurseForgeProvider, JsonAccountRepository, JsonInstanceRepository,
-    JsonSettingsStore, KeyringSecretStore, LocalFileStore, LocalJavaProvider, MemoryLogStore,
-    MetaLoaderProvider, ModrinthProvider, ReqwestHttp, TokioGameRunner,
+    default_root, CurseForgeProvider, DesktopRevealer, JsonAccountRepository,
+    JsonInstanceRepository, JsonSettingsStore, KeyringSecretStore, LocalFileStore,
+    LocalJavaProvider, MemoryLogStore, MetaLoaderProvider, ModrinthProvider, ReqwestHttp,
+    TokioGameRunner,
 };
 use mnelys_presentation::{CoreServices, CoreState};
 
@@ -202,6 +203,14 @@ fn build_state(logs: &LogService) -> CoreState {
         Arc::clone(&clock),
     ));
 
+    let reveal: Arc<dyn EntryRevealer> = Arc::new(DesktopRevealer::new());
+    let workspace = Arc::new(WorkspaceService::new(
+        Arc::clone(&files),
+        paths.clone(),
+        Arc::clone(&instances),
+        reveal,
+    ));
+
     CoreState::new(CoreServices {
         logs: logs.clone(),
         paths,
@@ -212,6 +221,7 @@ fn build_state(logs: &LogService) -> CoreState {
         launch,
         accounts,
         content,
+        workspace,
         java,
         loaders,
         mirrors,
