@@ -138,6 +138,12 @@ impl GamePaths {
         self.root.join("exports")
     }
 
+    /// Where redacted diagnosis bundles are written.
+    #[must_use]
+    pub fn diagnostics_dir(&self) -> PathBuf {
+        self.root.join("diagnostics")
+    }
+
     #[must_use]
     pub fn settings_file(&self) -> PathBuf {
         self.root.join("settings.json")
@@ -167,6 +173,16 @@ mod tests {
         assert_eq!(
             paths.version_json("1.21.4"),
             PathBuf::from("/data/versions/1.21.4/1.21.4.json")
+        );
+    }
+
+    #[test]
+    fn diagnosis_bundles_are_written_below_their_own_directory() {
+        let paths = GamePaths::new("/data");
+        assert_eq!(
+            paths.diagnostics_dir(),
+            PathBuf::from("/data/diagnostics"),
+            "a bundle must not land next to the instances it describes"
         );
     }
 }

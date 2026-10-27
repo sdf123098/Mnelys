@@ -5,6 +5,7 @@
 
 pub mod accounts;
 pub mod content;
+pub mod diagnostics;
 pub mod install;
 pub mod instances;
 pub mod launch;
@@ -13,6 +14,7 @@ pub mod metadata;
 pub mod mirrors;
 pub mod paths;
 pub mod ports;
+pub mod redact;
 pub mod settings;
 pub mod tasks;
 pub mod util;
@@ -22,6 +24,9 @@ pub use accounts::{AccountService, MicrosoftConfig};
 pub use content::{
     ContentInstallReport, ContentManifest, ContentRegistry, ContentService, ExportedInstance,
     InstalledContent, InstanceExport,
+};
+pub use diagnostics::{
+    analyze, render_bundle, BundleContext, DiagnosisInput, DiagnosticService, SourceLine,
 };
 pub use install::{InstallReport, InstallService};
 pub use instances::{InstanceService, InstanceSummary, UpdateInstance};
@@ -36,6 +41,7 @@ pub use ports::{
     HttpClient, HttpMethod, HttpRequest, HttpResponse, JavaProvider, LoaderInstallContext,
     LoaderProvider, NullReporter, SecretStore, SystemClock,
 };
+pub use redact::redact;
 pub use settings::{AppSettings, SettingsStore};
 pub use tasks::{TaskHandle, TaskRegistry, TaskReporter};
 pub use workspace::{

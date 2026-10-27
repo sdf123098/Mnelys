@@ -5,6 +5,7 @@
 
 pub mod account;
 pub mod content;
+pub mod diagnostic;
 pub mod download;
 pub mod error;
 pub mod instance;
@@ -20,6 +21,10 @@ pub use account::{
 pub use content::{
     ContentDependency, ContentFile, ContentKind, ContentProject, ContentProviderId,
     ContentSearchPage, ContentVersion, DependencyKind,
+};
+pub use diagnostic::{
+    DiagnosisReport, DiagnosticEvidence, DiagnosticFinding, DiagnosticId, DiagnosticSeverity,
+    DiagnosticsBundle, EvidenceSource,
 };
 pub use download::{DownloadItem, DownloadKind, DownloadPlan};
 pub use error::{CoreError, CoreErrorCode, CoreResult};
