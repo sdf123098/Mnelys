@@ -544,7 +544,7 @@ mod tests {
         async fn list(&self, path: &Path) -> CoreResult<Vec<DirEntry>> {
             let mut children: BTreeMap<String, (bool, u64)> = BTreeMap::new();
             for (key, body) in &self.bodies {
-                if let Some(relative) = key.strip_prefix(path) {
+                if let Ok(relative) = key.strip_prefix(path) {
                     if let Some(first) = relative.components().next() {
                         let name = first.as_os_str().to_string_lossy().into_owned();
                         let is_dir = relative.components().count() > 1;
@@ -554,7 +554,7 @@ mod tests {
                 }
             }
             for directory in &self.directories {
-                if let Some(relative) = directory.strip_prefix(path) {
+                if let Ok(relative) = directory.strip_prefix(path) {
                     if let Some(first) = relative.components().next() {
                         children
                             .insert(first.as_os_str().to_string_lossy().into_owned(), (true, 0));
@@ -663,9 +663,9 @@ mod tests {
     fn harness(files: FakeFiles) -> Harness {
         let paths = GamePaths::new("/data");
         let files: Arc<FakeFiles> = Arc::new(files);
-        let store: Arc<dyn FileStore> = Arc::clone(&files);
+        let store: Arc<dyn FileStore> = files.clone();
         let revealer: Arc<FakeRevealer> = Arc::new(FakeRevealer::default());
-        let show: Arc<dyn EntryRevealer> = Arc::clone(&revealer);
+        let show: Arc<dyn EntryRevealer> = revealer.clone();
         let mut repo = FakeRepo::default();
         repo.records.insert(String::from("main"), instance_record());
         let instances = Arc::new(InstanceService::new(

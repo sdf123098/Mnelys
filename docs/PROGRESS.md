@@ -170,7 +170,8 @@
 - 新增与改写用例：`src/routes/core-backed-routes.test.tsx` 覆盖"标签浏览限定类型 / 关键词跨类型命中并给出说明 / 世界体积与目录确认文案 / 崩溃报告 landmark → 读取尾部 → 截断提示 / 文件面板进入目录 / 投影子目录体积"。
 - 本轮本地验证：`tsc --noEmit` 零错、`eslint .` 零告警、`prettier --check .` 全绿、`vitest run` 9 个文件 43 个用例全部通过；`vite build` 产物 JS 742.04 kB（gzip 226.07 kB）、CSS 46.50 kB（gzip 7.32 kB），仍只有 >500 kB 分块提示。
 - 界面实走：临时注入 mock 核心后用浏览器逐面板确认（导航顺序、内容标签与跨种类搜索、世界 1.0 GiB、日志两个子列表、文件层级返回、投影子目录），确认后端上脚手架（`preview.html`、`src/dev/`）已删除。
-- 仍待远端确认：Rust 侧的 workspace / files / reveal 代码在本机无法编译（缺 MSVC 链接器），契约 v4 与 46 条命令的编译、`contract.rs` 校验与三平台打包必须在推送后由 GitHub Actions 给出结论。
+- 远端验证与回修：推送后的 CI run [40362676279](https://github.com/sdf123098/Mnelys/actions/runs/40362676279) 前端检查通过，`Rust (windows|macos|ubuntu)` 三个任务全部失败——`cargo clippy --workspace --all-targets -- -D warnings` 报 5 处：`workspace.rs:547/557` 把 `Path::strip_prefix` 的 `Result` 当作 `Option` 解构（E0308 ×2）、`workspace.rs:666/668` 用 `Arc::clone(&Arc<FakeFiles>)` 去满足 `&Arc<dyn FileStore>`（E0308 ×2）、`reveal.rs:8` 的 `PathBuf` 只在测试模块用到却在顶层导入（unused import）。三平台的 `cargo test` 因此根本没跑到，契约 v4 与 46 条命令的校验仍是空白。
+- 回修后本机找到了可行的 Rust 校验路径：用已装的 `stable-x86_64-pc-windows-gnu` 工具链并把 `/c/msys64/ucrt64/bin` 加进 `PATH`（默认的 msvc 目标会被 Git Bash 的 coreutils `link` 抢掉链接器），`clippy --workspace --all-targets -- -D warnings` 五个 crate 全过、退出码 0；`cargo test -p mnelys-domain -p mnelys-application -p mnelys-infrastructure` 121 项通过（33 / 34 / 54，含本轮新增的 13 项 workspace 测试）。`mnelys-presentation` 与 `src-tauri` 的测试二进制在 GNU 目标上仍以 `0xC0000139` 起不来，那部分只能由 Actions 给结论。
 
 ## 已完成
 

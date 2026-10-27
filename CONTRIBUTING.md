@@ -42,4 +42,11 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 ```
 
+Under Git Bash on Windows, `link.exe` resolves to the coreutils `link` command and MSVC builds die with "link: extra operand". The GNU toolchain links against MSYS2's gcc instead, which makes the Rust checks runnable locally:
+
+```bash
+PATH="/c/msys64/ucrt64/bin:$PATH" CARGO_TARGET_DIR=target-gnu \
+  cargo +stable-x86_64-pc-windows-gnu clippy --workspace --all-targets -- -D warnings
+```
+
 Warnings are errors in CI. `src-tauri/tests/contract.rs` reads the TypeScript command and error definitions directly; if you change `src/ipc/commands.ts` or `src/ipc/errors.ts`, update the Rust side in the same commit or that test will fail.

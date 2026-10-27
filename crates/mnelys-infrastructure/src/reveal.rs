@@ -5,7 +5,7 @@
 //! `explorer` on Windows reports a non-zero status even when it did the job, so waiting
 //! for it would turn a successful reveal into an error.
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use mnelys_application::ports::EntryRevealer;
 use mnelys_domain::{CoreError, CoreResult};
@@ -50,6 +50,7 @@ fn reveal_command(path: &Path) -> (&'static str, Vec<String>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::PathBuf;
 
     #[test]
     fn one_path_never_becomes_two_arguments() {
