@@ -174,6 +174,13 @@ export const core = {
   ): Promise<CommandResult<'reveal_instance_entry'>> =>
     call('reveal_instance_entry', { instanceId, path }),
 
+  diagnoseInstance: (instanceId: string): Promise<CommandResult<'diagnose_instance'>> =>
+    call('diagnose_instance', { instanceId }),
+  exportInstanceDiagnostics: (
+    instanceId: string,
+  ): Promise<CommandResult<'export_instance_diagnostics'>> =>
+    call('export_instance_diagnostics', { instanceId }),
+
   tasks: (): Promise<CommandResult<'list_tasks'>> => call('list_tasks', {}),
   cancelTask: (id: string): Promise<CommandResult<'cancel_task'>> => call('cancel_task', { id }),
 } as const;

@@ -105,6 +105,106 @@
     "instancesTitle": "最近的實例",
     "instancesBody": "你最近啟動過的實例。"
   },
+  "diagnosis": {
+    "title": "上次執行的診斷",
+    "body": "核心會讀取啟動記錄、最新的當機報告以及程序的結束狀況，並依固定規則比對。任何資訊都不會離開本機。",
+    "rerun": "重新執行",
+    "failed": "無法讀取診斷結果。",
+    "sessionTitle": "上次啟動",
+    "sessionNone": "尚未記錄任何啟動",
+    "exitCode": "結束碼 {{code}}",
+    "analyzedTitle": "已讀取行數",
+    "analyzed": "{{lines}} 行",
+    "truncated": "記錄檔比讀取的範圍更長。",
+    "crashTitle": "當機報告",
+    "findingsTitle": "發現的問題",
+    "emptyTitle": "沒有命中任何規則",
+    "emptyBody": "記錄中沒有已知故障的特徵，請自行檢視記錄。",
+    "exportTitle": "診斷包",
+    "export": "儲存診斷包",
+    "exported": "已寫入 {{path}}（{{size}}）。",
+    "exportFailed": "無法寫入診斷包。",
+    "privacy": "路徑、位址、權杖與玩家暱稱在寫入前都會被遮罩，因此可以安心傳給他人求助。",
+    "severities": {
+      "critical": "阻礙",
+      "warning": "警告",
+      "notice": "提示"
+    },
+    "sources": {
+      "launchLog": "啟動記錄",
+      "crashReport": "當機報告",
+      "exitCode": "程序結束",
+      "instanceConfig": "執行個體記錄"
+    },
+    "states": {
+      "running": "執行中",
+      "exited": "已結束",
+      "failed": "無法讀取狀態",
+      "stopped": "已停止"
+    },
+    "params": {
+      "required": "需要",
+      "supported": "支援",
+      "subtype": "類型",
+      "target": "對象",
+      "mod": "模組",
+      "code": "結束碼"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "Java 版本低於此建置的需求",
+        "fix": "請在「一般」把 Java 路徑改成記錄要求的版本，或到「下載」安裝更新的執行環境。"
+      },
+      "out-of-memory": {
+        "title": "遊戲記憶體不足",
+        "fix": "在設定中提高記憶體上限，或移除部分模組並調降視距。"
+      },
+      "duplicate-mod": {
+        "title": "同一個模組裝了兩份",
+        "fix": "打開「內容」，刪除證據中那個文件的其中一份，然後重新啟動。"
+      },
+      "missing-dependency": {
+        "title": "模組缺少它需要的東西",
+        "fix": "在「內容」中搜尋記錄提到的函式庫，並安裝到此執行個體。"
+      },
+      "mixin-failure": {
+        "title": "模組無法改寫遊戲",
+        "fix": "模組與遊戲或載入器的版本不符，請將其中一方升級到相同版本。"
+      },
+      "class-loading-failure": {
+        "title": "無法載入某個類別",
+        "fix": "通常是模組不適用於目前載入器或版本，也可能是殘留的核心檔案；請刪除證據指出的檔案。"
+      },
+      "loader-install-incomplete": {
+        "title": "載入器安裝不完整",
+        "fix": "請重新安裝此執行個體；版本檔案或其函式庫遺失。"
+      },
+      "disk-full": {
+        "title": "磁碟空間不足",
+        "fix": "清理執行個體所在磁碟的空間，然後重新安裝。"
+      },
+      "permission-denied": {
+        "title": "無法寫入檔案",
+        "fix": "關閉佔用該資料夾的程序，並把執行個體移到不需要管理員權限的位置。"
+      },
+      "network-failure": {
+        "title": "下載未完成",
+        "fix": "檢查網路，在設定裡換一個鏡像站，然後重試下載。"
+      },
+      "abnormal-exit": {
+        "title": "程序異常結束",
+        "fix": "遊戲並非正常關閉，請閱讀證據下方記錄的最後幾行。"
+      },
+      "crash-report-present": {
+        "title": "已產生當機報告",
+        "fix": "請在「日誌」面板開啟它，原因章節會指出出問題的模組或存檔。"
+      },
+      "unexplained-failure": {
+        "title": "沒有規則能解釋這次執行",
+        "fix": "記錄中沒有已知故障的特徵，請把記錄末尾與診斷包一併傳給能協助你的人。"
+      }
+    }
+  },
   "instances": {
     "heading": "實例",
     "description": "每個實例擁有獨立的遊戲目錄、模組、世界、Java 選擇與日誌。",
@@ -175,6 +275,7 @@
       "content": "內容",
       "worlds": "世界存档",
       "schematics": "投影",
+      "diagnosis": "診斷",
       "logs": "日誌",
       "files": "檔案",
       "export": "匯出與刪除"

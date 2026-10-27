@@ -1,7 +1,7 @@
 # Mnelys 项目进度
 
 - 最后更新：2026-10-27
-- 当前阶段：M1–M6 核心能力已落地（账户、实例、下载安装、加载器、内容平台与启动管线）；桌面运行时、三平台打包证据与签名仍未关闭
+- 当前阶段：M1–M6 核心能力已落地（账户、实例、下载安装、加载器、内容平台与启动管线），M9 阶段一的本地确定性崩溃诊断与脱敏导出已接入界面；桌面运行时、三平台打包证据与签名仍未关闭
 - 状态：可构建、可测试；桌面交互验证与发布产物以 GitHub Actions 为权威路径
 
 ## 当前快照
@@ -19,7 +19,7 @@
 | 前端构建与路由 | Vite + `createHashRouter`（hash 路由，三平台 WebView 一致）                                                           |
 | 前端状态与样式 | TanStack Query + Zustand；CSS Modules 与语义 Token                                                                    |
 | Rust 分层      | Cargo workspace：domain / application / infrastructure / presentation；`src-tauri` 为组合根                           |
-| 命令契约       | v4，46 条命令；`src-tauri/tests/contract.rs` 校验前后端命令集、错误码与版本                                           |
+| 命令契约       | v5，48 条命令；`src-tauri/tests/contract.rs` 校验前后端命令集、错误码、诊断规则与版本                                 |
 | 持续集成       | GitHub Actions：前端检查、三平台 Rust 矩阵、三平台桌面打包（手动或标签触发）                                          |
 | 本地化         | 10 套目录：`en` / `zh-Hans` / `zh-Hant` / `ja` / `ko` / `fr` / `de` / `es` / `pt-BR` / `ru`；键集必须与 `en` 完全一致 |
 | 主题           | 浅色 / 深色 / 跟随系统；默认强调色为品牌粉 `#C2185B`，支持预设与自定义十六进制色                                      |
@@ -174,6 +174,24 @@
 - 回修后本机找到了可行的 Rust 校验路径：用已装的 `stable-x86_64-pc-windows-gnu` 工具链并把 `/c/msys64/ucrt64/bin` 加进 `PATH`（默认的 msvc 目标会被 Git Bash 的 coreutils `link` 抢掉链接器），`clippy --workspace --all-targets -- -D warnings` 五个 crate 全过、退出码 0；`cargo test -p mnelys-domain -p mnelys-application -p mnelys-infrastructure` 121 项通过（33 / 34 / 54，含本轮新增的 13 项 workspace 测试）。`mnelys-presentation` 与 `src-tauri` 的测试二进制在 GNU 目标上仍以 `0xC0000139` 起不来，那部分只能由 Actions 给结论。
 - CI run [40438919132](https://github.com/sdf123098/Mnelys/actions/runs/40438919132)（`b6cf753`）：前端检查、`Rust (windows-latest)`、`Rust (ubuntu-latest)` 全部通过，macOS 的 Clippy 也已通过（证明 5 处编译错误修干净了），`cargo test` 里 `contract.rs` 3 项通过 ⇒ **契约 v4 与 46 条命令的跨语言校验成立**。唯一失败是本轮自己写的断言：`reveal.rs:60` 无条件要求"参数向量的长度是 1"，而 macOS 分支返回的是 `("open", ["-R", path])`——标志与路径各占一个元素；Windows（`/select,路径`）与 Linux（`xdg-open 父目录`）恰好都是一个参数，所以只有 macOS 暴露。断言改为按平台比对整个参数向量，顺带把三平台的程序名钉住；被测试的 `reveal_command` 本身没有错。
 - 本机 GNU 环境只能实际执行 `cfg!(target_os = "windows")` 那一条分支，Linux 与 macOS 的新期望是照实现逐行核对写的，要等下一次 Actions 才算真跑过。
+- CI run [40441141145](https://github.com/sdf123098/Mnelys/actions/runs/40441141145)（`caf1c65`）**四个任务全部通过**：前端检查、Windows / Ubuntu / macOS 的 fmt + clippy + test。契约 v4 与 46 条命令的校验、13 项新增 workspace 测试自此在三平台均有证据成立，Rust 侧不再有待验证项。
+- 产物已在同一 HEAD 重打：[Desktop packages run 40441152472](https://github.com/sdf123098/Mnelys/actions/runs/40441152472)（手动 dispatch，三平台作业全绿，工件保留至 2026-11-10）——`mnelys-windows-x64-unsigned` 6 898 873 B、`mnelys-macos-arm64-unsigned` 6 757 665 B、`mnelys-linux-x64-unsigned` 81 749 912 B。Windows 已下载到 `artifacts/ci-caf1c65/`：`bundle/nsis/Mnelys_0.1.0_x64-setup.exe` 3 183 023 B（SHA-256 `CA8B490B…9CC083AB`）、便携 `mnelys.exe` 6 951 936 B（`12C27017…47F44755`），两者均确认是 PE。相较上一版（setup 3 140 080 B / 便携 6 827 008 B）体积随新面板增长。**仍未安装、未启动**：冷启动、真机运行时行为、实例文件面板在真实目录下的读取都还是空缺，且这些包未签名。
+
+## 2026-10-27 M9 阶段一：本地崩溃诊断、脱敏与诊断包
+
+对应计划 §19.1（确定性规则）与 §19.3（脱敏后再出门）。全部判定在核心里，界面只负责把 id 翻成话。
+
+- 规则引擎的词汇表在 `crates/mnelys-domain/src/diagnostic.rs`：13 条规则 id（kebab wire 串）、3 档严重度（`critical` / `warning` / `notice`，按 rank 排序）、4 种证据来源（`launchLog` / `crashReport` / `exitCode` / `instanceConfig`）。
+- 判定在 `crates/mnelys-application/src/diagnostics.rs`：10 条片段规则扫启动日志与崩溃报告（Java 版本不符、OutOfMemory、模组重复、缺依赖、Mixin、类加载、加载器安装不完整、磁盘满、权限、网络），加两组不看文本的结构判定——配置事实（实例未安装却启动过）与退出形态（`Failed` / 非零退出码 / 137 视为内存嫌疑）；只有当全部发现都是结构性判定时才追加 `unexplained-failure`，避免把"没读懂"说成"没问题"。
+- 界面拿到的是 id + 机器值，不是句子：13 条规则的 `title` / `fix` 文案 100% 在语言目录里，`diagnosis.params.*` 把 `required` / `supported` / `subtype` / `target` / `mod` / `code` 作为**事实行**列在旁边而不是插进句子里——规则读不到数字时那一行就不出现，屏幕上不会留下 `{{required}}` 或占位破折号。同理，核心不再自制英文句子当证据摘录：`installed=false version_id=…`、`state=failed code=unknown`、`lines=… matched=0` 这类机器串才有跨语言性。
+- §19.3 脱敏在核心内一次完成（`crates/mnelys-application/src/redact.rs`）：`redact(text, literals)` 依次掩 19 个密钥名（`Authorization: Bearer <token>` 连方案名一起掩）、`--server <地址>`、家目录、IPv4、UUID 与调用方传入的账户字面量，占位符固定为 `<redacted>` `<HOME>` `<IP>` `<UUID>`。证据摘录、崩溃报告路径、日志尾与诊断包正文都先过它再离开核心；取向是宁可多掩——`token` 这类词后面紧跟的单词即使没有 `:` `=` 分隔也会被掩，测试里把这条写成了期望。
+- 诊断包：`render_bundle` 渲染成 Markdown（实例与会话事实、发现列表带参数与证据定位、日志尾 ≤200 行、崩溃报告走 `read_log` 的尾部窗口），写到 `<数据根>/diagnostics/<实例id>-<毫秒>.md`；`crates/mnelys-application/src/paths.rs` 新增 `diagnostics_dir()`，写入复用 `write_atomic`（父目录自动创建）。命令只回 `{path, sizeBytes, findings}`，与 `export_instance` 同形，界面上照旧只是把路径显示出来。
+- 命令契约 v4 → v5：新增 `diagnose_instance` / `export_instance_diagnostics`，共 48 条；`src-tauri/tests/contract.rs` 多一项校验——Rust 侧 13 条规则 id 必须逐条出现在 `src/ipc/commands.ts`，改名不再只靠人盯。
+- 界面入口是第一级的：实例设置对话框导航由七项变八项，"诊断"紧跟"日志"（`src/components/ui/Icon.tsx` 注册 `diagnosis` → Lucide `Stethoscope`）。`src/components/InstanceDiagnosisPanel.tsx` 三段：上次运行的事实行（会话状态与退出码、读取行数按界面语言分组、崩溃报告、截断提示 + 重新运行）、发现列表（严重度徽标 + 标题 + 处置建议 + 参数事实 + 证据路径行号与摘录）、导出块（隐私说明 + 结果路径与体积）。`useInstanceDiagnosis` 复用日志轮询的 `staleTime`，导出成功后失效核心日志（写包会在核心日志里留一行）。
+- 目录：`diagnosis.*` 共 62 键 × 10 语言，另加 `instances.settingsCategory.diagnosis`；扁平化后每套 471 键，`src/i18n/catalogs.test.ts` 奇偶校验通过，并新增一条断言 `en.diagnosis.rules` 的键集与 `DIAGNOSIS_IDS` **双向**严格相等，防止核心删了规则而目录留着旧条目。
+- 测试：`mnelys-domain` 38、`mnelys-application` 67（其中 `diagnostics.rs` 18 项、`redact.rs` 15 项）、`mnelys-infrastructure` 54，共 159 项通过；前端 9 个文件 45 个用例，新增 `diagnoses the last run and exports a bundle` 用 `mockIPC` 断言规则标题、`Blocking` 徽标、`java heap space` 事实行、`latest.log:128` 证据定位与导出后的 `Written to … (2.0 KiB).`。
+- 本机验证：`tsc --noEmit` 零错、`eslint .` 零告警、`prettier --check .` 全绿、`vitest run` 45/45；`vite build` 产物 JS 784.72 kB（gzip 239.05 kB）、CSS 46.50 kB（gzip 7.32 kB），仍只有 >500 kB 分块提示。Rust 侧走 GNU 工具链（`stable-x86_64-pc-windows-gnu` + `/c/msys64/ucrt64/bin` 前置 PATH）：`cargo fmt --all --check` 通过，`cargo clippy --workspace --all-targets -- -D warnings` 五个 crate 退出码 0（说明 presentation 与 `src-tauri` 也编译得过 v5 的 48 条命令面），三个核心 crate 159 项测试通过。
+- 本机仍给不出结论的部分：`mnelys-presentation` 与 `src-tauri` 的测试二进制在 GNU 目标以 `0xC0000139` 起不来 ⇒ **契约 v5、48 条命令与 13 条规则 id 的跨语言校验要等 Actions**；真实崩溃语料上的规则命中率、诊断包在真实数据根下的落盘、以及 M9 阶段二（把结构化发现交给模型）都还没做——后者的供给链决定仍是计划 §36 第 5 项未冻结的内容。
 
 ## 已完成
 
@@ -240,6 +258,16 @@
 - [ ] CurseForge 与 Microsoft 登录的端到端验证（需要仓库外 API key 与 Azure 客户端）。
 - [ ] 世界、光影与资源包在真实实例中的回归验证。
 
+### 崩溃诊断（M9 阶段一，本地确定性）
+
+- [x] 13 条规则 id、3 档严重度、4 种证据来源的 wire 词表（`crates/mnelys-domain/src/diagnostic.rs`）。
+- [x] 规则引擎与结构判定（Java 版本、内存、模组重复 / 缺依赖、Mixin、类加载、加载器安装、磁盘、权限、网络、退出形态、崩溃报告存在）。
+- [x] §19.3 脱敏：密钥名、`--server` 地址、家目录、IPv4、UUID 与账户字面量，占位符统一，测试钉住"宁可多掩"的取向。
+- [x] 诊断包导出到 `<数据根>/diagnostics/`，命令只回路径 / 体积 / 发现数。
+- [x] 实例设置对话框的"诊断"面板与 10 套语言目录同步；规则 id 与前端声明由 `contract.rs` 校验。
+- [ ] 真实崩溃语料上的命中率与误报率（需要一批真实 crash / latest.log 样本）。
+- [ ] M9 阶段二：把结构化发现交给模型；供给链选择仍未冻结（计划 §36 第 5 项）。
+
 ### 上一轮 Avalonia 基线（已弃用，仅作存档）
 
 - [x] .NET 10 / C# 14 / Avalonia 12 版本锁定与不透明无 Mica Shell。
@@ -279,7 +307,8 @@
 1. 在开发者机器上安装 CI 产出的三平台未签名包，记录冷启动与首屏数据；后续平台差异仍由 `CI` 与 `Desktop packages` 兜底。
 2. 在具备图形桌面的 Windows / macOS / Linux 环境补做真实窗口的 100%～200% DPI、缩放、窗口装饰与视觉回归；CI 的无头打包不能替代这一步。
 3. 用真实账户与网络完成一次 Vanilla 和一种加载器实例的端到端启动，补齐 M2–M6 的运行证据。
-4. 根据实测结果决定首个 0.2 预发布范围；在此之前不发布中间版本。
+4. 收集一批真实崩溃样本（各加载器、各 Java 版本、缺依赖与内存不足），用它们给 M9 的 13 条规则做命中率与误报率回归；规则表的片段是按典型日志写的，没有语料就谈不上"准确"。
+5. 根据实测结果决定首个 0.2 预发布范围；在此之前不发布中间版本。
 
 目标平台打包由 CI 产出，但启动冒烟、DPI 与 Apple 签名/公证仍需对应的真实桌面环境和仓库外凭据。CI 产物是未签名的测试构建，不是正式版本。
 

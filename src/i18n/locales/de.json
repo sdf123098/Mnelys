@@ -105,6 +105,106 @@
     "instancesTitle": "Letzte Instanzen",
     "instancesBody": "Die zuletzt gestarteten Instanzen."
   },
+  "diagnosis": {
+    "title": "Diagnose des letzten Starts",
+    "body": "Der Kern liest das Startprotokoll, den neuesten Abbruchbericht und das Prozessende und gleicht sie mit festen Regeln ab. Nichts verlässt dieses Gerät.",
+    "rerun": "Erneut ausführen",
+    "failed": "Die Diagnose konnte nicht gelesen werden.",
+    "sessionTitle": "Letzter Start",
+    "sessionNone": "Noch kein Start erfasst",
+    "exitCode": "Exit-Code {{code}}",
+    "analyzedTitle": "Gelesene Zeilen",
+    "analyzed": "{{lines}} Zeilen",
+    "truncated": "Das Protokoll ist länger als das gelesene Fenster.",
+    "crashTitle": "Abbruchbericht",
+    "findingsTitle": "Was gefunden wurde",
+    "emptyTitle": "Keine Regel getroffen",
+    "emptyBody": "Nichts im Protokoll passte zu einem bekannten Fehler. Sieh das Protokoll selbst an.",
+    "exportTitle": "Diagnosepaket",
+    "export": "Paket speichern",
+    "exported": "Geschrieben nach {{path}} ({{size}}).",
+    "exportFailed": "Das Paket konnte nicht geschrieben werden.",
+    "privacy": "Pfade, Adressen, Tokens und Spielernamen werden vor dem Schreiben maskiert, damit du das Paket gefahrlos zum Helfen verschicken kannst.",
+    "severities": {
+      "critical": "Blockierend",
+      "warning": "Warnung",
+      "notice": "Hinweis"
+    },
+    "sources": {
+      "launchLog": "Startprotokoll",
+      "crashReport": "Abbruchbericht",
+      "exitCode": "Prozessende",
+      "instanceConfig": "Instanzdatensatz"
+    },
+    "states": {
+      "running": "Läuft",
+      "exited": "Beendet",
+      "failed": "Zustand unlesbar",
+      "stopped": "Angehalten"
+    },
+    "params": {
+      "required": "Erforderlich",
+      "supported": "Unterstützt",
+      "subtype": "Art",
+      "target": "Betroffen",
+      "mod": "Mod",
+      "code": "Exit-Code"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "Java ist zu alt für diese Build",
+        "fix": "Wähle in „Allgemein“ einen Java-Pfad mit der Version, die das Protokoll verlangt, oder installiere unter „Downloads“ eine neuere Laufzeit."
+      },
+      "out-of-memory": {
+        "title": "Dem Spiel fehlte Speicher",
+        "fix": "Erhöhe das Speicherlimit in den Einstellungen, entferne Mods oder verringere die Sichtweite."
+      },
+      "duplicate-mod": {
+        "title": "Dieselbe Mod ist zweimal installiert",
+        "fix": "Öffne „Inhalte“, entferne eine der Dateien aus dem Nachweis und starte erneut."
+      },
+      "missing-dependency": {
+        "title": "Einer Mod fehlt etwas",
+        "fix": "Suche in „Inhalte“ die Bibliothek, die das Protokoll nennt, und installiere sie für diese Instanz."
+      },
+      "mixin-failure": {
+        "title": "Eine Mod konnte das Spiel nicht anpassen",
+        "fix": "Mod und Spiel- oder Loader-Version passen nicht zusammen. Aktualisiere eine davon auf dieselbe Version."
+      },
+      "class-loading-failure": {
+        "title": "Eine Klasse ließ sich nicht laden",
+        "fix": "Meist eine Mod für einen anderen Loader oder Stand, oder eine übrig gebliebene Kern-Datei. Entferne die im Nachweis genannte Datei."
+      },
+      "loader-install-incomplete": {
+        "title": "Loader-Installation unvollständig",
+        "fix": "Installiere diese Instanz erneut; die Versionsdatei oder ihre Bibliotheken fehlen."
+      },
+      "disk-full": {
+        "title": "Kein Platz mehr auf der Festplatte",
+        "fix": "Gib dem Laufwerk mit den Instanzen mehr Platz und installiere erneut."
+      },
+      "permission-denied": {
+        "title": "Eine Datei ließ sich nicht schreiben",
+        "fix": "Schließe alles, was den Ordner blockiert, und lege die Instanz außerhalb eines Administrator-Ordners ab."
+      },
+      "network-failure": {
+        "title": "Ein Download brach ab",
+        "fix": "Prüfe die Verbindung, wähle in den Einstellungen einen anderen Spiegel und versuche es erneut."
+      },
+      "abnormal-exit": {
+        "title": "Der Prozess endete ungewöhnlich",
+        "fix": "Das Spiel wurde nicht sauber beendet. Lies die letzten Zeilen des Protokolls unter dem Nachweis."
+      },
+      "crash-report-present": {
+        "title": "Ein Abbruchbericht wurde geschrieben",
+        "fix": "Öffne ihn im Bereich „Protokolle“; der Abschnitt zur Ursache nennt die Mod oder die Welt."
+      },
+      "unexplained-failure": {
+        "title": "Keine Regel erklärt diesen Start",
+        "fix": "Im Protokoll fand sich kein bekannter Fehler. Protokollende und Diagnosepaket sind das, was jemand zur Hilfe braucht."
+      }
+    }
+  },
   "instances": {
     "heading": "Instanzen",
     "description": "Jede Instanz besitzt ihr eigenes Spielverzeichnis, ihre Mods, Welten, Java-Auswahl und Protokolle.",
@@ -175,6 +275,7 @@
       "content": "Inhalte",
       "worlds": "Welten",
       "schematics": "Schematics",
+      "diagnosis": "Diagnose",
       "logs": "Protokolle",
       "files": "Dateien",
       "export": "Exportieren und löschen"

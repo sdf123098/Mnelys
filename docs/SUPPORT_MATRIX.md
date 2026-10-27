@@ -1,7 +1,7 @@
 # Support matrix
 
-Status: M6 core baseline (Tauri v2)
-Last updated: 2026-10-26
+Status: M6 core baseline plus M9 phase-one local diagnosis (Tauri v2)
+Last updated: 2026-10-27
 
 ## Platforms
 
@@ -45,23 +45,24 @@ Tier meanings:
 - Tier C: experimental and may require advanced settings.
 - Tier D: recognized or reserved without a runtime guarantee.
 
-| Capability                  | Tier | Current state                                                                                       |
-| --------------------------- | ---: | --------------------------------------------------------------------------------------------------- |
-| Vanilla install and launch  |    B | Implemented end to end; real-desktop smoke evidence still pending                                   |
-| Offline accounts            |    B | Implemented with Java-compatible MD5 v3 UUIDs                                                       |
-| Microsoft device-code login |    C | Implemented; requires `MNELYS_MS_CLIENT_ID` and a real account for end-to-end evidence              |
-| Yggdrasil accounts          |    B | Authenticate, refresh, and validate implemented                                                     |
-| Quilt / Legacy Fabric       |    B | Metadata profiles resolved from their official meta APIs                                            |
-| Fabric                      |    B | Metadata profiles resolved from the official meta API                                               |
-| Forge / NeoForge installers |    C | Installer JAR and processor pipeline implemented; version coverage is not yet established           |
-| Modrinth content            |    B | Search, versions, install, list, and remove implemented                                             |
-| CurseForge content          |    C | Implemented; requires `MNELYS_CURSEFORGE_API_KEY` and real-network evidence                         |
-| Content kinds               |    B | Mods, resource packs, shaders, worlds, and datapacks                                                |
-| Mirrors                     |    B | Direct / BMCLAPI / auto; transport may change, upstream SHA-1 never does                            |
-| Instance export / import    |    B | JSON manifest only (2 MiB limit); worlds and user files are not included                            |
-| Java discovery and install  |    B | JAVA_HOME, managed root, platform roots, PATH; Temurin fetched from Adoptium with hash verification |
-| Multiplayer (Terracotta)    |    D | Not implemented                                                                                     |
-| Developer daemon / Gradle   |    D | Not implemented                                                                                     |
-| AI crash diagnostics        |    D | Not implemented                                                                                     |
+| Capability                  | Tier | Current state                                                                                           |
+| --------------------------- | ---: | ------------------------------------------------------------------------------------------------------- |
+| Vanilla install and launch  |    B | Implemented end to end; real-desktop smoke evidence still pending                                       |
+| Offline accounts            |    B | Implemented with Java-compatible MD5 v3 UUIDs                                                           |
+| Microsoft device-code login |    C | Implemented; requires `MNELYS_MS_CLIENT_ID` and a real account for end-to-end evidence                  |
+| Yggdrasil accounts          |    B | Authenticate, refresh, and validate implemented                                                         |
+| Quilt / Legacy Fabric       |    B | Metadata profiles resolved from their official meta APIs                                                |
+| Fabric                      |    B | Metadata profiles resolved from the official meta API                                                   |
+| Forge / NeoForge installers |    C | Installer JAR and processor pipeline implemented; version coverage is not yet established               |
+| Modrinth content            |    B | Search, versions, install, list, and remove implemented                                                 |
+| CurseForge content          |    C | Implemented; requires `MNELYS_CURSEFORGE_API_KEY` and real-network evidence                             |
+| Content kinds               |    B | Mods, resource packs, shaders, worlds, and datapacks                                                    |
+| Mirrors                     |    B | Direct / BMCLAPI / auto; transport may change, upstream SHA-1 never does                                |
+| Instance export / import    |    B | JSON manifest only (2 MiB limit); worlds and user files are not included                                |
+| Java discovery and install  |    B | JAVA_HOME, managed root, platform roots, PATH; Temurin fetched from Adoptium with hash verification     |
+| Multiplayer (Terracotta)    |    D | Not implemented                                                                                         |
+| Developer daemon / Gradle   |    D | Not implemented                                                                                         |
+| Crash diagnosis (local)     |    C | 13 deterministic rules over the launch log, newest crash report and exit status; redacted bundle export |
+| AI crash diagnostics        |    D | Not implemented; the rule ids and redacted evidence above are what a model would be given               |
 
 A capability is promoted only after it has fixtures, automated contract coverage, and platform smoke evidence. Implementation alone does not make a row Tier A.

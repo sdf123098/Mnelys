@@ -105,6 +105,106 @@
     "instancesTitle": "Recent instances",
     "instancesBody": "The instances you launched most recently."
   },
+  "diagnosis": {
+    "title": "Diagnosis of the last run",
+    "body": "The core reads the launch log, the newest crash report and how the process ended, and matches them against fixed rules. Nothing leaves this machine.",
+    "rerun": "Run again",
+    "failed": "The diagnosis could not be read.",
+    "sessionTitle": "Last run",
+    "sessionNone": "No run recorded yet",
+    "exitCode": "exit code {{code}}",
+    "analyzedTitle": "Lines read",
+    "analyzed": "{{lines}} lines",
+    "truncated": "The log is longer than the window that was read.",
+    "crashTitle": "Crash report",
+    "findingsTitle": "What it found",
+    "emptyTitle": "No rule matched",
+    "emptyBody": "Nothing in the log matched a known failure. Read the log itself.",
+    "exportTitle": "Diagnosis bundle",
+    "export": "Save bundle",
+    "exported": "Written to {{path}} ({{size}}).",
+    "exportFailed": "The bundle could not be written.",
+    "privacy": "Paths, addresses, tokens and player names are masked before the bundle is written, so you can post it somewhere for help.",
+    "severities": {
+      "critical": "Blocking",
+      "warning": "Warning",
+      "notice": "Note"
+    },
+    "sources": {
+      "launchLog": "Launch log",
+      "crashReport": "Crash report",
+      "exitCode": "Process exit",
+      "instanceConfig": "Instance record"
+    },
+    "states": {
+      "running": "Running",
+      "exited": "Exited",
+      "failed": "State unreadable",
+      "stopped": "Stopped"
+    },
+    "params": {
+      "required": "Required",
+      "supported": "Supported",
+      "subtype": "Kind",
+      "target": "Subject",
+      "mod": "Mod",
+      "code": "Exit code"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "Java is too old for this build",
+        "fix": "Pick a Java path matching the version the log asks for in General, or install a newer runtime from Downloads."
+      },
+      "out-of-memory": {
+        "title": "The game ran out of memory",
+        "fix": "Raise the memory limit in settings, remove mods, or lower the render distance."
+      },
+      "duplicate-mod": {
+        "title": "The same mod is installed twice",
+        "fix": "Open Content, remove one copy of the file named in the evidence, and launch again."
+      },
+      "missing-dependency": {
+        "title": "A mod is missing something it needs",
+        "fix": "Search Content for the library the log names and install it into this instance."
+      },
+      "mixin-failure": {
+        "title": "A mod could not patch the game",
+        "fix": "The mod and the game or loader version do not line up. Update one of them to the same version."
+      },
+      "class-loading-failure": {
+        "title": "A class could not be loaded",
+        "fix": "Usually a mod built for another loader or version, or a core file left behind. Remove the file the evidence names."
+      },
+      "loader-install-incomplete": {
+        "title": "The loader install is incomplete",
+        "fix": "Install this instance again; the version file or its libraries is missing."
+      },
+      "disk-full": {
+        "title": "There was no room left on disk",
+        "fix": "Free space on the drive holding the instance root, then install again."
+      },
+      "permission-denied": {
+        "title": "A file could not be written",
+        "fix": "Close whatever holds the folder open, and move the instance out of a folder that needs administrator rights."
+      },
+      "network-failure": {
+        "title": "A download did not finish",
+        "fix": "Check the connection, choose another mirror in settings, and retry the download."
+      },
+      "abnormal-exit": {
+        "title": "The process ended abnormally",
+        "fix": "The game closed without a clean stop. Read the last lines of the log under the evidence."
+      },
+      "crash-report-present": {
+        "title": "A crash report was written",
+        "fix": "Open it from the Logs pane; the cause section names the mod or world that failed."
+      },
+      "unexplained-failure": {
+        "title": "No rule explained this run",
+        "fix": "Nothing in the log matched a known failure. The log tail and the bundle are what someone needs to help."
+      }
+    }
+  },
   "instances": {
     "heading": "Instances",
     "description": "Each instance owns its game directory, mods, worlds, Java selection and logs.",
@@ -175,6 +275,7 @@
       "content": "Content",
       "worlds": "Worlds",
       "schematics": "Schematics",
+      "diagnosis": "Diagnosis",
       "logs": "Logs",
       "files": "Files",
       "export": "Export and delete"

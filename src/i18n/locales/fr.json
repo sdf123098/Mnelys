@@ -105,6 +105,106 @@
     "instancesTitle": "Instances récentes",
     "instancesBody": "Les instances que vous avez lancées le plus récemment."
   },
+  "diagnosis": {
+    "title": "Diagnostic de la dernière session",
+    "body": "Le noyau lit le journal de lancement, le rapport de plantage le plus récent et la fin du processus, puis les compare à des règles fixes. Rien ne quitte cet appareil.",
+    "rerun": "Relancer",
+    "failed": "Le diagnostic n'a pas pu être lu.",
+    "sessionTitle": "Dernier lancement",
+    "sessionNone": "Aucun lancement enregistré",
+    "exitCode": "code de sortie {{code}}",
+    "analyzedTitle": "Lignes lues",
+    "analyzed": "{{lines}} lignes",
+    "truncated": "Le journal est plus long que la fenêtre lue.",
+    "crashTitle": "Rapport de plantage",
+    "findingsTitle": "Ce qui a été trouvé",
+    "emptyTitle": "Aucune règle déclenchée",
+    "emptyBody": "Rien dans le journal ne correspond à une panne connue. Lisez le journal lui-même.",
+    "exportTitle": "Paquet de diagnostic",
+    "export": "Enregistrer le paquet",
+    "exported": "Écrit dans {{path}} ({{size}}).",
+    "exportFailed": "Le paquet n'a pas pu être écrit.",
+    "privacy": "Les chemins, adresses, jetons et noms de joueur sont masqués avant l'écriture du paquet, pour que vous puissiez le partager sans risque.",
+    "severities": {
+      "critical": "Bloquant",
+      "warning": "Avertissement",
+      "notice": "Note"
+    },
+    "sources": {
+      "launchLog": "Journal de lancement",
+      "crashReport": "Rapport de plantage",
+      "exitCode": "Fin du processus",
+      "instanceConfig": "Dossier de l'instance"
+    },
+    "states": {
+      "running": "En cours",
+      "exited": "Terminé",
+      "failed": "État illisible",
+      "stopped": "Arrêté"
+    },
+    "params": {
+      "required": "Requis",
+      "supported": "Pris en charge",
+      "subtype": "Type",
+      "target": "Élément",
+      "mod": "Mod",
+      "code": "Code de sortie"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "Java est trop ancien pour cette version",
+        "fix": "Choisissez dans Général un chemin Java correspondant à la version demandée, ou installez un environnement plus récent depuis Téléchargements."
+      },
+      "out-of-memory": {
+        "title": "Le jeu manquait de mémoire",
+        "fix": "Augmentez la limite mémoire dans Paramètres, retirez des mods ou réduisez la distance de rendu."
+      },
+      "duplicate-mod": {
+        "title": "Le même mod est installé deux fois",
+        "fix": "Ouvrez Contenu, retirez une copie du fichier cité dans la preuve, puis relancez."
+      },
+      "missing-dependency": {
+        "title": "Il manque une dépendance à un mod",
+        "fix": "Cherchez dans Contenu la bibliothèque nommée par le journal et installez-la pour cette instance."
+      },
+      "mixin-failure": {
+        "title": "Un mod n'a pas pu modifier le jeu",
+        "fix": "Le mod et la version du jeu ou du chargeur ne correspondent pas ; mettez l'un ou l'autre à la même version."
+      },
+      "class-loading-failure": {
+        "title": "Une classe n'a pas pu être chargée",
+        "fix": "Souvent un mod prévu pour un autre chargeur ou une autre version, ou un fichier de base restant ; retirez le fichier cité dans la preuve."
+      },
+      "loader-install-incomplete": {
+        "title": "Installation du chargeur incomplète",
+        "fix": "Réinstallez cette instance : le fichier de version ou ses bibliothèques manque."
+      },
+      "disk-full": {
+        "title": "Plus d'espace disque",
+        "fix": "Libérez de l'espace sur le disque qui contient les instances, puis réinstallez."
+      },
+      "permission-denied": {
+        "title": "Un fichier n'a pas pu être écrit",
+        "fix": "Fermez ce qui retient le dossier ouvert et déplacez l'instance hors d'un dossier nécessitant les droits administrateur."
+      },
+      "network-failure": {
+        "title": "Un téléchargement inachevé",
+        "fix": "Vérifiez la connexion, choisissez un autre miroir dans Paramètres et relancez le téléchargement."
+      },
+      "abnormal-exit": {
+        "title": "Le processus s'est terminé anormalement",
+        "fix": "Le jeu s'est fermé sans arrêt propre ; lisez les dernières lignes du journal sous la preuve."
+      },
+      "crash-report-present": {
+        "title": "Un rapport de plantage a été écrit",
+        "fix": "Ouvrez-le depuis le panneau Journaux ; la section cause nomme le mod ou le monde en cause."
+      },
+      "unexplained-failure": {
+        "title": "Aucune règle n'explique cette session",
+        "fix": "Le journal ne correspond à aucune panne connue. La fin du journal et le paquet sont ce qu'il faut pour vous aider."
+      }
+    }
+  },
   "instances": {
     "heading": "Instances",
     "description": "Chaque instance possède son propre répertoire de jeu, ses mods, ses mondes, sa sélection Java et ses journaux.",
@@ -175,6 +275,7 @@
       "content": "Contenu",
       "worlds": "Mondes",
       "schematics": "Schémas",
+      "diagnosis": "Diagnostic",
       "logs": "Journaux",
       "files": "Fichiers",
       "export": "Exporter et supprimer"

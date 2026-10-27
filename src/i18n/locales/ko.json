@@ -105,6 +105,106 @@
     "instancesTitle": "최근 인스턴스",
     "instancesBody": "최근에 실행한 인스턴스입니다."
   },
+  "diagnosis": {
+    "title": "마지막 실행 진단",
+    "body": "코어는 시작 로그와 가장 최근 충돌 보고서, 프로세스 종료 상태를 정해진 규칙과 비교합니다. 어떤 정보도 기기를 벗어나지 않습니다.",
+    "rerun": "다시 실행",
+    "failed": "진단을 읽을 수 없습니다.",
+    "sessionTitle": "마지막 실행",
+    "sessionNone": "기록된 실행이 없습니다",
+    "exitCode": "종료 코드 {{code}}",
+    "analyzedTitle": "읽은 줄 수",
+    "analyzed": "{{lines}}개 줄",
+    "truncated": "로그가 읽은 범위보다 깁니다.",
+    "crashTitle": "충돌 보고서",
+    "findingsTitle": "찾은 내용",
+    "emptyTitle": "조건에 맞는 규칙 없음",
+    "emptyBody": "알려진 장애와 맞는 줄이 없습니다. 로그 자체를 확인하세요.",
+    "exportTitle": "진단 묶음",
+    "export": "묶음 저장",
+    "exported": "{{path}}에 저장했습니다({{size}}).",
+    "exportFailed": "묶음을 저장할 수 없습니다.",
+    "privacy": "경로, 주소, 토큰, 플레이어 이름은 저장 전에 가려지므로 그대로 공유할 수 있습니다.",
+    "severities": {
+      "critical": "차단",
+      "warning": "경고",
+      "notice": "참고"
+    },
+    "sources": {
+      "launchLog": "시작 로그",
+      "crashReport": "충돌 보고서",
+      "exitCode": "프로세스 종료",
+      "instanceConfig": "인스턴스 기록"
+    },
+    "states": {
+      "running": "실행 중",
+      "exited": "종료",
+      "failed": "상태 확인 불가",
+      "stopped": "정지"
+    },
+    "params": {
+      "required": "필요한 버전",
+      "supported": "지원 버전",
+      "subtype": "종류",
+      "target": "대상",
+      "mod": "모드",
+      "code": "종료 코드"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "이 빌드보다 오래된 Java",
+        "fix": "일반에서 로그가 요구하는 Java 경로를 고르거나 다운로드에서 최신 런타임을 설치하세요."
+      },
+      "out-of-memory": {
+        "title": "게임 메모리 부족",
+        "fix": "설정에서 메모리 상한을 올리거나 모드를 줄이고 시야 거리를 낮추세요."
+      },
+      "duplicate-mod": {
+        "title": "같은 모드가 두 번 설치됨",
+        "fix": "콘텐츠에서 증거에 나온 파일 하나를 삭제한 뒤 다시 실행하세요."
+      },
+      "missing-dependency": {
+        "title": "모드가 필요한 라이브러리 없음",
+        "fix": "콘텐츠에서 로그에 적힌 라이브러리를 찾아 이 인스턴스에 설치하세요."
+      },
+      "mixin-failure": {
+        "title": "모드가 게임에 적용되지 못함",
+        "fix": "모드와 게임 또는 로더 버전이 맞지 않습니다. 둘 중 하나를 같은 버전으로 업데이트하세요."
+      },
+      "class-loading-failure": {
+        "title": "클래스를 불러오지 못함",
+        "fix": "다른 버전용 모드이거나 남은 핵심 파일일 수 있습니다. 증거에 나온 파일을 삭제하세요."
+      },
+      "loader-install-incomplete": {
+        "title": "로더 설치가 불완전함",
+        "fix": "이 인스턴스를 다시 설치하세요. 버전 파일이나 라이브러리가 없습니다."
+      },
+      "disk-full": {
+        "title": "디스크 공간 없음",
+        "fix": "인스턴스 저장 경로가 있는 드라이브의 공간을 확보한 뒤 다시 설치하세요."
+      },
+      "permission-denied": {
+        "title": "파일을 작성하지 못함",
+        "fix": "폴더를 사용 중인 프로그램을 닫고 관리자 권한이 필요 없는 위치로 인스턴스를 옮기세요."
+      },
+      "network-failure": {
+        "title": "다운로드가 끝나지 않음",
+        "fix": "연결을 확인하고 설정에서 다른 미러를 골라 다시 시도하세요."
+      },
+      "abnormal-exit": {
+        "title": "프로세스가 비정상 종료됨",
+        "fix": "게임이 정상 종료되지 않았습니다. 증거 아래 로그의 마지막 줄을 확인하세요."
+      },
+      "crash-report-present": {
+        "title": "충돌 보고서가 저장됨",
+        "fix": "로그 패널에서 열어 원인 부분에 적힌 모드나 월드를 확인하세요."
+      },
+      "unexplained-failure": {
+        "title": "규칙으로 설명되지 않는 실행",
+        "fix": "알려진 장애와 맞는 줄이 없으므로 로그 끝부분과 진단 묶음을 도움을 요청하는 곳에 보내세요."
+      }
+    }
+  },
   "instances": {
     "heading": "인스턴스",
     "description": "각 인스턴스는 자체 게임 디렉터리, 모드, 월드, Java 선택, 로그를 가집니다.",
@@ -175,6 +275,7 @@
       "content": "콘텐츠",
       "worlds": "월드",
       "schematics": "스키매틱",
+      "diagnosis": "진단",
       "logs": "로그",
       "files": "파일",
       "export": "내보내기 및 삭제"

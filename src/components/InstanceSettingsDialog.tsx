@@ -9,6 +9,7 @@ import { Dialog } from '@/components/ui/Dialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Icon, type IconName } from '@/components/ui/Icon';
 import { InstalledContentGroups } from '@/components/InstalledContentGroups';
+import { InstanceDiagnosisPanel } from '@/components/InstanceDiagnosisPanel';
 import { InstanceEntryList, type EntryListItem } from '@/components/InstanceEntryList';
 import { InstanceFilesPanel } from '@/components/InstanceFilesPanel';
 import { InstanceLogsPanel } from '@/components/InstanceLogsPanel';
@@ -27,13 +28,15 @@ import {
 import styles from './InstanceSettingsDialog.module.css';
 import pages from '@/routes/pages.module.css';
 
-type Category = 'general' | 'content' | 'worlds' | 'schematics' | 'logs' | 'files' | 'export';
+type Category =
+  'general' | 'content' | 'worlds' | 'schematics' | 'logs' | 'diagnosis' | 'files' | 'export';
 
 const CATEGORIES: readonly { id: Category; icon: IconName }[] = [
   { id: 'general', icon: 'settings' },
   { id: 'content', icon: 'package' },
   { id: 'files', icon: 'folder' },
   { id: 'logs', icon: 'terminal' },
+  { id: 'diagnosis', icon: 'diagnosis' },
   { id: 'schematics', icon: 'box' },
   { id: 'worlds', icon: 'globe' },
   { id: 'export', icon: 'downloads' },
@@ -110,6 +113,7 @@ export function InstanceSettingsDialog({
           ) : null}
           {category === 'schematics' ? <SchematicsPane instanceId={instance.id} /> : null}
           {category === 'worlds' ? <WorldsPane instanceId={instance.id} /> : null}
+          {category === 'diagnosis' ? <InstanceDiagnosisPanel instanceId={instance.id} /> : null}
           {category === 'export' ? (
             <ExportPane instance={instance} onRequestDelete={onRequestDelete} />
           ) : null}

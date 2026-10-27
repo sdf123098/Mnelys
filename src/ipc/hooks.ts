@@ -57,6 +57,7 @@ export const queryKeys = {
     ['core', 'instanceLogTail', instanceId, path] as const,
   instanceWorlds: (instanceId: string) => ['core', 'instanceWorlds', instanceId] as const,
   instanceSchematics: (instanceId: string) => ['core', 'instanceSchematics', instanceId] as const,
+  diagnosis: (instanceId: string) => ['core', 'diagnosis', instanceId] as const,
   /** Scopes for invalidation: every listing of one instance, whatever its folder. */
   instanceFilesScope: (instanceId: string) => ['core', 'instanceFiles', instanceId] as const,
   instanceLogTailScope: (instanceId: string) => ['core', 'instanceLogTail', instanceId] as const,
@@ -515,6 +516,30 @@ export function useRevealInstanceEntry() {
   return useMutation({
     mutationFn: (values: { instanceId: string; path: string }) =>
       core.revealInstanceEntry(values.instanceId, values.path),
+  });
+}
+
+/**
+ * The rules run over the last launch of one instance. The core recomputes them from the
+ * session buffer and the newest crash report, so the panel asks rather than polls.
+ */
+export function useInstanceDiagnosis(instanceId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.diagnosis(instanceId ?? ''),
+    queryFn: () => core.diagnoseInstance(instanceId ?? ''),
+    enabled: enabled && instanceId !== undefined && instanceId.length > 0,
+    staleTime: LOG_POLL_INTERVAL_MS,
+    retry: 1,
+  });
+}
+
+/** Writes a redacted diagnosis bundle and reports where it went. */
+export function useExportInstanceDiagnostics() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (instanceId: string) => core.exportInstanceDiagnostics(instanceId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.appLogs }),
   });
 }
 

@@ -105,6 +105,106 @@
     "instancesTitle": "Instâncias recentes",
     "instancesBody": "As instâncias iniciadas mais recentemente."
   },
+  "diagnosis": {
+    "title": "Diagnóstico da última execução",
+    "body": "O núcleo lê o registro de inicialização, o relatório de falha mais recente e o fim do processo e compara tudo com regras fixas. Nada sai deste dispositivo.",
+    "rerun": "Executar de novo",
+    "failed": "Não foi possível ler o diagnóstico.",
+    "sessionTitle": "Última execução",
+    "sessionNone": "Nenhuma execução registrada",
+    "exitCode": "código de saída {{code}}",
+    "analyzedTitle": "Linhas lidas",
+    "analyzed": "{{lines}} linhas",
+    "truncated": "O registro é maior que a janela lida.",
+    "crashTitle": "Relatório de falha",
+    "findingsTitle": "O que foi encontrado",
+    "emptyTitle": "Nenhuma regra correspondeu",
+    "emptyBody": "Nada no registro casa com uma falha conhecida. Consulte o próprio registro.",
+    "exportTitle": "Pacote de diagnóstico",
+    "export": "Salvar pacote",
+    "exported": "Gravado em {{path}} ({{size}}).",
+    "exportFailed": "Não foi possível gravar o pacote.",
+    "privacy": "Caminhos, endereços, tokens e nomes de jogador são ocultados antes da gravação, então você pode compartilhar o pacote sem risco.",
+    "severities": {
+      "critical": "Bloqueante",
+      "warning": "Aviso",
+      "notice": "Nota"
+    },
+    "sources": {
+      "launchLog": "Registro de inicialização",
+      "crashReport": "Relatório de falha",
+      "exitCode": "Fim do processo",
+      "instanceConfig": "Registro da instância"
+    },
+    "states": {
+      "running": "Em execução",
+      "exited": "Encerrado",
+      "failed": "Estado ilegível",
+      "stopped": "Parado"
+    },
+    "params": {
+      "required": "Necessária",
+      "supported": "Suportada",
+      "subtype": "Tipo",
+      "target": "Item",
+      "mod": "Mod",
+      "code": "Código de saída"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "Java velho demais para esta versão",
+        "fix": "Escolha em Geral um caminho de Java com a versão pedida no registro, ou instale um ambiente mais novo em Downloads."
+      },
+      "out-of-memory": {
+        "title": "O jogo ficou sem memória",
+        "fix": "Aumente o limite de memória nas Configurações, remova mods ou diminua a distância de renderização."
+      },
+      "duplicate-mod": {
+        "title": "O mesmo mod está instalado duas vezes",
+        "fix": "Abra Conteúdo, remova uma das cópias citadas na evidência e inicie de novo."
+      },
+      "missing-dependency": {
+        "title": "Falta algo que um mod precisa",
+        "fix": "Procure em Conteúdo a biblioteca citada no registro e instale-a nesta instância."
+      },
+      "mixin-failure": {
+        "title": "Um mod não conseguiu modificar o jogo",
+        "fix": "O mod e a versão do jogo ou do carregador não combinam; atualize um dos dois para a mesma versão."
+      },
+      "class-loading-failure": {
+        "title": "Uma classe não foi carregada",
+        "fix": "Costuma ser um mod feito para outro carregador ou versão, ou um arquivo básico esquecido; remova o arquivo citado na evidência."
+      },
+      "loader-install-incomplete": {
+        "title": "Instalação do carregador incompleta",
+        "fix": "Instale esta instância de novo; falta o arquivo de versão ou as bibliotecas."
+      },
+      "disk-full": {
+        "title": "Não sobrou espaço em disco",
+        "fix": "Libere espaço na unidade da raiz das instâncias e instale de novo."
+      },
+      "permission-denied": {
+        "title": "Não foi possível gravar um arquivo",
+        "fix": "Feche o que estiver com a pasta aberta e mova a instância para fora de uma pasta que exija administrador."
+      },
+      "network-failure": {
+        "title": "Um download não terminou",
+        "fix": "Verifique a conexão, escolha outro espelho nas Configurações e tente de novo."
+      },
+      "abnormal-exit": {
+        "title": "O processo terminou de forma anormal",
+        "fix": "O jogo fechou sem encerramento limpo; leia as últimas linhas do registro abaixo da evidência."
+      },
+      "crash-report-present": {
+        "title": "Há um relatório de falha gravado",
+        "fix": "Abra-o no painel de registros; a seção de causa nomeia o mod ou o mundo que falhou."
+      },
+      "unexplained-failure": {
+        "title": "Nenhuma regra explica esta execução",
+        "fix": "Nada no registro casa com uma falha conhecida. O fim do registro e o pacote são o que alguém precisa para ajudar."
+      }
+    }
+  },
   "instances": {
     "heading": "Instâncias",
     "description": "Cada instância tem seu próprio diretório de jogo, mods, mundos, seleção de Java e logs.",
@@ -175,6 +275,7 @@
       "content": "Conteúdo",
       "worlds": "Mundos",
       "schematics": "Esquemas",
+      "diagnosis": "Diagnóstico",
       "logs": "Registros",
       "files": "Arquivos",
       "export": "Exportar e excluir"

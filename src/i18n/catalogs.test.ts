@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { DIAGNOSIS_IDS } from '@/ipc/commands';
+
 import en from './locales/en.json';
 
 type CatalogNode = string | { readonly [key: string]: CatalogNode };
@@ -48,6 +50,18 @@ describe('message catalogs', () => {
       const name = (catalog as { app?: { name?: string } }).app?.name;
       expect(name, `${code} must name the product`).toBeTruthy();
       expect(name, `${code} must not append a second name`).not.toContain('/');
+    }
+  });
+
+  /**
+   * The core ships rule ids, not sentences, so a rule with no catalog entry would render
+   * its raw key. Both directions are checked: a rule the interface forgot to translate and
+   * a catalog entry for a rule the core no longer reports.
+   */
+  it('carries one title and one fix per diagnosis rule', () => {
+    expect(Object.keys(en.diagnosis.rules).sort()).toEqual([...DIAGNOSIS_IDS].sort());
+    for (const id of DIAGNOSIS_IDS) {
+      expect(Object.keys(en.diagnosis.rules[id]).sort()).toEqual(['fix', 'title']);
     }
   });
 });

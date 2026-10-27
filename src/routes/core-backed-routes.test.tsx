@@ -10,6 +10,8 @@ import type {
   AccountSummary,
   ContentProject,
   ContentSearchPage,
+  DiagnosisReport,
+  DiagnosticsBundle,
   FileListing,
   InstalledContent,
   InstanceSummary,
@@ -177,6 +179,31 @@ const ROOT_FILE: WorkspaceEntry = {
   modifiedMs: MODIFIED,
 };
 
+/** What the core's rules report for the demo instance's last run. */
+const DIAGNOSIS: DiagnosisReport = {
+  instanceId: 'demo',
+  generatedAtMs: Date.UTC(2026, 9, 26),
+  session: SESSION,
+  findings: [
+    {
+      id: 'out-of-memory',
+      severity: 'critical',
+      params: { subtype: 'java heap space' },
+      evidence: [
+        {
+          source: 'launchLog',
+          path: LOG.path,
+          line: 128,
+          excerpt: 'java.lang.OutOfMemoryError: Java heap space',
+        },
+      ],
+    },
+  ],
+  analyzedLines: 4_096,
+  logTruncated: false,
+  crashReport: CRASH.path,
+};
+
 function handle(command: string): unknown {
   switch (command) {
     case 'list_instances':
@@ -230,6 +257,14 @@ function handle(command: string): unknown {
       return [WORLD];
     case 'list_instance_schematics':
       return [SCHEMATIC];
+    case 'diagnose_instance':
+      return DIAGNOSIS;
+    case 'export_instance_diagnostics':
+      return {
+        path: 'D:/Mnelys/data/diagnostics/demo-1.md',
+        sizeBytes: 2_048,
+        findings: 1,
+      } satisfies DiagnosticsBundle;
     default:
       return null;
   }
@@ -332,6 +367,32 @@ describe('rewritten routes render real core data', () => {
     await user.click(within(dialog).getByRole('radio', { name: 'Schematics' }));
     expect(await within(dialog).findByText('castle.schem')).toBeInTheDocument();
     expect(within(dialog).getByText(/512 KiB/)).toBeInTheDocument();
+  });
+
+  /**
+   * The diagnosis pane is the core's rule output, not a sentence written in the shell:
+   * the command ships an id and a value, and the catalog turns them into this text.
+   */
+  it('diagnoses the last run and exports a bundle', async () => {
+    const user = userEvent.setup();
+    renderAt('/instances/demo', <InstancesRoute />);
+    await user.click(await screen.findByRole('button', { name: 'Instance settings' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Instance settings' });
+
+    await user.click(within(dialog).getByRole('radio', { name: 'Diagnosis' }));
+    expect(await within(dialog).findByText('The game ran out of memory')).toBeInTheDocument();
+    expect(within(dialog).getByText('Blocking')).toBeInTheDocument();
+    expect(within(dialog).getByText('java heap space')).toBeInTheDocument();
+    expect(within(dialog).getByText(/latest\.log:128/)).toBeInTheDocument();
+    expect(
+      within(dialog).getByText('java.lang.OutOfMemoryError: Java heap space'),
+    ).toBeInTheDocument();
+    expect(within(dialog).getByText('4,096 lines')).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole('button', { name: 'Save bundle' }));
+    expect(
+      await within(dialog).findByText('Written to D:/Mnelys/data/diagnostics/demo-1.md (2.0 KiB).'),
+    ).toBeInTheDocument();
   });
 
   it('keeps the download queue alone', async () => {

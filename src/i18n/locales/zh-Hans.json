@@ -105,6 +105,106 @@
     "instancesTitle": "最近实例",
     "instancesBody": "你最近启动过的实例。"
   },
+  "diagnosis": {
+    "title": "上次运行的诊断",
+    "body": "核心会读取启动日志、最新的崩溃报告以及进程的退出情况，并按固定规则匹配。任何信息都不会离开本机。",
+    "rerun": "重新运行",
+    "failed": "无法读取诊断结果。",
+    "sessionTitle": "上次启动",
+    "sessionNone": "尚未记录任何启动",
+    "exitCode": "退出码 {{code}}",
+    "analyzedTitle": "已读取行数",
+    "analyzed": "{{lines}} 行",
+    "truncated": "日志比读取的窗口更长。",
+    "crashTitle": "崩溃报告",
+    "findingsTitle": "发现的问题",
+    "emptyTitle": "没有命中任何规则",
+    "emptyBody": "日志中没有已知故障的特征，请自行查看日志。",
+    "exportTitle": "诊断包",
+    "export": "保存诊断包",
+    "exported": "已写入 {{path}}（{{size}}）。",
+    "exportFailed": "无法写入诊断包。",
+    "privacy": "路径、地址、令牌和玩家昵称在写入前都会被掩码，因此可以放心地发给别人求助。",
+    "severities": {
+      "critical": "阻碍",
+      "warning": "警告",
+      "notice": "提示"
+    },
+    "sources": {
+      "launchLog": "启动日志",
+      "crashReport": "崩溃报告",
+      "exitCode": "进程退出",
+      "instanceConfig": "实例记录"
+    },
+    "states": {
+      "running": "运行中",
+      "exited": "已退出",
+      "failed": "无法读取状态",
+      "stopped": "已停止"
+    },
+    "params": {
+      "required": "需要",
+      "supported": "支持",
+      "subtype": "类型",
+      "target": "对象",
+      "mod": "模组",
+      "code": "退出码"
+    },
+    "rules": {
+      "java-version-mismatch": {
+        "title": "Java 版本低于该构建的要求",
+        "fix": "请在“常规”里把 Java 路径改成日志要求的版本，或到“下载”里安装更新的运行时。"
+      },
+      "out-of-memory": {
+        "title": "游戏内存不足",
+        "fix": "在设置中提高内存上限，或删掉一些模组并调低可视距离。"
+      },
+      "duplicate-mod": {
+        "title": "同一个模组装了两份",
+        "fix": "打开“内容”，删除证据中提到的那个文件的其中一份，然后重新启动。"
+      },
+      "missing-dependency": {
+        "title": "模组缺少它需要的东西",
+        "fix": "在“内容”中搜索日志提到的库，并把它装到这个实例。"
+      },
+      "mixin-failure": {
+        "title": "模组无法改写游戏",
+        "fix": "模组与游戏或加载器的版本对不上，请把其中一方升级到相同版本。"
+      },
+      "class-loading-failure": {
+        "title": "无法加载某个类",
+        "fix": "通常是模组不适合当前加载器或版本，也可能是残留的核心文件；请删除证据中指出的文件。"
+      },
+      "loader-install-incomplete": {
+        "title": "加载器安装不完整",
+        "fix": "请重新安装该实例；版本文件或缺少它依赖的库。"
+      },
+      "disk-full": {
+        "title": "磁盘空间不足",
+        "fix": "为实例所在磁盘清理出空间，然后重新安装。"
+      },
+      "permission-denied": {
+        "title": "无法写入文件",
+        "fix": "关闭占用该文件夹的程序，并把实例移到不需要管理员权限的位置。"
+      },
+      "network-failure": {
+        "title": "下载未完成",
+        "fix": "检查网络，在设置里换一个镜像源，然后重试下载。"
+      },
+      "abnormal-exit": {
+        "title": "进程异常退出",
+        "fix": "游戏不是正常关闭的，请阅读证据下方日志的最后几行。"
+      },
+      "crash-report-present": {
+        "title": "已经写出崩溃报告",
+        "fix": "请在“日志”面板里打开它，原因一节会指出出问题的模组或存档。"
+      },
+      "unexplained-failure": {
+        "title": "没有规则解释这次运行",
+        "fix": "日志中没有已知故障的特征，请把日志末尾和诊断包一起发给能帮你的人。"
+      }
+    }
+  },
   "instances": {
     "heading": "实例",
     "description": "每个实例拥有独立的游戏目录、模组、存档、Java 选择与日志。",
@@ -175,6 +275,7 @@
       "content": "内容",
       "worlds": "世界存档",
       "schematics": "投影",
+      "diagnosis": "诊断",
       "logs": "日志",
       "files": "文件",
       "export": "导出与删除"
