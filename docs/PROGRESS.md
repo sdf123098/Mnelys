@@ -191,7 +191,10 @@
 - 目录：`diagnosis.*` 共 62 键 × 10 语言，另加 `instances.settingsCategory.diagnosis`；扁平化后每套 471 键，`src/i18n/catalogs.test.ts` 奇偶校验通过，并新增一条断言 `en.diagnosis.rules` 的键集与 `DIAGNOSIS_IDS` **双向**严格相等，防止核心删了规则而目录留着旧条目。
 - 测试：`mnelys-domain` 38、`mnelys-application` 67（其中 `diagnostics.rs` 18 项、`redact.rs` 15 项）、`mnelys-infrastructure` 54，共 159 项通过；前端 9 个文件 45 个用例，新增 `diagnoses the last run and exports a bundle` 用 `mockIPC` 断言规则标题、`Blocking` 徽标、`java heap space` 事实行、`latest.log:128` 证据定位与导出后的 `Written to … (2.0 KiB).`。
 - 本机验证：`tsc --noEmit` 零错、`eslint .` 零告警、`prettier --check .` 全绿、`vitest run` 45/45；`vite build` 产物 JS 784.72 kB（gzip 239.05 kB）、CSS 46.50 kB（gzip 7.32 kB），仍只有 >500 kB 分块提示。Rust 侧走 GNU 工具链（`stable-x86_64-pc-windows-gnu` + `/c/msys64/ucrt64/bin` 前置 PATH）：`cargo fmt --all --check` 通过，`cargo clippy --workspace --all-targets -- -D warnings` 五个 crate 退出码 0（说明 presentation 与 `src-tauri` 也编译得过 v5 的 48 条命令面），三个核心 crate 159 项测试通过。
-- 本机仍给不出结论的部分：`mnelys-presentation` 与 `src-tauri` 的测试二进制在 GNU 目标以 `0xC0000139` 起不来 ⇒ **契约 v5、48 条命令与 13 条规则 id 的跨语言校验要等 Actions**；真实崩溃语料上的规则命中率、诊断包在真实数据根下的落盘、以及 M9 阶段二（把结构化发现交给模型）都还没做——后者的供给链决定仍是计划 §36 第 5 项未冻结的内容。
+- 本机给不出结论的部分：`mnelys-presentation` 与 `src-tauri` 的测试二进制在 GNU 目标以 `0xC0000139` 起不来，这部分历来由 Actions 收口。
+- 远端结论：CI run [40534389234](https://github.com/sdf123098/Mnelys/actions/runs/40534389234)（提交 `93703e9`）四个任务全部通过——前端检查 9 个文件 45 项（含 `catalogs.test.ts` 13 项与 `diagnoses the last run and exports a bundle`），`Rust (windows|macos|ubuntu)` 的 fmt + Clippy + test 每平台 167 项零失败（domain 38、application 67、infrastructure 54、presentation 4、`contract.rs` 4）⇒ **契约 v5、48 条命令与 13 条规则 id 的跨语言校验在三平台均有证据成立**，Rust 侧不再有待验证项。
+- 产物已在同一 HEAD 重打：[Desktop packages run 40534459160](https://github.com/sdf123098/Mnelys/actions/runs/40534459160)（手动 dispatch，三平台作业全绿，工件保留至 2026-11-10）——`mnelys-windows-x64-unsigned` 6 984 688 B、`mnelys-macos-arm64-unsigned` 6 799 732 B、`mnelys-linux-x64-unsigned` 81 797 401 B；windows 4m34s、macos 3m46s、linux 18m14s（AppImage 那步照旧是最慢的一环）。Windows 已下载到 `artifacts/ci-93703e9/`：`bundle/nsis/Mnelys_0.1.0_x64-setup.exe` 3 220 891 B（SHA-256 `908982F4…78403626`）、便携 `mnelys.exe` 7 035 392 B（`56057F03…2E978CA3`），两者均确认是 PE。相较上一版（setup 3 183 023 B / 便携 6 951 936 B）各增约 1%，与新增面板和十套目录的量级相符。**仍未安装、未启动**：冷启动、真机运行时行为与诊断面板在真实数据根下的读取依旧空缺，且这些包未签名。
+- 仍未做：真实崩溃语料上的规则命中率与误报率、诊断包在真实数据根下的落盘验证，以及 M9 阶段二（把结构化发现交给模型）——后者的供给链决定仍是计划 §36 第 5 项未冻结的内容。
 
 ## 已完成
 
@@ -265,6 +268,7 @@
 - [x] §19.3 脱敏：密钥名、`--server` 地址、家目录、IPv4、UUID 与账户字面量，占位符统一，测试钉住"宁可多掩"的取向。
 - [x] 诊断包导出到 `<数据根>/diagnostics/`，命令只回路径 / 体积 / 发现数。
 - [x] 实例设置对话框的"诊断"面板与 10 套语言目录同步；规则 id 与前端声明由 `contract.rs` 校验。
+- [x] 三平台 CI 通过：契约 v5、48 条命令与 13 条规则 id 的跨语言校验成立（CI run [40534389234](https://github.com/sdf123098/Mnelys/actions/runs/40534389234)）。
 - [ ] 真实崩溃语料上的命中率与误报率（需要一批真实 crash / latest.log 样本）。
 - [ ] M9 阶段二：把结构化发现交给模型；供给链选择仍未冻结（计划 §36 第 5 项）。
 
