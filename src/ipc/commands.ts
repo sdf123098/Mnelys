@@ -10,7 +10,7 @@
  * here match the ones the Rust side registers.
  */
 
-export const CONTRACT_VERSION = 4;
+export const CONTRACT_VERSION = 5;
 
 /** Result of `core_version` — the start-up handshake that keeps both halves in step. */
 export interface CoreVersion {
@@ -294,6 +294,85 @@ export interface WorldEntry {
   readonly modifiedMs: number | null;
 }
 
+/**
+ * Diagnosis rules the core knows, matching `mnelys_domain::DiagnosticId` wire slugs.
+ *
+ * The core sends only an id, a severity and interpolated values; the prose lives in the
+ * language catalogs, so adding a rule is a translation task and never a core string.
+ */
+export type DiagnosisId =
+  | 'java-version-mismatch'
+  | 'out-of-memory'
+  | 'duplicate-mod'
+  | 'missing-dependency'
+  | 'mixin-failure'
+  | 'class-loading-failure'
+  | 'loader-install-incomplete'
+  | 'disk-full'
+  | 'permission-denied'
+  | 'network-failure'
+  | 'abnormal-exit'
+  | 'crash-report-present'
+  | 'unexplained-failure';
+
+/** Every rule id as a runtime value, for the contract test and the label maps. */
+export const DIAGNOSIS_IDS = [
+  'java-version-mismatch',
+  'out-of-memory',
+  'duplicate-mod',
+  'missing-dependency',
+  'mixin-failure',
+  'class-loading-failure',
+  'loader-install-incomplete',
+  'disk-full',
+  'permission-denied',
+  'network-failure',
+  'abnormal-exit',
+  'crash-report-present',
+  'unexplained-failure',
+] as const satisfies readonly DiagnosisId[];
+
+/** How much attention a finding deserves. */
+export type DiagnosisSeverity = 'critical' | 'warning' | 'notice';
+
+/** Where one piece of evidence came from. */
+export type DiagnosisSource = 'launchLog' | 'crashReport' | 'exitCode' | 'instanceConfig';
+
+/** One line, file or value that fired a rule; already redacted by the core. */
+export interface DiagnosisEvidence {
+  readonly source: DiagnosisSource;
+  readonly path?: string;
+  readonly line?: number;
+  readonly excerpt: string;
+}
+
+/** One rule that fired. */
+export interface DiagnosisFinding {
+  readonly id: DiagnosisId;
+  readonly severity: DiagnosisSeverity;
+  /** Interpolation values such as `required`, `supported`, `code` or `mod`. */
+  readonly params: Readonly<Record<string, string>>;
+  readonly evidence: readonly DiagnosisEvidence[];
+}
+
+/** Result of `diagnose_instance`. */
+export interface DiagnosisReport {
+  readonly instanceId: string;
+  readonly generatedAtMs: number;
+  readonly session?: LaunchSession;
+  readonly findings: readonly DiagnosisFinding[];
+  readonly analyzedLines: number;
+  readonly logTruncated: boolean;
+  readonly crashReport?: string;
+}
+
+/** Result of `export_instance_diagnostics`. */
+export interface DiagnosticsBundle {
+  readonly path: string;
+  readonly sizeBytes: number;
+  readonly findings: number;
+}
+
 /** One background task snapshot. */
 export interface TaskSnapshot {
   readonly id: string;
@@ -453,6 +532,12 @@ export interface CommandContract {
     result: null;
   };
 
+  diagnose_instance: { args: { readonly instanceId: string }; result: DiagnosisReport };
+  export_instance_diagnostics: {
+    args: { readonly instanceId: string };
+    result: DiagnosticsBundle;
+  };
+
   list_tasks: { args: Record<string, never>; result: TaskSnapshot[] };
   cancel_task: { args: { readonly id: string }; result: boolean };
 }
@@ -507,6 +592,8 @@ export const COMMAND_NAMES = [
   'list_instance_schematics',
   'delete_instance_entry',
   'reveal_instance_entry',
+  'diagnose_instance',
+  'export_instance_diagnostics',
   'list_tasks',
   'cancel_task',
 ] as const satisfies readonly CommandName[];

@@ -47,3 +47,14 @@ fn every_error_code_is_declared_by_the_frontend() {
         );
     }
 }
+
+#[test]
+fn every_diagnosis_rule_is_declared_by_the_frontend() {
+    let source = frontend_source("src/ipc/commands.ts");
+    for id in mnelys_lib::DiagnosticId::ALL {
+        assert!(
+            source.contains(&format!("'{id}'")),
+            "src/ipc/commands.ts does not declare diagnosis rule `{id}`"
+        );
+    }
+}

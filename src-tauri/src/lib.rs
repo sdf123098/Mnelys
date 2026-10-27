@@ -13,9 +13,9 @@ use mnelys_application::ports::{
     LoaderProvider, SecretStore,
 };
 use mnelys_application::{
-    AccountService, AppSettings, ContentRegistry, ContentService, GamePaths, InstallService,
-    InstanceService, LaunchService, LogLevel, LogService, MetadataService, MicrosoftConfig,
-    MirrorPolicy, SettingsStore, TaskRegistry, WorkspaceService,
+    AccountService, AppSettings, ContentRegistry, ContentService, DiagnosticService, GamePaths,
+    InstallService, InstanceService, LaunchService, LogLevel, LogService, MetadataService,
+    MicrosoftConfig, MirrorPolicy, SettingsStore, TaskRegistry, WorkspaceService,
 };
 use mnelys_infrastructure::{
     default_root, CurseForgeProvider, DesktopRevealer, JsonAccountRepository,
@@ -26,7 +26,7 @@ use mnelys_infrastructure::{
 use mnelys_presentation::{CoreServices, CoreState};
 
 pub use mnelys_presentation::{
-    CoreError, CoreErrorCode, CoreResult, COMMAND_NAMES, CONTRACT_VERSION,
+    CoreError, CoreErrorCode, CoreResult, DiagnosticId, COMMAND_NAMES, CONTRACT_VERSION,
 };
 
 /// Builds and runs the desktop application.
@@ -210,6 +210,15 @@ fn build_state(logs: &LogService) -> CoreState {
         Arc::clone(&instances),
         reveal,
     ));
+    let diagnostics = Arc::new(DiagnosticService::new(
+        Arc::clone(&instances),
+        Arc::clone(&launch),
+        Arc::clone(&workspace),
+        Arc::clone(&accounts),
+        Arc::clone(&files),
+        paths.clone(),
+        Arc::clone(&clock),
+    ));
 
     CoreState::new(CoreServices {
         logs: logs.clone(),
@@ -222,6 +231,7 @@ fn build_state(logs: &LogService) -> CoreState {
         accounts,
         content,
         workspace,
+        diagnostics,
         java,
         loaders,
         mirrors,

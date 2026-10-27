@@ -2,6 +2,7 @@
 
 mod accounts;
 mod content;
+mod diagnostics;
 mod instances;
 mod java;
 mod launch;
@@ -17,10 +18,10 @@ mod workspace;
 ///
 /// Bump this whenever a request or response shape changes. `src/ipc/commands.ts` mirrors
 /// the value, and `src-tauri/tests/contract.rs` fails when the two disagree (ADR 0006).
-pub const CONTRACT_VERSION: u32 = 4;
+pub const CONTRACT_VERSION: u32 = 5;
 
 /// Every command name this core exposes, in the order the frontend declares them.
-pub const COMMAND_NAMES: [&str; 46] = [
+pub const COMMAND_NAMES: [&str; 48] = [
     "core_version",
     "runtime_info",
     "app_logs",
@@ -65,6 +66,8 @@ pub const COMMAND_NAMES: [&str; 46] = [
     "list_instance_schematics",
     "delete_instance_entry",
     "reveal_instance_entry",
+    "diagnose_instance",
+    "export_instance_diagnostics",
     "list_tasks",
     "cancel_task",
 ];
@@ -120,6 +123,8 @@ pub fn attach<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::Builder<R
         workspace::list_instance_schematics,
         workspace::delete_instance_entry,
         workspace::reveal_instance_entry,
+        diagnostics::diagnose_instance,
+        diagnostics::export_instance_diagnostics,
         tasks::list_tasks,
         tasks::cancel_task
     ])

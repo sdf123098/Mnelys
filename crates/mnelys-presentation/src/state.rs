@@ -9,8 +9,8 @@ use std::sync::Arc;
 use mnelys_application::mirrors::MirrorPolicy;
 use mnelys_application::ports::{HttpClient, JavaProvider, LoaderProvider};
 use mnelys_application::{
-    AccountService, ContentService, GamePaths, InstallService, InstanceService, LaunchService,
-    LogService, MetadataService, SettingsStore, TaskRegistry, WorkspaceService,
+    AccountService, ContentService, DiagnosticService, GamePaths, InstallService, InstanceService,
+    LaunchService, LogService, MetadataService, SettingsStore, TaskRegistry, WorkspaceService,
 };
 
 /// Everything the command surface can reach.
@@ -25,6 +25,7 @@ pub struct CoreServices {
     pub accounts: Arc<AccountService>,
     pub content: Arc<ContentService>,
     pub workspace: Arc<WorkspaceService>,
+    pub diagnostics: Arc<DiagnosticService>,
     pub java: Arc<dyn JavaProvider>,
     pub loaders: Arc<dyn LoaderProvider>,
     pub mirrors: MirrorPolicy,
@@ -96,6 +97,11 @@ impl CoreState {
     #[must_use]
     pub fn workspace(&self) -> &Arc<WorkspaceService> {
         &self.services.workspace
+    }
+
+    #[must_use]
+    pub fn diagnostics(&self) -> &Arc<DiagnosticService> {
+        &self.services.diagnostics
     }
 
     #[must_use]
