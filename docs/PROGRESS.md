@@ -172,6 +172,8 @@
 - 界面实走：临时注入 mock 核心后用浏览器逐面板确认（导航顺序、内容标签与跨种类搜索、世界 1.0 GiB、日志两个子列表、文件层级返回、投影子目录），确认后端上脚手架（`preview.html`、`src/dev/`）已删除。
 - 远端验证与回修：推送后的 CI run [40362676279](https://github.com/sdf123098/Mnelys/actions/runs/40362676279) 前端检查通过，`Rust (windows|macos|ubuntu)` 三个任务全部失败——`cargo clippy --workspace --all-targets -- -D warnings` 报 5 处：`workspace.rs:547/557` 把 `Path::strip_prefix` 的 `Result` 当作 `Option` 解构（E0308 ×2）、`workspace.rs:666/668` 用 `Arc::clone(&Arc<FakeFiles>)` 去满足 `&Arc<dyn FileStore>`（E0308 ×2）、`reveal.rs:8` 的 `PathBuf` 只在测试模块用到却在顶层导入（unused import）。三平台的 `cargo test` 因此根本没跑到，契约 v4 与 46 条命令的校验仍是空白。
 - 回修后本机找到了可行的 Rust 校验路径：用已装的 `stable-x86_64-pc-windows-gnu` 工具链并把 `/c/msys64/ucrt64/bin` 加进 `PATH`（默认的 msvc 目标会被 Git Bash 的 coreutils `link` 抢掉链接器），`clippy --workspace --all-targets -- -D warnings` 五个 crate 全过、退出码 0；`cargo test -p mnelys-domain -p mnelys-application -p mnelys-infrastructure` 121 项通过（33 / 34 / 54，含本轮新增的 13 项 workspace 测试）。`mnelys-presentation` 与 `src-tauri` 的测试二进制在 GNU 目标上仍以 `0xC0000139` 起不来，那部分只能由 Actions 给结论。
+- CI run [40438919132](https://github.com/sdf123098/Mnelys/actions/runs/40438919132)（`b6cf753`）：前端检查、`Rust (windows-latest)`、`Rust (ubuntu-latest)` 全部通过，macOS 的 Clippy 也已通过（证明 5 处编译错误修干净了），`cargo test` 里 `contract.rs` 3 项通过 ⇒ **契约 v4 与 46 条命令的跨语言校验成立**。唯一失败是本轮自己写的断言：`reveal.rs:60` 无条件要求"参数向量的长度是 1"，而 macOS 分支返回的是 `("open", ["-R", path])`——标志与路径各占一个元素；Windows（`/select,路径`）与 Linux（`xdg-open 父目录`）恰好都是一个参数，所以只有 macOS 暴露。断言改为按平台比对整个参数向量，顺带把三平台的程序名钉住；被测试的 `reveal_command` 本身没有错。
+- 本机 GNU 环境只能实际执行 `cfg!(target_os = "windows")` 那一条分支，Linux 与 macOS 的新期望是照实现逐行核对写的，要等下一次 Actions 才算真跑过。
 
 ## 已完成
 

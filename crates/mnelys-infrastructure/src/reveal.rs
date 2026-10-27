@@ -57,11 +57,19 @@ mod tests {
         let tricky =
             PathBuf::from("/data/instances/main/game/mods").join("a mod (1.0) && echo hi.jar");
         let (program, arguments) = reveal_command(&tricky);
-        assert_eq!(arguments.len(), 1, "the path must stay one argument");
         assert!(program != "sh" && program != "cmd", "no shell is used");
-        if cfg!(target_os = "windows") {
+        // The three programs take different shapes, but none of them splits the path: macOS
+        // passes `-R` as its own argument and the whole file name in the next one.
+        let expected = if cfg!(target_os = "windows") {
             assert_eq!(program, "explorer");
-            assert!(arguments[0].starts_with("/select,"));
-        }
+            vec![format!("/select,{}", tricky.display())]
+        } else if cfg!(target_os = "macos") {
+            assert_eq!(program, "open");
+            vec![String::from("-R"), tricky.display().to_string()]
+        } else {
+            assert_eq!(program, "xdg-open");
+            vec![String::from("/data/instances/main/game/mods")]
+        };
+        assert_eq!(arguments, expected, "the path must arrive as one argument");
     }
 }
